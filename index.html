@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> PKL - BAGTAPEM </title>
     
+    <!-- FAVICON (LOGO TAB BROWSER) -->
+    <link rel="icon" type="image/png" href="logo bagtapem.png">
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -281,7 +284,7 @@
                         </form>
                     </div>
 
-                    <!-- LIVE PREVIEW CARD (SIDEBAR - CLEAN ICON MINIMIZE MODE) -->
+                    <!-- LIVE PREVIEW CARD (SIDEBAR) -->
                     <div id="container-preview" class="lg:col-span-5 sticky top-28 transition-all duration-300 ease-in-out">
                         <div id="preview-card-box" class="glass-card rounded-3xl p-6 shadow-md border-2 border-blue-800/30 transition-all duration-300 overflow-hidden max-h-[calc(100vh-8rem)]">
                             
@@ -487,7 +490,6 @@
             updatePreview();
         });
 
-        // FUNGSI TOGGLE MINIMIZE / MAXIMIZE CLEAN ICON MODE
         function togglePreviewState() {
             const formCol = document.getElementById('container-form');
             const prevCol = document.getElementById('container-preview');
@@ -500,7 +502,6 @@
             const toggleIcon = document.getElementById('toggle-icon');
 
             if (!isPreviewMinimized) {
-                // MINIMIZE MODE: Hanya Ikon Melayang Tanpa Scrollbar/Teks Terpotong
                 formCol.className = 'lg:col-span-11 glass-card rounded-3xl p-6 sm:p-8 shadow-sm transition-all duration-300 ease-in-out';
                 prevCol.className = 'lg:col-span-1 sticky top-28 flex justify-end transition-all duration-300 ease-in-out';
 
@@ -512,11 +513,10 @@
                 prevBody.classList.add('hidden');
 
                 toggleBtn.className = 'p-3 rounded-full bg-blue-900 text-white hover:bg-slate-900 transition-all shadow-lg flex items-center justify-center';
-                toggleIcon.setAttribute('data-lucide', 'eye'); // Menggunakan ikon mata untuk buka preview
+                toggleIcon.setAttribute('data-lucide', 'eye');
                 
                 isPreviewMinimized = true;
             } else {
-                // MAXIMIZE MODE: Kembalikan Tampilan Normal secara Utuh
                 formCol.className = 'lg:col-span-7 glass-card rounded-3xl p-6 sm:p-8 shadow-sm transition-all duration-300 ease-in-out';
                 prevCol.className = 'lg:col-span-5 sticky top-28 transition-all duration-300 ease-in-out';
 
