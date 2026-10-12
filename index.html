@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PKL - BAGTAPEM </title>
+    <title> PKL - BAGTAPEM </title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,7 +20,7 @@
             background-color: #f8fafc;
         }
 
-        /* Watermark Background Styling (Ukuran Diperbesar) */
+        /* Watermark Background Styling (Ukuran Besar) */
         .watermark-bg {
             position: fixed;
             top: 50%;
@@ -157,47 +157,19 @@
 
                         <form id="pkl-form" onsubmit="handleFormSubmit(event)" class="space-y-5">
                             
-                            <!-- Row 1: Kecamatan & Kelurahan -->
+                            <!-- Row 1: Kecamatan & Kelurahan Dinamis -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">1. Kecamatan <span class="text-red-500">*</span></label>
-                                    <select id="field-kecamatan" required onchange="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/80 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all">
+                                    <select id="field-kecamatan" required onchange="onKecamatanChange()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/80 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all">
                                         <option value="">-- Pilih Kecamatan --</option>
-                                        <option value="Andir">Andir</option>
-                                        <option value="Astana Anyar">Astana Anyar</option>
-                                        <option value="Antapani">Antapani</option>
-                                        <option value="Arcamanik">Arcamanik</option>
-                                        <option value="Babakan Ciparay">Babakan Ciparay</option>
-                                        <option value="Bandung Kidul">Bandung Kidul</option>
-                                        <option value="Bandung Kulon">Bandung Kulon</option>
-                                        <option value="Bandung Raya">Bandung Raya</option>
-                                        <option value="Bandung Wetan">Bandung Wetan</option>
-                                        <option value="Batununggal">Batununggal</option>
-                                        <option value="Boionagara">Boionagara</option>
-                                        <option value="Buahbatu">Buahbatu</option>
-                                        <option value="Cibeunying Kaler">Cibeunying Kaler</option>
-                                        <option value="Cibeunying Kidul">Cibeunying Kidul</option>
-                                        <option value="Cibiru">Cibiru</option>
-                                        <option value="Cicendo">Cicendo</option>
-                                        <option value="Cidadap">Cidadap</option>
-                                        <option value="Cinambo">Cinambo</option>
-                                        <option value="Coblong">Coblong</option>
-                                        <option value="Gedebage">Gedebage</option>
-                                        <option value="Kiaracondong">Kiaracondong</option>
-                                        <option value="Lengkong">Lengkong</option>
-                                        <option value="Mandalajati">Mandalajati</option>
-                                        <option value="Panyileukan">Panyileukan</option>
-                                        <option value="Rancasari">Rancasari</option>
-                                        <option value="Regol">Regol</option>
-                                        <option value="Sukajadi">Sukajadi</option>
-                                        <option value="Sukasari">Sukasari</option>
-                                        <option value="Sumur Bandung">Sumur Bandung</option>
-                                        <option value="Ujungberung">Ujungberung</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">2. Kelurahan <span class="text-red-500">*</span></label>
-                                    <input type="text" id="field-kelurahan" required placeholder="Contoh: Dago, Braga, Pasirkaliki" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/80 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all">
+                                    <select id="field-kelurahan" required onchange="updatePreview()" disabled class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/80 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all disabled:bg-slate-100 disabled:cursor-not-allowed">
+                                        <option value="">-- Pilih Kecamatan Dulu --</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -228,13 +200,28 @@
                                 </div>
                             </div>
 
-                            <!-- Row 4: Data PKL -->
-                            <div>
-                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">7. Data PKL (Pedagang Kaki Lima) <span class="text-red-500">*</span></label>
-                                <textarea id="field-datapkl" rows="3" required placeholder="Sebutkan jenis usaha, dagangan, atau rincian identitas pedagang..." oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/80 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all"></textarea>
+                            <!-- Row 4: Data PKL (Textarea + Upload File Terintegrasi di dalam) -->
+                            <div class="border border-slate-200 bg-white/90 p-4 rounded-2xl space-y-3">
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">7. Data PKL (Pedagang Kaki Lima) <span class="text-red-500">*</span></label>
+                                <textarea id="field-datapkl" rows="3" required placeholder="Data keperluan pedagang kaki lima..." oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all"></textarea>
+                                
+                                <!-- File Upload terintegrasi langsung di dalam box Data PKL -->
+                                <div class="pt-2 border-t border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                    <div class="flex items-center space-x-2">
+                                        <i data-lucide="paperclip" class="w-4 h-4 text-emerald-600"></i>
+                                        <span class="text-xs text-slate-500">Lampirkan Berkas Data PKL (Opsional):</span>
+                                    </div>
+                                    <div class="relative w-full sm:w-auto">
+                                        <input type="file" id="field-file-pkl" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,image/*" onchange="handlePklFileUpload(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                        <button type="button" class="w-full sm:w-auto px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 flex items-center justify-center space-x-1.5 shadow-sm">
+                                            <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                                            <span id="pkl-file-label">Upload File (Maks. 5MB)</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
 
-                            <!-- Row 5: Dokumentasi (Upload Foto) -->
+                            <!-- Row 5: Dokumentasi (Upload Foto dengan Catatan Maks 5MB) -->
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">8. Dokumentasi Foto <span class="text-red-500">*</span></label>
                                 <div class="relative border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center hover:bg-emerald-50/50 hover:border-emerald-400 transition-all group">
@@ -244,15 +231,17 @@
                                             <i data-lucide="camera" class="w-6 h-6"></i>
                                         </div>
                                         <p class="text-sm font-semibold text-slate-700" id="file-label-text">Klik atau seret foto lokasi ke sini</p>
-                                        <p class="text-xs text-slate-400">Format PNG, JPG, JPEG (Maks. 5MB)</p>
+                                        <p class="text-xs font-medium text-emerald-700 bg-emerald-100/70 px-3 py-1 rounded-full border border-emerald-200 inline-block">
+                                            Format PNG, JPG, JPEG (Maksimal 5MB)
+                                        </p>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Row 6: Keterangan -->
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">9. Keterangan Tambahan</label>
-                                <textarea id="field-keterangan" rows="2" placeholder="Catatan kondisi fasilitas umum, situasi lalu lintas, dll (Opsional)..." oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/80 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all"></textarea>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">9. Keterangan</label>
+                                <textarea id="field-keterangan" rows="2" placeholder="KETERANGAN TAMBAHAN..." oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/80 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all"></textarea>
                             </div>
 
                             <!-- Submit Buttons -->
@@ -319,6 +308,10 @@
                                     <div>
                                         <span class="text-slate-400 font-medium block mb-1">Data PKL:</span>
                                         <p class="p-2.5 bg-slate-50 rounded-xl text-slate-700 italic border border-slate-200/60" id="prev-datapkl">Belum ada rincian data PKL...</p>
+                                        <div id="prev-file-pkl-container" class="mt-1.5 hidden flex items-center space-x-1.5 text-xs text-emerald-700 font-medium">
+                                            <i data-lucide="paperclip" class="w-3.5 h-3.5"></i>
+                                            <span id="prev-file-pkl-name" class="truncate max-w-[200px]"></span>
+                                        </div>
                                     </div>
                                     <div>
                                         <span class="text-slate-400 font-medium block mb-1">Keterangan:</span>
@@ -386,6 +379,7 @@
                     <div class="py-1 border-b">
                         <span class="text-slate-500 block mb-1">Rincian Data PKL:</span>
                         <p class="p-2 bg-slate-50 rounded text-slate-800 font-medium" id="modal-datapkl"></p>
+                        <p id="modal-file-pkl" class="text-[11px] text-emerald-700 font-semibold mt-1 hidden"></p>
                     </div>
                     <div class="py-1">
                         <span class="text-slate-500 block mb-1">Keterangan:</span>
@@ -410,17 +404,84 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
+        // Data Resmi 30 Kecamatan dan 151 Kelurahan Kota Bandung
+        const dataWilayahBandung = {
+            "Andir": ["Campaka", "Ciroyom", "Dunguscariang", "Garuda", "Kebon Jeruk", "Maleber"],
+            "Antapani": ["Antapani Kidul", "Antapani Kulon", "Antapani Tengah", "Antapani Wetan"],
+            "Arcamanik": ["Cisaranten Bina Harapan", "Cisaranten Endah", "Cisaranten Kulon", "Sukamiskin"],
+            "Astana Anyar": ["Cibadak", "Karanganyar", "Karasak", "Nyengseret", "Panjunan", "Pelindung Hewan"],
+            "Babakan Ciparay": ["Babakan", "Babakan Ciparay", "Cirangrang", "Margahayu Utara", "Margaraya", "Sukahaji"],
+            "Bandung Kidul": ["Batununggal", "Kujangsari", "Mengger", "Wates"],
+            "Bandung Kulon": ["Cijerah", "Cikawao", "Caringin", "Cigondewah Kaler", "Cigondewah Kidul", "Cigondewah Rahayu", "Gempolsari", "Warung Muncang"],
+            "Bandung Wetan": ["Cihapit", "Citarum", "Tamansari"],
+            "Batununggal": ["Binong", "Cibangkong", "Gumuruh", "Kacapiring", "Kebonwaru", "Maleer", "Samoja"],
+            "Bojongloa Kaler": ["Babakan Asih", "Babakan Tarogong", "Jamika", "Kopo", "Suka Asih"],
+            "Bojongloa Kidul": ["Cibaduyut", "Cibaduyut Kidul", "Cibaduyut Wetan", "Kebon Lega", "Mekarwangi", "Situsaeur"],
+            "Buahbatu": ["Cijawura", "Jatisari", "Margasari", "Sekejati"],
+            "Cibeunying Kaler": ["Cigadung", "Cihaurgeulis", "Neglasari", "Sukaluyu"],
+            "Cibeunying Kidul": ["Cicadas", "Cikutra", "Padasuka", "Pasirlayung", "Sukamaju"],
+            "Cibiru": ["Cipadung", "Cipadung Kidul", "Cipadung Kulon", "Cipadung Wetan", "Palasari"],
+            "Cicendo": ["Arjuna", "Husein Sastranegara", "Pajajaran", "Pamoyanan", "Pasirkaliki", "Sukasenang"],
+            "Cidadap": ["Ciumbuleuit", "Hegarmanah", "Ledeng"],
+            "Cinambo": ["Babakan Penghulu", "Cisaranten Patra", "Pakemitan", "Sukamulya"],
+            "Coblong": ["Cipaganti", "Dago", "Lebak Siliwangi", "Lebakgede", "Sadangserang", "Sekeloa"],
+            "Gedebage": ["Cimincrang", "Cisaranten Utama", "Rancabolang", "Rancanurat"],
+            "Kiaracondong": ["Babakan Surabaya", "Babakansari", "Cicaheum", "Compreng", "Kebonkangkung", "Kebonselatan", "Sukapura"],
+            "Lengkong": ["Burangrang", "Cijagra", "Cikawao", "Lingkar Selatan", "Malabar", "Paledang", "Turangga"],
+            "Mandalajati": ["Jatihandap", "Karangpamulang", "Pasir Impun", "Sindangjaya"],
+            "Panyileukan": ["Cipadung Kidul", "Cipadung Kulon", "Mekarmulya", "Rawa Bening"],
+            "Rancasari": ["Cipamokolan", "Derwati", "Manjahlega", "Mekarjaya"],
+            "Regol": ["Ancol", "Balonggede", "Ciateul", "Cigereleng", "Ciseureuh", "Pasirluyu", "Pungkur"],
+            "Sukajadi": ["Cipedes", "Pasteur", "Sukagalih", "Sukawarna", "Sukajadi"],
+            "Sukasari": ["Gegerkalong", "Isola", "Sarimanah", "Sukarasa"],
+            "Sumur Bandung": ["Babakan Ciamis", "Braga", "Kebon Pisang", "Merdeka"],
+            "Ujungberung": ["Cigending", "Pasir Endah", "Pasir Jati", "Pasirwangi", "Ujungberung"]
+        };
+
         let uploadedImageBase64 = '';
+        let uploadedPklFileName = '';
 
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             
+            // Populate Kecamatan Options
+            const kecSelect = document.getElementById('field-kecamatan');
+            Object.keys(dataWilayahBandung).sort().forEach(kec => {
+                const opt = document.createElement('option');
+                opt.value = kec;
+                opt.textContent = kec;
+                kecSelect.appendChild(opt);
+            });
+
             const now = new Date();
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             document.getElementById('field-waktu').value = now.toISOString().slice(0, 16);
 
             updatePreview();
         });
+
+        // Event saat Kecamatan Diubah
+        function onKecamatanChange() {
+            const kecVal = document.getElementById('field-kecamatan').value;
+            const kelSelect = document.getElementById('field-kelurahan');
+
+            kelSelect.innerHTML = '<option value="">-- Pilih Kelurahan --</option>';
+
+            if (kecVal && dataWilayahBandung[kecVal]) {
+                kelSelect.disabled = false;
+                dataWilayahBandung[kecVal].sort().forEach(kel => {
+                    const opt = document.createElement('option');
+                    opt.value = kel;
+                    opt.textContent = kel;
+                    kelSelect.appendChild(opt);
+                });
+            } else {
+                kelSelect.disabled = true;
+                kelSelect.innerHTML = '<option value="">-- Pilih Kecamatan Dulu --</option>';
+            }
+
+            updatePreview();
+        }
 
         function updatePreview() {
             const kecamatan = document.getElementById('field-kecamatan').value || '-';
@@ -440,11 +501,41 @@
             document.getElementById('prev-waktu').innerText = waktu;
             document.getElementById('prev-datapkl').innerText = datapkl;
             document.getElementById('prev-keterangan').innerText = keterangan;
+
+            const pklFileContainer = document.getElementById('prev-file-pkl-container');
+            if (uploadedPklFileName) {
+                document.getElementById('prev-file-pkl-name').innerText = uploadedPklFileName;
+                pklFileContainer.classList.remove('hidden');
+            } else {
+                pklFileContainer.classList.add('hidden');
+            }
         }
 
+        // Handle File Upload Data PKL
+        function handlePklFileUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert("Ukuran file Data PKL melebihi batas 5MB!");
+                    e.target.value = "";
+                    return;
+                }
+                uploadedPklFileName = file.name;
+                document.getElementById('pkl-file-label').innerText = file.name;
+                updatePreview();
+            }
+        }
+
+        // Handle Foto Dokumentasi Upload
         function handleImageUpload(e) {
             const file = e.target.files[0];
             if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert("Ukuran foto dokumentasi melebihi batas 5MB!");
+                    e.target.value = "";
+                    return;
+                }
+
                 const reader = new FileReader();
                 reader.onload = function(evt) {
                     uploadedImageBase64 = evt.target.result;
@@ -463,9 +554,17 @@
         function resetForm() {
             document.getElementById('pkl-form').reset();
             uploadedImageBase64 = '';
+            uploadedPklFileName = '';
+            
             document.getElementById('preview-img').classList.add('hidden');
             document.getElementById('preview-img-placeholder').classList.remove('hidden');
             document.getElementById('file-label-text').innerText = "Klik atau seret foto lokasi ke sini";
+            document.getElementById('pkl-file-label').innerText = "Upload File (Maks. 5MB)";
+            
+            const kelSelect = document.getElementById('field-kelurahan');
+            kelSelect.disabled = true;
+            kelSelect.innerHTML = '<option value="">-- Pilih Kecamatan Dulu --</option>';
+            
             updatePreview();
         }
 
@@ -488,6 +587,7 @@
                 jumlah: parseInt(document.getElementById('field-jumlah').value),
                 waktu: document.getElementById('field-waktu').value,
                 datapkl: document.getElementById('field-datapkl').value,
+                filePklName: uploadedPklFileName,
                 dokumentasi: uploadedImageBase64,
                 keterangan: document.getElementById('field-keterangan').value || '-'
             };
@@ -509,6 +609,15 @@
             document.getElementById('modal-jumlah').innerText = `${item.jumlah} Unit`;
             document.getElementById('modal-waktu').innerText = new Date(item.waktu).toLocaleString('id-ID');
             document.getElementById('modal-datapkl').innerText = item.datapkl;
+            
+            const modalFilePkl = document.getElementById('modal-file-pkl');
+            if (item.filePklName) {
+                modalFilePkl.innerText = `Lampiran File: ${item.filePklName}`;
+                modalFilePkl.classList.remove('hidden');
+            } else {
+                modalFilePkl.classList.add('hidden');
+            }
+
             document.getElementById('modal-keterangan').innerText = item.keterangan;
 
             document.getElementById('detail-modal').classList.remove('hidden');
