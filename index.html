@@ -20,7 +20,7 @@
             background-color: #f1f5f9;
         }
 
-        /* Watermark Background Styling (Ukuran Diperbesar) */
+        /* Watermark Background Styling (Ukuran Besar) */
         .watermark-bg {
             position: fixed;
             top: 50%;
@@ -104,7 +104,7 @@
 </head>
 <body class="text-slate-800 min-h-screen relative flex flex-col justify-between overflow-x-hidden">
 
-    <!-- WATERMARK LOGO BAGTAPEM BACKGROUND (UKURAN LEBIH BESAR) -->
+    <!-- WATERMARK LOGO BAGTAPEM BACKGROUND -->
     <img src="logo bagtapem.png" alt="Watermark Bagtapem" class="watermark-bg" id="watermark-image" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Lambang_Kota_Bandung.svg/1200px-Lambang_Kota_Bandung.svg.png'">
 
     <!-- CONTAINER UTAMA -->
@@ -154,10 +154,11 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- GRID CONTAINER (Ditambahkan transition-all untuk animasi halus) -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start transition-all duration-300 ease-in-out">
                     
-                    <!-- FORM INPUT (9 FIELD SPESIFIK) -->
-                    <div class="lg:col-span-7 glass-card rounded-3xl p-6 sm:p-8 shadow-sm">
+                    <!-- FORM INPUT (KOLOM USER - Dynamic Span dengan Animasi Transition) -->
+                    <div id="container-form" class="lg:col-span-7 glass-card rounded-3xl p-6 sm:p-8 shadow-sm transition-all duration-300 ease-in-out">
                         <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200">
                             <div class="flex items-center space-x-3">
                                 <div class="bg-blue-100 text-blue-900 p-2.5 rounded-2xl">
@@ -271,20 +272,28 @@
                         </form>
                     </div>
 
-                    <!-- LIVE PREVIEW CARD (SIDEBAR) -->
-                    <div class="lg:col-span-5 sticky top-28 space-y-4 max-h-[calc(100vh-8rem)] overflow-y-auto pr-1">
-                        <div class="glass-card rounded-3xl p-6 shadow-md border-2 border-blue-800/30">
+                    <!-- LIVE PREVIEW CARD (SIDEBAR - Dynamic Span + Minimize & Maximize Toggle) -->
+                    <div id="container-preview" class="lg:col-span-5 sticky top-28 space-y-4 max-h-[calc(100vh-8rem)] overflow-y-auto pr-1 transition-all duration-300 ease-in-out">
+                        <div class="glass-card rounded-3xl p-6 shadow-md border-2 border-blue-800/30 transition-all duration-300">
                             
+                            <!-- Header Preview dengan Tombol Action Minimize / Maximize -->
                             <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-200">
                                 <div class="flex items-center space-x-2">
                                     <span class="w-2.5 h-2.5 rounded-full bg-blue-700 animate-ping"></span>
-                                    <h4 class="text-sm font-extrabold text-slate-900 uppercase tracking-wider">Live Preview Dokumen</h4>
+                                    <h4 id="preview-title" class="text-sm font-extrabold text-slate-900 uppercase tracking-wider">Live Preview Dokumen</h4>
                                 </div>
-                                <span class="text-xs text-slate-600 font-bold font-mono bg-slate-100 px-2 py-0.5 rounded" id="preview-timestamp">Draft</span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-xs text-slate-600 font-bold font-mono bg-slate-100 px-2 py-0.5 rounded" id="preview-timestamp">Draft</span>
+                                    
+                                    <!-- TOMBOL TOGGLE MINIMIZE / MAXIMIZE -->
+                                    <button type="button" onclick="togglePreviewState()" id="btn-toggle-preview" title="Minimize / Expand Preview" class="p-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-blue-100 hover:text-blue-900 transition-all border border-slate-300">
+                                        <i data-lucide="minimize-2" id="toggle-icon" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
                             </div>
 
-                            <!-- Preview Card Content -->
-                            <div class="space-y-4">
+                            <!-- Content Preview yang akan di-toggle (Sembunyi/Tampil) -->
+                            <div id="preview-content-body" class="space-y-4 transition-all duration-300">
                                 <div class="relative w-full h-44 bg-slate-100 rounded-2xl overflow-hidden border border-slate-300 flex items-center justify-center group">
                                     <img id="preview-img" src="" alt="Preview Dokumentasi" class="w-full h-full object-cover hidden">
                                     <div id="preview-img-placeholder" class="text-center p-4">
@@ -449,6 +458,7 @@
 
         let uploadedImageBase64 = '';
         let uploadedPklFileName = '';
+        let isPreviewMinimized = false; // State status minimize
 
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
@@ -467,6 +477,45 @@
 
             updatePreview();
         });
+
+        // FUNGI BARU: Toggle Minimize / Maximize Kolom Preview
+        function togglePreviewState() {
+            const formCol = document.getElementById('container-form');
+            const prevCol = document.getElementById('container-preview');
+            const prevBody = document.getElementById('preview-content-body');
+            const toggleIcon = document.getElementById('toggle-icon');
+
+            if (!isPreviewMinimized) {
+                // MINIMIZE PREVIEW: Form Melebar (11 kolom), Preview Menyempit (1 kolom)
+                formCol.classList.remove('lg:col-span-7');
+                formCol.classList.add('lg:col-span-11');
+
+                prevCol.classList.remove('lg:col-span-5');
+                prevCol.classList.add('lg:col-span-1');
+
+                prevBody.classList.add('hidden');
+
+                // Ganti icon menjadi 'maximize-2' / 'expand'
+                toggleIcon.setAttribute('data-lucide', 'maximize-2');
+                isPreviewMinimized = true;
+            } else {
+                // MAXIMIZE / RESTORE PREVIEW: Kembali Normal (Form 7 Kolom, Preview 5 Kolom)
+                formCol.classList.remove('lg:col-span-11');
+                formCol.classList.add('lg:col-span-7');
+
+                prevCol.classList.remove('lg:col-span-1');
+                prevCol.classList.add('lg:col-span-5');
+
+                prevBody.classList.remove('hidden');
+
+                // Ganti icon kembali menjadi 'minimize-2'
+                toggleIcon.setAttribute('data-lucide', 'minimize-2');
+                isPreviewMinimized = false;
+            }
+
+            // Re-render Lucide Icons agar icon terbaru dirender dengan sempurna
+            lucide.createIcons();
+        }
 
         function onKecamatanChange() {
             const kecVal = document.getElementById('field-kecamatan').value;
