@@ -138,10 +138,18 @@
                         </div>
                     </div>
 
-                    <!-- Indikator Portal -->
-                    <div class="hidden sm:flex items-center space-x-2 bg-emerald-50 border border-emerald-300 px-3.5 py-1.5 rounded-full shadow-sm">
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse"></span>
-                        <span class="text-xs font-bold text-emerald-900">Portal Pelaporan Aktif</span>
+                    <!-- Indikator Portal & Tombol Navigasi Admin -->
+                    <div class="flex items-center space-x-3">
+                        <div class="hidden sm:flex items-center space-x-2 bg-emerald-50 border border-emerald-300 px-3.5 py-1.5 rounded-full shadow-sm">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                            <span class="text-xs font-bold text-emerald-900">Portal Pelaporan Aktif</span>
+                        </div>
+                        
+                        <!-- TOMBOL MENU HUBUNGKAN KE ADMIN.HTML -->
+                        <a href="admin.html" class="flex items-center space-x-1.5 bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                            <span>Dashboard Admin</span>
+                        </a>
                     </div>
 
                 </div>
@@ -649,6 +657,7 @@
                 return;
             }
 
+            // SIMPAN KE LOCALSTORAGE (DENGAN KEY 'pkl_data_store')
             const storedData = JSON.parse(localStorage.getItem('pkl_data_store')) || [];
             
             const newEntry = {
