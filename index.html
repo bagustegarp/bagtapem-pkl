@@ -20,7 +20,7 @@
             background-color: #f1f5f9;
         }
 
-        /* Watermark Background Styling (Ukuran Besar) */
+        /* Watermark Background Styling */
         .watermark-bg {
             position: fixed;
             top: 50%;
@@ -46,6 +46,15 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(203, 213, 225, 0.8);
+        }
+
+        /* Mode Minimize Kustom agar Rapi Tanpa Scrollbar */
+        .preview-minimized {
+            padding: 12px !important;
+            border-radius: 9999px !important;
+            width: fit-content !important;
+            margin-left: auto !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
         }
 
         /* Print Media Styles */
@@ -154,10 +163,10 @@
                     </div>
                 </div>
 
-                <!-- GRID CONTAINER (Ditambahkan transition-all untuk animasi halus) -->
+                <!-- GRID CONTAINER -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start transition-all duration-300 ease-in-out">
                     
-                    <!-- FORM INPUT (KOLOM USER - Dynamic Span dengan Animasi Transition) -->
+                    <!-- FORM INPUT (KOLOM USER) -->
                     <div id="container-form" class="lg:col-span-7 glass-card rounded-3xl p-6 sm:p-8 shadow-sm transition-all duration-300 ease-in-out">
                         <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200">
                             <div class="flex items-center space-x-3">
@@ -272,28 +281,28 @@
                         </form>
                     </div>
 
-                    <!-- LIVE PREVIEW CARD (SIDEBAR - Dynamic Span + Minimize & Maximize Toggle) -->
-                    <div id="container-preview" class="lg:col-span-5 sticky top-28 space-y-4 max-h-[calc(100vh-8rem)] overflow-y-auto pr-1 transition-all duration-300 ease-in-out">
-                        <div class="glass-card rounded-3xl p-6 shadow-md border-2 border-blue-800/30 transition-all duration-300">
+                    <!-- LIVE PREVIEW CARD (SIDEBAR - CLEAN ICON MINIMIZE MODE) -->
+                    <div id="container-preview" class="lg:col-span-5 sticky top-28 transition-all duration-300 ease-in-out">
+                        <div id="preview-card-box" class="glass-card rounded-3xl p-6 shadow-md border-2 border-blue-800/30 transition-all duration-300 overflow-hidden max-h-[calc(100vh-8rem)]">
                             
-                            <!-- Header Preview dengan Tombol Action Minimize / Maximize -->
-                            <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-200">
-                                <div class="flex items-center space-x-2">
+                            <!-- Header Preview -->
+                            <div id="preview-header-bar" class="flex items-center justify-between pb-3 mb-4 border-b border-slate-200">
+                                <div id="preview-title-group" class="flex items-center space-x-2">
                                     <span class="w-2.5 h-2.5 rounded-full bg-blue-700 animate-ping"></span>
-                                    <h4 id="preview-title" class="text-sm font-extrabold text-slate-900 uppercase tracking-wider">Live Preview Dokumen</h4>
+                                    <h4 class="text-sm font-extrabold text-slate-900 uppercase tracking-wider">Live Preview Dokumen</h4>
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     <span class="text-xs text-slate-600 font-bold font-mono bg-slate-100 px-2 py-0.5 rounded" id="preview-timestamp">Draft</span>
                                     
                                     <!-- TOMBOL TOGGLE MINIMIZE / MAXIMIZE -->
-                                    <button type="button" onclick="togglePreviewState()" id="btn-toggle-preview" title="Minimize / Expand Preview" class="p-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-blue-100 hover:text-blue-900 transition-all border border-slate-300">
+                                    <button type="button" onclick="togglePreviewState()" id="btn-toggle-preview" title="Minimize / Expand Preview" class="p-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-blue-100 hover:text-blue-900 transition-all border border-slate-300 flex items-center justify-center">
                                         <i data-lucide="minimize-2" id="toggle-icon" class="w-4 h-4"></i>
                                     </button>
                                 </div>
                             </div>
 
-                            <!-- Content Preview yang akan di-toggle (Sembunyi/Tampil) -->
-                            <div id="preview-content-body" class="space-y-4 transition-all duration-300">
+                            <!-- Content Preview Body -->
+                            <div id="preview-content-body" class="space-y-4 transition-all duration-300 overflow-y-auto pr-1 max-h-[calc(100vh-12rem)]">
                                 <div class="relative w-full h-44 bg-slate-100 rounded-2xl overflow-hidden border border-slate-300 flex items-center justify-center group">
                                     <img id="preview-img" src="" alt="Preview Dokumentasi" class="w-full h-full object-cover hidden">
                                     <div id="preview-img-placeholder" class="text-center p-4">
@@ -458,7 +467,7 @@
 
         let uploadedImageBase64 = '';
         let uploadedPklFileName = '';
-        let isPreviewMinimized = false; // State status minimize
+        let isPreviewMinimized = false;
 
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
@@ -478,42 +487,52 @@
             updatePreview();
         });
 
-        // FUNGI BARU: Toggle Minimize / Maximize Kolom Preview
+        // FUNGSI TOGGLE MINIMIZE / MAXIMIZE CLEAN ICON MODE
         function togglePreviewState() {
             const formCol = document.getElementById('container-form');
             const prevCol = document.getElementById('container-preview');
+            const prevCardBox = document.getElementById('preview-card-box');
+            const prevHeaderBar = document.getElementById('preview-header-bar');
+            const prevTitleGroup = document.getElementById('preview-title-group');
+            const prevTimestamp = document.getElementById('preview-timestamp');
             const prevBody = document.getElementById('preview-content-body');
+            const toggleBtn = document.getElementById('btn-toggle-preview');
             const toggleIcon = document.getElementById('toggle-icon');
 
             if (!isPreviewMinimized) {
-                // MINIMIZE PREVIEW: Form Melebar (11 kolom), Preview Menyempit (1 kolom)
-                formCol.classList.remove('lg:col-span-7');
-                formCol.classList.add('lg:col-span-11');
+                // MINIMIZE MODE: Hanya Ikon Melayang Tanpa Scrollbar/Teks Terpotong
+                formCol.className = 'lg:col-span-11 glass-card rounded-3xl p-6 sm:p-8 shadow-sm transition-all duration-300 ease-in-out';
+                prevCol.className = 'lg:col-span-1 sticky top-28 flex justify-end transition-all duration-300 ease-in-out';
 
-                prevCol.classList.remove('lg:col-span-5');
-                prevCol.classList.add('lg:col-span-1');
-
+                prevCardBox.classList.add('preview-minimized');
+                prevHeaderBar.classList.remove('pb-3', 'mb-4', 'border-b', 'border-slate-200');
+                
+                prevTitleGroup.classList.add('hidden');
+                prevTimestamp.classList.add('hidden');
                 prevBody.classList.add('hidden');
 
-                // Ganti icon menjadi 'maximize-2' / 'expand'
-                toggleIcon.setAttribute('data-lucide', 'maximize-2');
+                toggleBtn.className = 'p-3 rounded-full bg-blue-900 text-white hover:bg-slate-900 transition-all shadow-lg flex items-center justify-center';
+                toggleIcon.setAttribute('data-lucide', 'eye'); // Menggunakan ikon mata untuk buka preview
+                
                 isPreviewMinimized = true;
             } else {
-                // MAXIMIZE / RESTORE PREVIEW: Kembali Normal (Form 7 Kolom, Preview 5 Kolom)
-                formCol.classList.remove('lg:col-span-11');
-                formCol.classList.add('lg:col-span-7');
+                // MAXIMIZE MODE: Kembalikan Tampilan Normal secara Utuh
+                formCol.className = 'lg:col-span-7 glass-card rounded-3xl p-6 sm:p-8 shadow-sm transition-all duration-300 ease-in-out';
+                prevCol.className = 'lg:col-span-5 sticky top-28 transition-all duration-300 ease-in-out';
 
-                prevCol.classList.remove('lg:col-span-1');
-                prevCol.classList.add('lg:col-span-5');
+                prevCardBox.classList.remove('preview-minimized');
+                prevHeaderBar.classList.add('pb-3', 'mb-4', 'border-b', 'border-slate-200');
 
+                prevTitleGroup.classList.remove('hidden');
+                prevTimestamp.classList.remove('hidden');
                 prevBody.classList.remove('hidden');
 
-                // Ganti icon kembali menjadi 'minimize-2'
+                toggleBtn.className = 'p-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-blue-100 hover:text-blue-900 transition-all border border-slate-300 flex items-center justify-center';
                 toggleIcon.setAttribute('data-lucide', 'minimize-2');
+                
                 isPreviewMinimized = false;
             }
 
-            // Re-render Lucide Icons agar icon terbaru dirender dengan sempurna
             lucide.createIcons();
         }
 
