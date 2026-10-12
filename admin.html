@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin - PKL BAGTAPEM</title>
     
+    <!-- FAVICON (LOGO TAB BROWSER) -->
     <link rel="icon" type="image/png" href="logo bagtapem.png">
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
+    <!-- Custom CSS Styles -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         
@@ -46,6 +52,7 @@
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col relative overflow-x-hidden">
 
+    <!-- WATERMARK LOGO BAGTAPEM BACKGROUND -->
     <img src="logo bagtapem.png" alt="Watermark" class="watermark-bg" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Lambang_Kota_Bandung.svg/1200px-Lambang_Kota_Bandung.svg.png'">
 
     <!-- TOPBAR NAVIGATION -->
@@ -61,17 +68,26 @@
                         <p class="text-xs font-bold text-blue-800 tracking-wide">Rekapitulasi Data PKL Mandiri BAGTAPEM</p>
                     </div>
                 </div>
+                
                 <div class="flex items-center space-x-3">
-                    <button onclick="exportToCSV()" class="flex items-center space-x-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-all shadow-md">
+                    <!-- TOMBOL KEMBALI KE FORM INPUT (INDEX.HTML) -->
+                    <a href="index.html" class="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 px-3.5 py-2 rounded-xl text-xs font-bold transition-all border border-slate-300">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                        <span class="hidden sm:inline">Kembali ke Form Input</span>
+                    </a>
+
+                    <button onclick="exportToCSV()" class="flex items-center space-x-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-md">
                         <i data-lucide="download" class="w-4 h-4"></i>
                         <span class="hidden sm:inline">Export CSV</span>
                     </button>
-                    <div class="h-8 w-px bg-slate-300 mx-2"></div>
-                    <div class="flex items-center space-x-2 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-full">
+
+                    <div class="h-8 w-px bg-slate-300 mx-1 hidden sm:block"></div>
+
+                    <div class="hidden sm:flex items-center space-x-2 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-full">
                         <div class="w-8 h-8 rounded-full bg-blue-200 border-2 border-white flex items-center justify-center overflow-hidden">
                             <i data-lucide="user" class="w-4 h-4 text-blue-700"></i>
                         </div>
-                        <span class="text-sm font-bold text-slate-700 pr-2">Admin Pusat</span>
+                        <span class="text-xs font-bold text-slate-700 pr-1">Admin Pusat</span>
                     </div>
                 </div>
             </div>
@@ -235,8 +251,8 @@
             loadData();
         });
 
+        // MEMBACA DATA DARI LOCALSTORAGE 'pkl_data_store'
         function loadData() {
-            // Mengambil data dari localStorage yang sama dengan form input user
             const stored = localStorage.getItem('pkl_data_store');
             pklData = stored ? JSON.parse(stored) : [];
             renderTable(pklData);
@@ -367,12 +383,10 @@
                 return;
             }
 
-            // Headers CSV
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += "Ref ID,Kecamatan,Kelurahan,Lokasi,RT/RW,Jumlah Lapak,Waktu,Data PKL,Keterangan\n";
 
             pklData.forEach(row => {
-                // Menghindari error koma pada format teks
                 const cleanLoc = row.lokasi.replace(/,/g, " ");
                 const cleanData = row.datapkl.replace(/,/g, " ").replace(/\n/g, " ");
                 const cleanKet = row.keterangan.replace(/,/g, " ").replace(/\n/g, " ");
