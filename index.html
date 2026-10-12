@@ -20,15 +20,15 @@
             background-color: #f1f5f9;
         }
 
-        /* Watermark Background Styling (Optimized Opacity & Layout) */
+        /* Watermark Background Styling (Ukuran Diperbesar) */
         .watermark-bg {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 70vw;
-            max-width: 800px;
-            opacity: 0.04;
+            width: 95vw;
+            max-width: 1300px;
+            opacity: 0.045;
             pointer-events: none;
             z-index: 0;
             filter: grayscale(20%);
@@ -48,7 +48,7 @@
             border-bottom: 1px solid rgba(203, 213, 225, 0.8);
         }
 
-        /* Print Media Styles (Optimized Print Layout) */
+        /* Print Media Styles */
         @media print {
             body * {
                 visibility: hidden;
@@ -85,7 +85,7 @@
             }
         }
 
-        /* Custom Scrollbar for Page & Scrollable Preview */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -104,7 +104,7 @@
 </head>
 <body class="text-slate-800 min-h-screen relative flex flex-col justify-between overflow-x-hidden">
 
-    <!-- WATERMARK LOGO BAGTAPEM BACKGROUND -->
+    <!-- WATERMARK LOGO BAGTAPEM BACKGROUND (UKURAN LEBIH BESAR) -->
     <img src="logo bagtapem.png" alt="Watermark Bagtapem" class="watermark-bg" id="watermark-image" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Lambang_Kota_Bandung.svg/1200px-Lambang_Kota_Bandung.svg.png'">
 
     <!-- CONTAINER UTAMA -->
@@ -126,7 +126,7 @@
                         </div>
                     </div>
 
-                    <!-- Indikator Portal (Kontras Ditingkatkan) -->
+                    <!-- Indikator Portal -->
                     <div class="hidden sm:flex items-center space-x-2 bg-emerald-50 border border-emerald-300 px-3.5 py-1.5 rounded-full shadow-sm">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse"></span>
                         <span class="text-xs font-bold text-emerald-900">Portal Pelaporan Aktif</span>
@@ -141,7 +141,7 @@
             
             <div class="space-y-6">
                 
-                <!-- Banner Informatif (Sesuai Skema Warna Instansi Resmi) -->
+                <!-- Banner Informatif -->
                 <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800">
                     <div class="relative z-10 max-w-2xl">
                         <span class="bg-amber-500/20 text-amber-300 text-xs font-bold px-3 py-1 rounded-full border border-amber-400/30 tracking-wide uppercase inline-block mb-3">Layanan Masyarakat</span>
@@ -216,12 +216,11 @@
                                 </div>
                             </div>
 
-                            <!-- Row 4: Data PKL (Textarea + Upload File Terintegrasi di dalam) -->
+                            <!-- Row 4: Data PKL -->
                             <div class="border border-slate-300 bg-white/95 p-4 rounded-2xl space-y-3 shadow-sm">
                                 <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider">7. Data PKL (Pedagang Kaki Lima) <span class="text-red-600">*</span></label>
                                 <textarea id="field-datapkl" rows="3" required placeholder="Data keperluan pedagang kaki lima..." oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white focus:ring-2 focus:ring-blue-800 focus:border-blue-800 text-sm transition-all font-medium text-slate-800"></textarea>
                                 
-                                <!-- File Upload terintegrasi langsung di dalam box Data PKL -->
                                 <div class="pt-2 border-t border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                                     <div class="flex items-center space-x-2">
                                         <i data-lucide="paperclip" class="w-4 h-4 text-blue-900"></i>
@@ -237,7 +236,7 @@
                                 </div>
                             </div>
 
-                            <!-- Row 5: Dokumentasi (Upload Foto dengan Catatan Maks 5MB) -->
+                            <!-- Row 5: Dokumentasi -->
                             <div>
                                 <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">8. Dokumentasi Foto <span class="text-red-600">*</span></label>
                                 <div class="relative border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center hover:bg-blue-50/50 hover:border-blue-700 transition-all group bg-white/50">
@@ -272,7 +271,7 @@
                         </form>
                     </div>
 
-                    <!-- LIVE PREVIEW CARD (SIDEBAR - TERPERBAIKI Max Height Scroll) -->
+                    <!-- LIVE PREVIEW CARD (SIDEBAR) -->
                     <div class="lg:col-span-5 sticky top-28 space-y-4 max-h-[calc(100vh-8rem)] overflow-y-auto pr-1">
                         <div class="glass-card rounded-3xl p-6 shadow-md border-2 border-blue-800/30">
                             
@@ -284,9 +283,8 @@
                                 <span class="text-xs text-slate-600 font-bold font-mono bg-slate-100 px-2 py-0.5 rounded" id="preview-timestamp">Draft</span>
                             </div>
 
-                            <!-- Preview Card Content (Aksesibilitas Kontras Teks Diperjelas) -->
+                            <!-- Preview Card Content -->
                             <div class="space-y-4">
-                                <!-- Photo Preview -->
                                 <div class="relative w-full h-44 bg-slate-100 rounded-2xl overflow-hidden border border-slate-300 flex items-center justify-center group">
                                     <img id="preview-img" src="" alt="Preview Dokumentasi" class="w-full h-full object-cover hidden">
                                     <div id="preview-img-placeholder" class="text-center p-4">
@@ -295,7 +293,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Field Previews -->
                                 <div class="space-y-2.5 text-xs sm:text-sm">
                                     <div class="flex justify-between items-start pb-2 border-b border-slate-200">
                                         <span class="text-slate-600 font-bold">Kecamatan:</span>
@@ -365,7 +362,6 @@
 
             <!-- Format Struk Yang Akan Dicetak -->
             <div id="printable-receipt" class="space-y-4">
-                <!-- Header Struk -->
                 <div class="flex items-center space-x-3 pb-4 border-b-2 border-slate-900">
                     <img src="logo bagtapem.png" alt="Logo Bagtapem" class="h-12 w-auto object-contain" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Lambang_Kota_Bandung.svg/1200px-Lambang_Kota_Bandung.svg.png'">
                     <div>
@@ -379,12 +375,10 @@
                     <span class="text-xs font-mono font-bold text-slate-900" id="modal-ref-id">REF: PKL-2026-000</span>
                 </div>
 
-                <!-- Foto Bukti -->
                 <div class="w-full h-48 bg-slate-100 rounded-xl overflow-hidden border border-slate-200">
                     <img id="modal-img" src="" alt="Foto Lokasi" class="w-full h-full object-cover">
                 </div>
 
-                <!-- Detail List -->
                 <div class="space-y-2 text-xs">
                     <div class="flex justify-between py-1 border-b border-slate-200"><span class="text-slate-600 font-semibold">Kecamatan:</span><span class="font-bold text-slate-900" id="modal-kecamatan"></span></div>
                     <div class="flex justify-between py-1 border-b border-slate-200"><span class="text-slate-600 font-semibold">Kelurahan:</span><span class="font-bold text-slate-900" id="modal-kelurahan"></span></div>
@@ -418,9 +412,8 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC (TETAP SAMA TANPA DIUBAH SAMA SEKALI) -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Data Resmi 30 Kecamatan dan 151 Kelurahan Kota Bandung
         const dataWilayahBandung = {
             "Andir": ["Campaka", "Ciroyom", "Dunguscariang", "Garuda", "Kebon Jeruk", "Maleber"],
             "Antapani": ["Antapani Kidul", "Antapani Kulon", "Antapani Tengah", "Antapani Wetan"],
@@ -460,7 +453,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             
-            // Populate Kecamatan Options
             const kecSelect = document.getElementById('field-kecamatan');
             Object.keys(dataWilayahBandung).sort().forEach(kec => {
                 const opt = document.createElement('option');
@@ -476,7 +468,6 @@
             updatePreview();
         });
 
-        // Event saat Kecamatan Diubah
         function onKecamatanChange() {
             const kecVal = document.getElementById('field-kecamatan').value;
             const kelSelect = document.getElementById('field-kelurahan');
@@ -527,7 +518,6 @@
             }
         }
 
-        // Handle File Upload Data PKL
         function handlePklFileUpload(e) {
             const file = e.target.files[0];
             if (file) {
@@ -542,7 +532,6 @@
             }
         }
 
-        // Handle Foto Dokumentasi Upload
         function handleImageUpload(e) {
             const file = e.target.files[0];
             if (file) {
