@@ -16,7 +16,8 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #e2e8f0; }
-        .card-sg-top { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-left-width: 5px; }
+        .card-sg-top { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-left-width: 5px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .card-sg-top:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         
         /* Watermark */
         .watermark-bg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 75vw; max-width: 800px; opacity: 0.15; pointer-events: none; z-index: 0; }
@@ -29,6 +30,9 @@
 
     <img src="logo bagtapem.png" alt="Watermark Bagtapem" class="watermark-bg" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Lambang_Kota_Bandung.svg/1200px-Lambang_Kota_Bandung.svg.png'">
 
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
     <div class="relative z-10 flex-grow flex flex-col">
         <!-- HEADER -->
         <header class="bg-white border-b border-slate-300 sticky top-0 z-40 shadow-sm">
@@ -40,9 +44,10 @@
                         <p class="text-xs font-semibold text-slate-500">Dashboard monitoring & Pendataan PKL V2</p>
                     </div>
                 </div>
-                <div class="hidden sm:flex items-center space-x-2 bg-emerald-50 border border-emerald-300 px-3.5 py-1.5 rounded-full">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse"></span>
-                    <span class="text-xs font-bold text-emerald-900">Portal Pendataan Aktif</span>
+                <!-- Network Status Indicator -->
+                <div id="network-status" class="hidden sm:flex items-center space-x-2 bg-emerald-50 border border-emerald-300 px-3.5 py-1.5 rounded-full transition-colors duration-300">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse" id="network-dot"></span>
+                    <span class="text-xs font-bold text-emerald-900" id="network-text">Online / Siap</span>
                 </div>
             </div>
         </header>
@@ -50,7 +55,7 @@
         <main class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full space-y-8">
             
             <!-- TITLE SECTION -->
-            <div>
+            <div class="animate-fade-in-up">
                 <h2 class="text-2xl font-bold text-[#1f2937] tracking-tight">Selamat Datang, Petugas Pendataan</h2>
                 <p class="text-sm text-slate-500 font-medium mt-1">Silakan lengkapi formulir di bawah dan pantau ringkasan data secara realtime.</p>
             </div>
@@ -64,17 +69,17 @@
                 </div>
                 <div class="card-sg-top border-l-[#f59e0b] flex flex-col justify-between">
                     <p class="text-xs font-bold text-slate-500">Kecamatan Selected</p>
-                    <h3 class="text-xl font-bold text-slate-800 my-1 truncate" id="card-kecamatan-val">-</h3>
+                    <h3 class="text-xl font-bold text-slate-800 my-1 truncate transition-all" id="card-kecamatan-val">-</h3>
                     <p class="text-[11px] text-slate-400 font-medium">Atribut No. 1</p>
                 </div>
                 <div class="card-sg-top border-l-[#10b981] flex flex-col justify-between">
                     <p class="text-xs font-bold text-slate-500">Kelurahan Selected</p>
-                    <h3 class="text-xl font-bold text-slate-800 my-1 truncate" id="card-kelurahan-val">-</h3>
+                    <h3 class="text-xl font-bold text-slate-800 my-1 truncate transition-all" id="card-kelurahan-val">-</h3>
                     <p class="text-[11px] text-slate-400 font-medium">Atribut No. 2</p>
                 </div>
                 <div class="card-sg-top border-l-[#4f46e5] flex flex-col justify-between">
                     <p class="text-xs font-bold text-slate-500">Status Foto Dokumentasi</p>
-                    <h3 class="text-sm font-bold text-emerald-600 my-1 flex items-center gap-1.5" id="card-foto-status">
+                    <h3 class="text-sm font-bold text-emerald-600 my-1 flex items-center gap-1.5 transition-all" id="card-foto-status">
                         <i data-lucide="camera-off" class="w-4 h-4 text-slate-400"></i> Belum Diupload
                     </h3>
                     <p class="text-[11px] text-slate-400 font-medium">Atribut No. 8</p>
@@ -86,7 +91,7 @@
                 
                 <!-- FORM INPUT DATA -->
                 <div class="lg:col-span-7 bg-white/95 backdrop-blur-md rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 relative z-10">
-                    <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-6 border-b border-slate-200">
                         <div class="flex items-center space-x-3">
                             <div class="bg-blue-50 text-blue-900 p-2.5 rounded-xl border border-blue-200">
                                 <i data-lucide="clipboard-edit" class="w-5 h-5"></i>
@@ -96,7 +101,10 @@
                                 <p class="text-xs font-medium text-slate-500">Lengkapi 9 Atribut sesuai instruksi</p>
                             </div>
                         </div>
-                        <span class="text-xs font-bold bg-blue-100 text-blue-900 px-3 py-1 rounded-full border border-blue-200">9 Atribut</span>
+                        <div class="flex flex-col items-end">
+                            <span class="text-xs font-bold bg-blue-100 text-blue-900 px-3 py-1 rounded-full border border-blue-200 mb-1">9 Atribut</span>
+                            <span id="draft-status" class="text-[10px] font-medium text-slate-400 italic">Belum ada draft tersimpan</span>
+                        </div>
                     </div>
 
                     <form id="pkl-form" onsubmit="handleFormSubmit(event)" class="space-y-5">
@@ -105,13 +113,13 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">1. Kecamatan <span class="text-red-600">*</span></label>
-                                <select id="field-kecamatan" required onchange="onKecamatanChange()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800">
+                                <select id="field-kecamatan" required onchange="onKecamatanChange()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 transition-all">
                                     <option value="">-- Pilih Kecamatan --</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">2. Kelurahan <span class="text-red-600">*</span></label>
-                                <select id="field-kelurahan" required onchange="updatePreview()" disabled class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800 disabled:opacity-50">
+                                <select id="field-kelurahan" required onchange="updatePreview()" disabled class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 disabled:opacity-50 transition-all">
                                     <option value="">-- Pilih Kecamatan Dulu --</option>
                                 </select>
                             </div>
@@ -121,22 +129,22 @@
                         <div>
                             <div class="flex justify-between items-end mb-2">
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">3 & 4. Nama Jalan & RW per Lokasi <span class="text-red-600">*</span></label>
-                                <span class="text-[10px] font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Klik tombol + untuk tambah jalan & RW</span>
+                                <span class="text-[10px] font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded cursor-pointer hover:bg-blue-200 transition-colors" onclick="addJalanRwField()">Klik tombol + untuk tambah</span>
                             </div>
                             
                             <div id="jalan-rw-container" class="space-y-3">
                                 <!-- Baris Pertama -->
-                                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 jalan-rw-row items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 jalan-rw-row items-center bg-slate-50 p-3 rounded-xl border border-slate-200 transition-all">
                                     <div class="sm:col-span-8">
                                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nama Jalan</label>
-                                        <input type="text" required placeholder="Contoh: Jl. Merdeka" oninput="updatePreview()" class="jalan-input w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-800">
+                                        <input type="text" required placeholder="Contoh: Jl. Merdeka" oninput="updatePreview()" class="jalan-input w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500">
                                     </div>
                                     <div class="sm:col-span-3">
                                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">RW</label>
-                                        <input type="text" required placeholder="Contoh: 05" oninput="updatePreview()" class="rw-input w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-800">
+                                        <input type="text" required placeholder="Contoh: 05" oninput="updatePreview()" class="rw-input w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500">
                                     </div>
                                     <div class="sm:col-span-1 flex items-end justify-center pt-5 sm:pt-0">
-                                        <button type="button" onclick="addJalanRwField()" class="w-full sm:w-auto p-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold transition-colors flex items-center justify-center shadow-sm" title="Tambah Jalan & RW">
+                                        <button type="button" onclick="addJalanRwField()" class="w-full sm:w-auto p-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 hover:scale-105 font-bold transition-all flex items-center justify-center shadow-sm" title="Tambah Jalan & RW">
                                             <i data-lucide="plus" class="w-4 h-4"></i>
                                         </button>
                                     </div>
@@ -149,47 +157,47 @@
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">5. Jumlah Total Bangli / PKL <span class="text-red-600">*</span></label>
                                 <div class="relative">
-                                    <input type="number" id="field-jumlah" min="1" required placeholder="1" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800 pr-16">
-                                    <span class="absolute right-3 top-3 text-xs font-bold text-slate-400">Unit</span>
+                                    <input type="number" id="field-jumlah" min="1" required placeholder="1" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 pr-16 transition-all">
+                                    <span class="absolute right-3 top-3 text-xs font-bold text-slate-400 mt-0.5">Unit</span>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">6. Tanggal Pelaksanaan <span class="text-red-600">*</span></label>
-                                <input type="date" id="field-waktu" required onchange="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800">
+                                <input type="date" id="field-waktu" required onchange="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 transition-all">
                             </div>
                         </div>
 
                         <!-- 7. Data PKL -->
-                        <div class="border border-slate-200 bg-slate-50 p-5 rounded-xl space-y-3">
+                        <div class="border border-slate-200 bg-slate-50 p-5 rounded-xl space-y-3 hover:border-blue-300 transition-colors">
                             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">7. Data PKL (Rincian Kategori) <span class="text-red-600">*</span></label>
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div>
                                     <label class="text-[11px] font-bold text-slate-600 uppercase">Tempat Usaha</label>
-                                    <input type="number" min="0" value="0" id="pkl-usaha" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 mt-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500" oninput="updatePreview()">
+                                    <input type="number" min="0" value="0" id="pkl-usaha" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 mt-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500 transition-all" oninput="updatePreview()">
                                 </div>
                                 <div>
                                     <label class="text-[11px] font-bold text-slate-600 uppercase">Rumah Tinggal</label>
-                                    <input type="number" min="0" value="0" id="pkl-rumah" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 mt-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500" oninput="updatePreview()">
+                                    <input type="number" min="0" value="0" id="pkl-rumah" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 mt-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500 transition-all" oninput="updatePreview()">
                                 </div>
                                 <div>
                                     <label class="text-[11px] font-bold text-slate-600 uppercase">Lainnya (Nama & Jml)</label>
                                     <div class="flex gap-2 mt-1">
-                                        <input type="text" id="pkl-lainnya-nama" placeholder="Sebutkan..." class="w-full px-3 py-2.5 rounded-lg border border-slate-300 text-sm font-medium bg-white focus:ring-2 focus:ring-blue-500" oninput="updatePreview()">
-                                        <input type="number" min="0" value="0" id="pkl-lainnya-qty" class="w-16 sm:w-20 px-3 py-2.5 rounded-lg border border-slate-300 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500 shrink-0" oninput="updatePreview()">
+                                        <input type="text" id="pkl-lainnya-nama" placeholder="Sebutkan..." class="w-full px-3 py-2.5 rounded-lg border border-slate-300 text-sm font-medium bg-white focus:ring-2 focus:ring-blue-500 transition-all" oninput="updatePreview()">
+                                        <input type="number" min="0" value="0" id="pkl-lainnya-qty" class="w-16 sm:w-20 px-3 py-2.5 rounded-lg border border-slate-300 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500 shrink-0 transition-all" oninput="updatePreview()">
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 8. Dokumentasi -->
+                        <!-- 8. Dokumentasi (Drag & Drop UI) -->
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">8. Dokumentasi Foto <span class="text-red-600">*</span></label>
-                            <div class="relative border-2 border-dashed border-slate-300 rounded-xl p-5 text-center hover:bg-blue-50/50 hover:border-blue-700 transition-all bg-slate-50">
+                            <div id="drop-area" class="relative border-2 border-dashed border-slate-300 rounded-xl p-5 text-center transition-all duration-300 bg-slate-50 hover:bg-blue-50 hover:border-blue-400 group">
                                 <input type="file" id="field-dokumentasi" accept="image/*" onchange="handleImageUpload(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                                <div class="flex flex-col items-center justify-center space-y-2">
-                                    <div class="p-3 bg-blue-100 text-blue-900 rounded-full"><i data-lucide="camera" class="w-6 h-6"></i></div>
-                                    <p class="text-sm font-bold text-slate-800" id="file-label-text">Klik atau seret foto lokasi ke sini</p>
-                                    <p class="text-xs font-bold text-blue-900 bg-blue-100 px-3 py-1 rounded-full border border-blue-200">Format PNG, JPG (Kompres Otomatis)</p>
+                                <div class="flex flex-col items-center justify-center space-y-2 pointer-events-none">
+                                    <div id="drop-icon-bg" class="p-3 bg-blue-100 text-blue-900 rounded-full group-hover:scale-110 transition-transform duration-300"><i data-lucide="camera" class="w-6 h-6"></i></div>
+                                    <p class="text-sm font-bold text-slate-800 transition-colors group-hover:text-blue-800" id="file-label-text">Klik atau seret foto lokasi ke sini</p>
+                                    <p class="text-xs font-bold text-blue-900 bg-blue-100 px-3 py-1 rounded-full border border-blue-200">Format PNG, JPG (Maks 5MB)</p>
                                 </div>
                             </div>
                         </div>
@@ -197,13 +205,13 @@
                         <!-- 9. Keterangan -->
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">9. Keterangan Tambahan</label>
-                            <textarea id="field-keterangan" rows="2" placeholder="Tuliskan catatan atau keterangan lain di sini..." oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800"></textarea>
+                            <textarea id="field-keterangan" rows="2" placeholder="Tuliskan catatan atau keterangan lain di sini..." oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 transition-all"></textarea>
                         </div>
 
-                        <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-200">
-                            <button type="button" onclick="resetForm()" class="px-5 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100">Reset</button>
-                            <button type="submit" id="btn-submit" class="flex items-center space-x-2 px-7 py-3 rounded-xl bg-[#1e3a8a] hover:bg-slate-900 text-white font-bold shadow-lg transition-all">
-                                <i data-lucide="send" class="w-4 h-4"></i>
+                        <div class="pt-4 flex flex-col sm:flex-row items-center justify-end gap-3 border-t border-slate-200">
+                            <button type="button" onclick="resetForm()" class="w-full sm:w-auto px-5 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors">Kosongkan Form</button>
+                            <button type="submit" id="btn-submit" class="w-full sm:w-auto flex items-center justify-center space-x-2 px-7 py-3 rounded-xl bg-[#1e3a8a] hover:bg-slate-900 text-white font-bold shadow-lg transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none">
+                                <i data-lucide="send" id="btn-icon" class="w-4 h-4 transition-transform"></i>
                                 <span id="btn-text">Kirim Pelaporan</span>
                             </button>
                         </div>
@@ -211,37 +219,37 @@
                 </div>
 
                 <!-- PREVIEW CARD -->
-                <div class="lg:col-span-5 sticky top-24 relative z-10">
+                <div class="lg:col-span-5 sticky top-24 relative z-10 transition-all duration-500">
                     <div class="bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
                         <div class="flex items-center justify-between pb-3 border-b border-slate-200">
                             <div class="flex items-center space-x-2">
                                 <span class="w-2.5 h-2.5 rounded-full bg-blue-600 animate-ping"></span>
                                 <h4 class="text-sm font-extrabold text-slate-900 uppercase tracking-wider">Live Preview Dokumen</h4>
                             </div>
-                            <span class="text-xs text-slate-500 font-mono font-bold bg-slate-100 px-2 py-0.5 rounded">Draft</span>
+                            <span class="text-xs text-slate-500 font-mono font-bold bg-slate-100 px-2 py-0.5 rounded">Otomatis Tersimpan</span>
                         </div>
 
-                        <div class="relative w-full h-48 bg-slate-100 rounded-xl overflow-hidden border border-slate-200 flex items-center justify-center">
-                            <img id="preview-img" src="" alt="Preview Dokumentasi" class="w-full h-full object-cover hidden">
-                            <div id="preview-img-placeholder" class="text-center p-4">
-                                <i data-lucide="image" class="w-10 h-10 text-slate-400 mx-auto mb-1"></i>
-                                <p class="text-xs text-slate-500 font-medium">Foto Dokumentasi (Atribut 8)</p>
+                        <div class="relative w-full h-48 bg-slate-100 rounded-xl overflow-hidden border border-slate-200 flex items-center justify-center group">
+                            <img id="preview-img" src="" alt="Preview Dokumentasi" class="w-full h-full object-cover hidden transition-transform duration-500 group-hover:scale-105">
+                            <div id="preview-img-placeholder" class="text-center p-4 transition-opacity duration-300">
+                                <i data-lucide="image" class="w-10 h-10 text-slate-400 mx-auto mb-1 opacity-50"></i>
+                                <p class="text-xs text-slate-400 font-medium">Foto Dokumentasi (Atribut 8)</p>
                             </div>
                         </div>
 
                         <div class="space-y-2.5 text-xs sm:text-sm pt-2">
-                            <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">1. Kecamatan:</span><span class="font-bold text-blue-900 text-right" id="prev-kecamatan">-</span></div>
-                            <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">2. Kelurahan:</span><span class="font-bold text-slate-800 text-right" id="prev-kelurahan">-</span></div>
-                            <div class="pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold block mb-1">3 & 4. Jalan & RW:</span><p class="font-bold text-slate-800 whitespace-pre-wrap leading-relaxed text-xs p-2 bg-slate-50 rounded border border-slate-200" id="prev-jalan-rw">-</p></div>
-                            <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">5. Jml Bangli/PKL:</span><span class="font-extrabold text-amber-600 text-right" id="prev-jumlah">0 Unit</span></div>
-                            <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">6. Tanggal:</span><span class="font-bold text-slate-800 text-right" id="prev-waktu">-</span></div>
+                            <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">1. Kecamatan:</span><span class="font-bold text-blue-900 text-right transition-all" id="prev-kecamatan">-</span></div>
+                            <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">2. Kelurahan:</span><span class="font-bold text-slate-800 text-right transition-all" id="prev-kelurahan">-</span></div>
+                            <div class="pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold block mb-1">3 & 4. Jalan & RW:</span><p class="font-bold text-slate-800 whitespace-pre-wrap leading-relaxed text-xs p-2 bg-slate-50 rounded border border-slate-200 transition-all" id="prev-jalan-rw">-</p></div>
+                            <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">5. Jml Bangli/PKL:</span><span class="font-extrabold text-amber-600 text-right transition-all" id="prev-jumlah">0 Unit</span></div>
+                            <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">6. Tanggal:</span><span class="font-bold text-slate-800 text-right transition-all" id="prev-waktu">-</span></div>
                             <div class="pb-2 border-b border-slate-100">
                                 <span class="text-slate-500 font-bold block mb-1">7. Data PKL:</span>
-                                <p class="p-2.5 bg-slate-50 rounded-lg text-slate-800 font-medium border border-slate-200 whitespace-pre-wrap leading-relaxed text-xs" id="prev-datapkl">Belum ada rincian data PKL...</p>
+                                <p class="p-2.5 bg-slate-50 rounded-lg text-slate-800 font-medium border border-slate-200 whitespace-pre-wrap leading-relaxed text-xs transition-all" id="prev-datapkl">Belum ada rincian data PKL...</p>
                             </div>
                             <div>
                                 <span class="text-slate-500 font-bold block mb-1">9. Keterangan:</span>
-                                <p class="p-2.5 bg-slate-50 rounded-lg text-slate-700 border border-slate-200 text-xs italic" id="prev-keterangan">-</p>
+                                <p class="p-2.5 bg-slate-50 rounded-lg text-slate-700 border border-slate-200 text-xs italic transition-all" id="prev-keterangan">-</p>
                             </div>
                         </div>
                     </div>
@@ -258,10 +266,11 @@
         </footer>
     </div>
 
-    <!-- MODAL BUKTI PELAPORAN -->
-    <div id="detail-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 no-print">
+    <!-- MODAL BUKTI PELAPORAN DENGAN ANIMASI -->
+    <div id="detail-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <!-- Wrapper Modal untuk efek Zoom & Fade -->
+        <div id="modal-content" class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto transform scale-95 transition-all duration-300 opacity-0">
+            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 no-print transition-colors">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <div id="printable-receipt" class="space-y-4">
@@ -296,8 +305,8 @@
                 </div>
             </div>
             <div class="flex items-center justify-between pt-3 border-t border-slate-200 no-print">
-                <button onclick="closeModal()" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-200">Tutup</button>
-                <button onclick="window.print()" class="flex items-center space-x-2 px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl hover:bg-slate-800">
+                <button onclick="closeModal()" class="px-4 py-3 bg-slate-100 text-slate-700 text-sm font-bold rounded-xl hover:bg-slate-200 transition-colors w-full sm:w-auto text-center sm:text-left mb-2 sm:mb-0 mr-0 sm:mr-2">Tutup</button>
+                <button onclick="window.print()" class="flex items-center justify-center space-x-2 px-4 py-3 bg-slate-900 text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-lg w-full sm:w-auto">
                     <i data-lucide="printer" class="w-4 h-4"></i>
                     <span>Cetak Bukti</span>
                 </button>
@@ -306,6 +315,7 @@
     </div>
 
     <script>
+        // KONFIGURASI FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyD0rc-XdBOnicvQNL8m0tt85Oce-Dd_LZI",
             authDomain: "bagtapem-db.firebaseapp.com",
@@ -353,48 +363,237 @@
         };
 
         let uploadedImageBase64 = '';
+        const STORAGE_KEY = 'pkl_form_draft_v1';
+
+        // --- SISTEM TOAST NOTIFICATION (PENGGANTI ALERT) ---
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass, iconName;
+            if (type === 'success') { bgClass = 'bg-emerald-600'; iconName = 'check-circle'; }
+            else if (type === 'error') { bgClass = 'bg-red-600'; iconName = 'alert-octagon'; }
+            else { bgClass = 'bg-blue-600'; iconName = 'info'; }
+
+            toast.className = `${bgClass} text-white px-5 py-3.5 rounded-xl shadow-xl transform transition-all duration-500 translate-x-[120%] flex items-center gap-3 pointer-events-auto max-w-sm`;
+            toast.innerHTML = `<i data-lucide="${iconName}" class="w-5 h-5 shrink-0"></i> <span class="text-sm font-semibold">${message}</span>`;
+            
+            container.appendChild(toast);
+            lucide.createIcons({root: toast});
+            
+            // Trigger animation in
+            setTimeout(() => { toast.classList.remove('translate-x-[120%]'); }, 50);
+            
+            // Auto remove after 3.5s
+            setTimeout(() => {
+                toast.classList.add('translate-x-[120%]');
+                setTimeout(() => toast.remove(), 500);
+            }, 3500);
+        }
+
+        // --- STATUS JARINGAN (ONLINE/OFFLINE) ---
+        window.addEventListener('online', () => {
+            const dot = document.getElementById('network-dot');
+            const text = document.getElementById('network-text');
+            const container = document.getElementById('network-status');
+            dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse';
+            text.innerText = 'Online / Siap';
+            text.className = 'text-xs font-bold text-emerald-900';
+            container.className = 'hidden sm:flex items-center space-x-2 bg-emerald-50 border border-emerald-300 px-3.5 py-1.5 rounded-full transition-colors duration-300';
+            showToast("Koneksi internet terhubung kembali", "success");
+        });
+
+        window.addEventListener('offline', () => {
+            const dot = document.getElementById('network-dot');
+            const text = document.getElementById('network-text');
+            const container = document.getElementById('network-status');
+            dot.className = 'w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse';
+            text.innerText = 'Offline Mode';
+            text.className = 'text-xs font-bold text-red-900';
+            container.className = 'hidden sm:flex items-center space-x-2 bg-red-50 border border-red-300 px-3.5 py-1.5 rounded-full transition-colors duration-300';
+            showToast("Koneksi terputus. Data akan disimpan ke Draft lokal.", "error");
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
+            
+            // Populate Kecamatan options
             const kecSelect = document.getElementById('field-kecamatan');
             Object.keys(dataWilayahBandung).sort().forEach(kec => {
                 const opt = document.createElement('option');
                 opt.value = kec; opt.textContent = kec;
                 kecSelect.appendChild(opt);
             });
+            
+            // Setup default date
             const now = new Date();
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             document.getElementById('field-waktu').value = now.toISOString().slice(0, 10);
-            updatePreview();
+            
+            setupDragAndDrop();
+            loadDraft(); // Load draft if exists
         });
 
+        // --- FITUR DRAG AND DROP FOTO ---
+        function setupDragAndDrop() {
+            const dropArea = document.getElementById('drop-area');
+            const fileInput = document.getElementById('field-dokumentasi');
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, () => {
+                    dropArea.classList.add('border-blue-500', 'bg-blue-100');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, () => {
+                    dropArea.classList.remove('border-blue-500', 'bg-blue-100');
+                }, false);
+            });
+
+            dropArea.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if(files && files.length > 0) {
+                    fileInput.files = files; // Assign to input
+                    handleImageUpload({ target: { files: files } });
+                }
+            }, false);
+        }
+
+        // --- FITUR DRAFT (SIMPAN LOKAL) ---
+        function saveDraft() {
+            // Extract dynamic rows
+            const jalanRows = [];
+            document.querySelectorAll('.jalan-rw-row').forEach(row => {
+                jalanRows.push({
+                    jalan: row.querySelector('.jalan-input').value,
+                    rw: row.querySelector('.rw-input').value
+                });
+            });
+
+            const draftData = {
+                kecamatan: document.getElementById('field-kecamatan').value,
+                kelurahan: document.getElementById('field-kelurahan').value,
+                jalanRw: jalanRows,
+                jumlah: document.getElementById('field-jumlah').value,
+                waktu: document.getElementById('field-waktu').value,
+                usaha: document.getElementById('pkl-usaha').value,
+                rumah: document.getElementById('pkl-rumah').value,
+                lainnyaNama: document.getElementById('pkl-lainnya-nama').value,
+                lainnyaQty: document.getElementById('pkl-lainnya-qty').value,
+                keterangan: document.getElementById('field-keterangan').value,
+                fotoBase64: uploadedImageBase64
+            };
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(draftData));
+            
+            const timeStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('draft-status').innerText = `Draft tersimpan (${timeStr})`;
+            document.getElementById('draft-status').classList.replace('text-slate-400', 'text-blue-600');
+        }
+
+        function loadDraft() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if(saved) {
+                try {
+                    const draft = JSON.parse(saved);
+                    
+                    if(draft.kecamatan) {
+                        document.getElementById('field-kecamatan').value = draft.kecamatan;
+                        onKecamatanChange(false); // Populate kelurahan but don't update preview yet
+                    }
+                    if(draft.kelurahan) document.getElementById('field-kelurahan').value = draft.kelurahan;
+                    if(draft.jumlah) document.getElementById('field-jumlah').value = draft.jumlah;
+                    if(draft.waktu) document.getElementById('field-waktu').value = draft.waktu;
+                    if(draft.usaha) document.getElementById('pkl-usaha').value = draft.usaha;
+                    if(draft.rumah) document.getElementById('pkl-rumah').value = draft.rumah;
+                    if(draft.lainnyaNama) document.getElementById('pkl-lainnya-nama').value = draft.lainnyaNama;
+                    if(draft.lainnyaQty) document.getElementById('pkl-lainnya-qty').value = draft.lainnyaQty;
+                    if(draft.keterangan) document.getElementById('field-keterangan').value = draft.keterangan;
+
+                    // Restore dynamic rows
+                    if(draft.jalanRw && draft.jalanRw.length > 0) {
+                        const container = document.getElementById('jalan-rw-container');
+                        container.innerHTML = ''; // Clear default
+                        draft.jalanRw.forEach((item, index) => {
+                            const isFirst = index === 0;
+                            const row = document.createElement('div');
+                            row.className = 'grid grid-cols-1 sm:grid-cols-12 gap-2 jalan-rw-row items-center bg-slate-50 p-3 rounded-xl border border-slate-200 transition-all';
+                            row.innerHTML = `
+                                <div class="sm:col-span-8">
+                                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nama Jalan</label>
+                                    <input type="text" required value="${item.jalan}" placeholder="Contoh: Jl. Merdeka" oninput="updatePreview()" class="jalan-input w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div class="sm:col-span-3">
+                                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">RW</label>
+                                    <input type="text" required value="${item.rw}" placeholder="Contoh: 05" oninput="updatePreview()" class="rw-input w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div class="sm:col-span-1 flex items-end justify-center pt-5 sm:pt-0">
+                                    <button type="button" onclick="${isFirst ? 'addJalanRwField()' : 'removeJalanRwField(this)'}" class="w-full sm:w-auto p-2.5 ${isFirst ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-red-100 text-red-600 hover:bg-red-200'} rounded-lg font-bold transition-all flex items-center justify-center shadow-sm hover:scale-105" title="${isFirst ? 'Tambah Jalan & RW' : 'Hapus Baris'}">
+                                        <i data-lucide="${isFirst ? 'plus' : 'trash-2'}" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            `;
+                            container.appendChild(row);
+                        });
+                        lucide.createIcons();
+                    }
+
+                    // Restore Image
+                    if(draft.fotoBase64) {
+                        uploadedImageBase64 = draft.fotoBase64;
+                        document.getElementById('preview-img').src = uploadedImageBase64;
+                        document.getElementById('preview-img').classList.remove('hidden');
+                        document.getElementById('preview-img-placeholder').classList.add('hidden');
+                        document.getElementById('file-label-text').innerText = "Foto draft dimuat kembali";
+                        document.getElementById('card-foto-status').innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i> Siap Dikirim`;
+                    }
+
+                    showToast("Draft pelaporan sebelumnya berhasil dimuat", "info");
+                    
+                } catch(e) { console.error("Gagal load draft", e); }
+            }
+            updatePreview();
+        }
+
+        // --- DINAMIS FORM LOKASI ---
         function addJalanRwField() {
             const container = document.getElementById('jalan-rw-container');
             const row = document.createElement('div');
-            row.className = 'grid grid-cols-1 sm:grid-cols-12 gap-2 jalan-rw-row items-center bg-slate-50 p-3 rounded-xl border border-slate-200 mt-2';
+            row.className = 'grid grid-cols-1 sm:grid-cols-12 gap-2 jalan-rw-row items-center bg-slate-50 p-3 rounded-xl border border-slate-200 transition-all opacity-0 translate-y-2';
             row.innerHTML = `
                 <div class="sm:col-span-8">
                     <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nama Jalan</label>
-                    <input type="text" required placeholder="Nama Jalan Lainnya" oninput="updatePreview()" class="jalan-input w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-800">
+                    <input type="text" required placeholder="Nama Jalan Lainnya" oninput="updatePreview()" class="jalan-input w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div class="sm:col-span-3">
                     <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">RW</label>
-                    <input type="text" required placeholder="Contoh: 02" oninput="updatePreview()" class="rw-input w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-800">
+                    <input type="text" required placeholder="Contoh: 02" oninput="updatePreview()" class="rw-input w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div class="sm:col-span-1 flex items-end justify-center pt-5 sm:pt-0">
-                    <button type="button" onclick="removeJalanRwField(this)" class="w-full sm:w-auto p-2.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-bold transition-colors flex items-center justify-center" title="Hapus Baris">
+                    <button type="button" onclick="removeJalanRwField(this)" class="w-full sm:w-auto p-2.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-bold transition-all flex items-center justify-center hover:scale-105" title="Hapus Baris">
                         <i data-lucide="trash-2" class="w-4 h-4"></i>
                     </button>
                 </div>
             `;
             container.appendChild(row);
             lucide.createIcons();
+            
+            // Trigger anim in
+            setTimeout(() => { row.classList.remove('opacity-0', 'translate-y-2'); }, 10);
             updatePreview();
         }
 
         function removeJalanRwField(btn) {
-            btn.closest('.jalan-rw-row').remove();
-            updatePreview();
+            const row = btn.closest('.jalan-rw-row');
+            row.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => { row.remove(); updatePreview(); }, 200);
         }
 
         function getJalanRwValues() {
@@ -410,12 +609,13 @@
             return values.length > 0 ? values.join('\n') : '-';
         }
 
-        function onKecamatanChange() {
+        function onKecamatanChange(doUpdatePreview = true) {
             const kecVal = document.getElementById('field-kecamatan').value;
             const kelSelect = document.getElementById('field-kelurahan');
             kelSelect.innerHTML = '<option value="">-- Pilih Kelurahan --</option>';
             if (kecVal && dataWilayahBandung[kecVal]) {
                 kelSelect.disabled = false;
+                kelSelect.classList.remove('opacity-50');
                 dataWilayahBandung[kecVal].sort().forEach(kel => {
                     const opt = document.createElement('option');
                     opt.value = kel; opt.textContent = kel;
@@ -423,9 +623,10 @@
                 });
             } else {
                 kelSelect.disabled = true;
+                kelSelect.classList.add('opacity-50');
                 kelSelect.innerHTML = '<option value="">-- Pilih Kecamatan Dulu --</option>';
             }
-            updatePreview();
+            if(doUpdatePreview) updatePreview();
         }
 
         function formatDataPKL() {
@@ -463,12 +664,15 @@
             
             document.getElementById('prev-datapkl').innerText = formatDataPKL();
             document.getElementById('prev-keterangan').innerText = document.getElementById('field-keterangan').value || '-';
+            
+            lucide.createIcons();
+            saveDraft(); // Auto save to localStorage every update
         }
 
         function handleImageUpload(e) {
             const file = e.target.files[0];
             if (file) {
-                if (file.size > 5 * 1024 * 1024) { alert("Foto maksimal 5MB!"); e.target.value = ""; return; }
+                if (file.size > 5 * 1024 * 1024) { showToast("Foto terlalu besar! Maksimal 5MB.", "error"); e.target.value = ""; return; }
                 const reader = new FileReader();
                 reader.onload = function(evt) {
                     const img = new Image();
@@ -483,13 +687,20 @@
                         ctx.drawImage(img, 0, 0, width, height);
                         
                         uploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.6);
-                        document.getElementById('preview-img').src = uploadedImageBase64;
-                        document.getElementById('preview-img').classList.remove('hidden');
+                        
+                        // Setup Preview image
+                        const imgEl = document.getElementById('preview-img');
+                        imgEl.src = uploadedImageBase64;
+                        imgEl.classList.remove('hidden');
                         document.getElementById('preview-img-placeholder').classList.add('hidden');
                         document.getElementById('file-label-text').innerText = file.name;
 
+                        // Update Status Card
                         document.getElementById('card-foto-status').innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i> Siap Dikirim`;
+                        
+                        showToast("Foto berhasil dimuat & dikompres", "success");
                         lucide.createIcons();
+                        updatePreview(); // Trigger save draft
                     };
                 };
                 reader.readAsDataURL(file);
@@ -500,17 +711,17 @@
             document.getElementById('pkl-form').reset();
             
             document.getElementById('jalan-rw-container').innerHTML = `
-                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 jalan-rw-row items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 jalan-rw-row items-center bg-slate-50 p-3 rounded-xl border border-slate-200 transition-all">
                     <div class="sm:col-span-8">
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nama Jalan</label>
-                        <input type="text" required placeholder="Contoh: Jl. Merdeka" oninput="updatePreview()" class="jalan-input w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-800">
+                        <input type="text" required placeholder="Contoh: Jl. Merdeka" oninput="updatePreview()" class="jalan-input w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="sm:col-span-3">
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">RW</label>
-                        <input type="text" required placeholder="Contoh: 05" oninput="updatePreview()" class="rw-input w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-800">
+                        <input type="text" required placeholder="Contoh: 05" oninput="updatePreview()" class="rw-input w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="sm:col-span-1 flex items-end justify-center pt-5 sm:pt-0">
-                        <button type="button" onclick="addJalanRwField()" class="w-full sm:w-auto p-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold transition-colors flex items-center justify-center shadow-sm" title="Tambah Jalan & RW">
+                        <button type="button" onclick="addJalanRwField()" class="w-full sm:w-auto p-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold transition-all flex items-center justify-center hover:scale-105 shadow-sm" title="Tambah Jalan & RW">
                             <i data-lucide="plus" class="w-4 h-4"></i>
                         </button>
                     </div>
@@ -521,27 +732,61 @@
             document.getElementById('preview-img').classList.add('hidden');
             document.getElementById('preview-img-placeholder').classList.remove('hidden');
             document.getElementById('file-label-text').innerText = "Klik atau seret foto lokasi ke sini";
-            document.getElementById('field-kelurahan').disabled = true;
-            document.getElementById('field-kelurahan').innerHTML = '<option value="">-- Pilih Kecamatan Dulu --</option>';
+            
+            const kelSelect = document.getElementById('field-kelurahan');
+            kelSelect.disabled = true;
+            kelSelect.classList.add('opacity-50');
+            kelSelect.innerHTML = '<option value="">-- Pilih Kecamatan Dulu --</option>';
+            
             document.getElementById('card-foto-status').innerHTML = `<i data-lucide="camera-off" class="w-4 h-4 text-slate-400"></i> Belum Diupload`;
             
+            // Hapus Draft Lokal
+            localStorage.removeItem(STORAGE_KEY);
+            document.getElementById('draft-status').innerText = "Draft dihapus";
+            document.getElementById('draft-status').classList.replace('text-blue-600', 'text-slate-400');
+            
+            showToast("Formulir berhasil dikosongkan", "info");
             lucide.createIcons();
+            
+            // Set ulang tanggal
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('field-waktu').value = now.toISOString().slice(0, 10);
             updatePreview();
+        }
+
+        function setSubmitButtonState(isSubmitting) {
+            const btn = document.getElementById('btn-submit');
+            const text = document.getElementById('btn-text');
+            const icon = document.getElementById('btn-icon');
+            
+            if(isSubmitting) {
+                btn.disabled = true;
+                text.innerText = "Mengirim...";
+                icon.setAttribute('data-lucide', 'loader-2');
+                icon.classList.add('animate-spin');
+            } else {
+                btn.disabled = false;
+                text.innerText = "Kirim Pelaporan";
+                icon.setAttribute('data-lucide', 'send');
+                icon.classList.remove('animate-spin');
+            }
+            lucide.createIcons({root: btn});
         }
 
         function handleFormSubmit(e) {
             e.preventDefault();
-            if (!uploadedImageBase64) { alert("Harap upload foto dokumentasi!"); return; }
+            if (!uploadedImageBase64) { showToast("Harap upload foto dokumentasi sebelum mengirim!", "error"); return; }
+            if (!navigator.onLine) { showToast("Gagal! Anda sedang offline. Silakan periksa koneksi.", "error"); return; }
 
-            const btnText = document.getElementById('btn-text');
-            btnText.innerText = "Mengirim...";
+            setSubmitButtonState(true);
 
             const newEntry = {
                 id: `PKL-2026-${Math.floor(1000 + Math.random() * 9000)}`,
                 kecamatan: document.getElementById('field-kecamatan').value,
                 kelurahan: document.getElementById('field-kelurahan').value,
-                lokasi: getJalanRwValues(), 
-                rtrw: "Multiple (Per Jalan)",
+                lokasi: getJalanRwValues(), // Sesuai master
+                rtrw: "Multiple (Per Jalan)", // Sesuai master
                 jumlah: parseInt(document.getElementById('field-jumlah').value),
                 waktu: document.getElementById('field-waktu').value,
                 datapkl: formatDataPKL(),
@@ -552,16 +797,20 @@
 
             database.ref('pkl_reports').push(newEntry)
                 .then(() => {
-                    btnText.innerText = "Kirim Pelaporan";
+                    setSubmitButtonState(false);
+                    showToast("Data Pelaporan Berhasil Dikirim ke Cloud!", "success");
                     openModal(newEntry);
+                    // Hapus draft setelah berhasil kirim
+                    localStorage.removeItem(STORAGE_KEY);
                     resetForm();
                 })
                 .catch((err) => {
-                    alert("Gagal mengirim data: " + err.message);
-                    btnText.innerText = "Kirim Pelaporan";
+                    setSubmitButtonState(false);
+                    showToast("Gagal mengirim data: " + err.message, "error");
                 });
         }
 
+        // --- SISTEM MODAL DENGAN ANIMASI ---
         function openModal(item) {
             document.getElementById('modal-ref-id').innerText = `REF: ${item.id}`;
             document.getElementById('modal-img').src = item.dokumentasi;
@@ -572,10 +821,33 @@
             document.getElementById('modal-waktu').innerText = new Date(item.waktu).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
             document.getElementById('modal-datapkl').innerText = item.datapkl;
             document.getElementById('modal-keterangan').innerText = item.keterangan;
-            document.getElementById('detail-modal').classList.remove('hidden');
+            
+            const modal = document.getElementById('detail-modal');
+            const modalContent = document.getElementById('modal-content');
+            
+            modal.classList.remove('hidden');
+            
+            // Trigger animation in
+            setTimeout(() => {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
         }
 
-        function closeModal() { document.getElementById('detail-modal').classList.add('hidden'); }
+        function closeModal() { 
+            const modal = document.getElementById('detail-modal');
+            const modalContent = document.getElementById('modal-content');
+            
+            // Trigger animation out
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300); // Wait for transition
+        }
     </script>
 </body>
 </html>
