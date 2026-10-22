@@ -21,8 +21,8 @@
         .card-icon-bg { position: absolute; right: -10px; top: -10px; opacity: 0.05; color: inherit; transform: rotate(-10deg); transition: transform 0.3s ease; }
         .card-sg-top:hover .card-icon-bg { transform: rotate(0deg) scale(1.1); }
         
-        /* Watermark Logo */
-        .watermark-bg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 75vw; max-width: 800px; opacity: 0.05; pointer-events: none; z-index: 0; filter: grayscale(50%); }
+        /* Watermark Logo - Dipertebal warnanya */
+        .watermark-bg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 75vw; max-width: 800px; opacity: 0.15; pointer-events: none; z-index: 0; filter: grayscale(20%); }
         
         /* Animated Background Blobs */
         @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
@@ -302,7 +302,7 @@
         <footer class="bg-white/90 backdrop-blur-md mt-12 py-6 border-t border-slate-200 relative z-20">
             <div class="max-w-[1400px] mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="flex items-center space-x-3 text-left">
-                    <div class="p-2.5 bg-blue-50 rounded-xl border border-blue-100"><i data-lucide="shield-check" class="w-5 h-5 text-blue-700"></i></div>
+                    <img src="logo bagtapem.png" alt="Logo BAGTAPEM" class="h-10 w-auto object-contain" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Lambang_Kota_Bandung.svg/1200px-Lambang_Kota_Bandung.svg.png'">
                     <div>
                         <p class="font-extrabold text-sm text-slate-800">Bagian Tata Pemerintahan (BAGTAPEM)</p>
                         <p class="text-[11px] text-slate-500 font-semibold tracking-wide">Sekretariat Daerah Kota Bandung &copy; 2026</p>
