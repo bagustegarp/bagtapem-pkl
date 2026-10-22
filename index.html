@@ -93,7 +93,7 @@
                             </div>
                             <div>
                                 <h3 class="text-lg font-bold text-slate-900">Formulir Pendataan Lapangan</h3>
-                                <p class="text-xs font-medium text-slate-500">Lengkapi 9 atribut sesuai instruksi</p>
+                                <p class="text-xs font-medium text-slate-500">Lengkapi 9 Atribut sesuai instruksi</p>
                             </div>
                         </div>
                         <span class="text-xs font-bold bg-blue-100 text-blue-900 px-3 py-1 rounded-full border border-blue-200">9 Atribut</span>
@@ -117,7 +117,7 @@
                             </div>
                         </div>
 
-                        <!-- 3. & 4. JALAN & RW DINAMIS BERPASANGAN (MENGGUNAKAN TOMBOL +) -->
+                        <!-- 3. & 4. JALAN & RW DINAMIS BERPASANGAN -->
                         <div>
                             <div class="flex justify-between items-end mb-2">
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">3 & 4. Nama Jalan & RW per Lokasi <span class="text-red-600">*</span></label>
@@ -125,7 +125,7 @@
                             </div>
                             
                             <div id="jalan-rw-container" class="space-y-3">
-                                <!-- Baris Pertama (Default) -->
+                                <!-- Baris Pertama -->
                                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 jalan-rw-row items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
                                     <div class="sm:col-span-8">
                                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nama Jalan</label>
@@ -159,7 +159,7 @@
                             </div>
                         </div>
 
-                        <!-- 7. Data PKL (3 Kategori + Lainnya Custom Teks & Angka) -->
+                        <!-- 7. Data PKL -->
                         <div class="border border-slate-200 bg-slate-50 p-5 rounded-xl space-y-3">
                             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">7. Data PKL (Rincian Kategori) <span class="text-red-600">*</span></label>
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -368,7 +368,6 @@
             updatePreview();
         });
 
-        // FUNGSI JALAN & RW DINAMIS BERPASANGAN (TAMBAH & HAPUS)
         function addJalanRwField() {
             const container = document.getElementById('jalan-rw-container');
             const row = document.createElement('div');
@@ -410,7 +409,6 @@
             });
             return values.length > 0 ? values.join('\n') : '-';
         }
-        // =========================================================
 
         function onKecamatanChange() {
             const kecVal = document.getElementById('field-kecamatan').value;
@@ -501,7 +499,6 @@
         function resetForm() {
             document.getElementById('pkl-form').reset();
             
-            // Reset Jalan & RW Dynamic Fields
             document.getElementById('jalan-rw-container').innerHTML = `
                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 jalan-rw-row items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
                     <div class="sm:col-span-8">
@@ -543,8 +540,8 @@
                 id: `PKL-2026-${Math.floor(1000 + Math.random() * 9000)}`,
                 kecamatan: document.getElementById('field-kecamatan').value,
                 kelurahan: document.getElementById('field-kelurahan').value,
-                jalan: getJalanRwValues(), // Menyimpan gabungan jalan dan RW per baris
-                rw: "Multiple (Per Jalan)",
+                lokasi: getJalanRwValues(), 
+                rtrw: "Multiple (Per Jalan)",
                 jumlah: parseInt(document.getElementById('field-jumlah').value),
                 waktu: document.getElementById('field-waktu').value,
                 datapkl: formatDataPKL(),
@@ -570,7 +567,7 @@
             document.getElementById('modal-img').src = item.dokumentasi;
             document.getElementById('modal-kecamatan').innerText = item.kecamatan;
             document.getElementById('modal-kelurahan').innerText = item.kelurahan;
-            document.getElementById('modal-jalan-rw').innerText = item.jalan;
+            document.getElementById('modal-jalan-rw').innerText = item.lokasi; 
             document.getElementById('modal-jumlah').innerText = `${item.jumlah} Unit`;
             document.getElementById('modal-waktu').innerText = new Date(item.waktu).toLocaleString('id-ID');
             document.getElementById('modal-datapkl').innerText = item.datapkl;
