@@ -154,8 +154,8 @@
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">6. Waktu Pelaksanaan <span class="text-red-600">*</span></label>
-                                <input type="datetime-local" id="field-waktu" required onchange="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800">
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">6. Tanggal Pelaksanaan <span class="text-red-600">*</span></label>
+                                <input type="date" id="field-waktu" required onchange="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800">
                             </div>
                         </div>
 
@@ -234,7 +234,7 @@
                             <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">2. Kelurahan:</span><span class="font-bold text-slate-800 text-right" id="prev-kelurahan">-</span></div>
                             <div class="pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold block mb-1">3 & 4. Jalan & RW:</span><p class="font-bold text-slate-800 whitespace-pre-wrap leading-relaxed text-xs p-2 bg-slate-50 rounded border border-slate-200" id="prev-jalan-rw">-</p></div>
                             <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">5. Jml Bangli/PKL:</span><span class="font-extrabold text-amber-600 text-right" id="prev-jumlah">0 Unit</span></div>
-                            <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">6. Waktu:</span><span class="font-bold text-slate-800 text-right" id="prev-waktu">-</span></div>
+                            <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">6. Tanggal:</span><span class="font-bold text-slate-800 text-right" id="prev-waktu">-</span></div>
                             <div class="pb-2 border-b border-slate-100">
                                 <span class="text-slate-500 font-bold block mb-1">7. Data PKL:</span>
                                 <p class="p-2.5 bg-slate-50 rounded-lg text-slate-800 font-medium border border-slate-200 whitespace-pre-wrap leading-relaxed text-xs" id="prev-datapkl">Belum ada rincian data PKL...</p>
@@ -284,7 +284,7 @@
                     <div class="flex justify-between py-1 border-b border-slate-100"><span class="text-slate-500 font-medium">2. Kelurahan:</span><span class="font-bold text-slate-900" id="modal-kelurahan"></span></div>
                     <div class="py-1 border-b border-slate-100"><span class="text-slate-500 font-medium block mb-1">3 & 4. Jalan & RW:</span><p class="font-bold text-slate-900 whitespace-pre-wrap" id="modal-jalan-rw"></p></div>
                     <div class="flex justify-between py-1 border-b border-slate-100"><span class="text-slate-500 font-medium">5. Jumlah Bangli:</span><span class="font-bold text-blue-900" id="modal-jumlah"></span></div>
-                    <div class="flex justify-between py-1 border-b border-slate-100"><span class="text-slate-500 font-medium">6. Waktu Pelaksanaan:</span><span class="font-bold text-slate-900" id="modal-waktu"></span></div>
+                    <div class="flex justify-between py-1 border-b border-slate-100"><span class="text-slate-500 font-medium">6. Tanggal:</span><span class="font-bold text-slate-900" id="modal-waktu"></span></div>
                     <div class="py-1 border-b border-slate-100">
                         <span class="text-slate-500 font-medium block mb-1">7. Data PKL:</span>
                         <p class="p-2 bg-slate-50 rounded border border-slate-200 text-slate-900 font-medium whitespace-pre-wrap" id="modal-datapkl"></p>
@@ -364,7 +364,7 @@
             });
             const now = new Date();
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            document.getElementById('field-waktu').value = now.toISOString().slice(0, 16);
+            document.getElementById('field-waktu').value = now.toISOString().slice(0, 10);
             updatePreview();
         });
 
@@ -459,7 +459,7 @@
             document.getElementById('prev-jumlah').innerText = `${jml} Unit`;
             document.getElementById('card-total-bangli').innerText = `${jml} Unit`;
 
-            document.getElementById('prev-waktu').innerText = document.getElementById('field-waktu').value ? new Date(document.getElementById('field-waktu').value).toLocaleString('id-ID') : '-';
+            document.getElementById('prev-waktu').innerText = document.getElementById('field-waktu').value ? new Date(document.getElementById('field-waktu').value).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-';
             
             document.getElementById('prev-datapkl').innerText = formatDataPKL();
             document.getElementById('prev-keterangan').innerText = document.getElementById('field-keterangan').value || '-';
@@ -569,7 +569,7 @@
             document.getElementById('modal-kelurahan').innerText = item.kelurahan;
             document.getElementById('modal-jalan-rw').innerText = item.lokasi; 
             document.getElementById('modal-jumlah').innerText = `${item.jumlah} Unit`;
-            document.getElementById('modal-waktu').innerText = new Date(item.waktu).toLocaleString('id-ID');
+            document.getElementById('modal-waktu').innerText = new Date(item.waktu).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
             document.getElementById('modal-datapkl').innerText = item.datapkl;
             document.getElementById('modal-keterangan').innerText = item.keterangan;
             document.getElementById('detail-modal').classList.remove('hidden');
