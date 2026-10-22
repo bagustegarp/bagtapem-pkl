@@ -17,8 +17,10 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #e2e8f0; }
         .card-sg-top { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-left-width: 5px; }
-        .card-sg-mid { background: white; border-radius: 12px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-        .watermark-bg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; max-width: 1200px; opacity: 0.035; pointer-events: none; z-index: 0; filter: grayscale(100%); }
+        
+        /* Watermark diubah menjadi besar, transparan, dan jelas warnanya */
+        .watermark-bg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 75vw; max-width: 800px; opacity: 0.15; pointer-events: none; z-index: 0; }
+        
         @media print { body * { visibility: hidden; } #detail-modal, #detail-modal * { visibility: visible; } #detail-modal { position: absolute; left: 0; top: 0; width: 100%; height: auto; background: white !important; padding: 0; display: block !important; } #printable-receipt, #printable-receipt * { visibility: visible; } #printable-receipt { width: 100%; max-width: 100%; margin: 0 auto; padding: 20px; box-shadow: none !important; border: none !important; } .no-print { display: none !important; } }
         ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: #e2e8f0; } ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
     </style>
@@ -28,7 +30,7 @@
     <img src="logo bagtapem.png" alt="Watermark Bagtapem" class="watermark-bg" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Lambang_Kota_Bandung.svg/1200px-Lambang_Kota_Bandung.svg.png'">
 
     <div class="relative z-10 flex-grow flex flex-col">
-        <!-- HEADER ALA SIM GOBER -->
+        <!-- HEADER -->
         <header class="bg-white border-b border-slate-300 sticky top-0 z-40 shadow-sm">
             <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
                 <div class="flex items-center space-x-3">
@@ -53,7 +55,7 @@
                 <p class="text-sm text-slate-500 font-medium mt-1">Silakan lengkapi formulir di bawah dan pantau ringkasan data secara realtime.</p>
             </div>
 
-            <!-- KARTU RINGKASAN DATA (SIM GOBER STYLE) -->
+            <!-- KARTU RINGKASAN DATA -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="card-sg-top border-l-[#1e3a8a] flex flex-col justify-between">
                     <p class="text-xs font-bold text-slate-500">Total Bangli / PKL</p>
@@ -79,43 +81,11 @@
                 </div>
             </div>
 
-            <!-- KARTU METRIK CATEGORY PKL (TITIK WARNA SIM GOBER) -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
-                <div class="card-sg-mid">
-                    <div class="flex items-center gap-1.5 mb-1"><div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div><span class="text-[11px] font-bold text-slate-600">Rumah</span></div>
-                    <span class="text-xl font-bold text-slate-800" id="stat-m-rumah">0</span>
-                </div>
-                <div class="card-sg-mid">
-                    <div class="flex items-center gap-1.5 mb-1"><div class="w-2.5 h-2.5 rounded-full bg-indigo-500"></div><span class="text-[11px] font-bold text-slate-600">Sembako</span></div>
-                    <span class="text-xl font-bold text-slate-800" id="stat-m-sembako">0</span>
-                </div>
-                <div class="card-sg-mid">
-                    <div class="flex items-center gap-1.5 mb-1"><div class="w-2.5 h-2.5 rounded-full bg-red-500"></div><span class="text-[11px] font-bold text-slate-600">Tambal Ban</span></div>
-                    <span class="text-xl font-bold text-slate-800" id="stat-m-ban">0</span>
-                </div>
-                <div class="card-sg-mid">
-                    <div class="flex items-center gap-1.5 mb-1"><div class="w-2.5 h-2.5 rounded-full bg-orange-500"></div><span class="text-[11px] font-bold text-slate-600">Warung Nasi</span></div>
-                    <span class="text-xl font-bold text-slate-800" id="stat-m-nasi">0</span>
-                </div>
-                <div class="card-sg-mid">
-                    <div class="flex items-center gap-1.5 mb-1"><div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div><span class="text-[11px] font-bold text-slate-600">Buah</span></div>
-                    <span class="text-xl font-bold text-slate-800" id="stat-m-buah">0</span>
-                </div>
-                <div class="card-sg-mid">
-                    <div class="flex items-center gap-1.5 mb-1"><div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div><span class="text-[11px] font-bold text-slate-600">Bengkel</span></div>
-                    <span class="text-xl font-bold text-slate-800" id="stat-m-bengkel">0</span>
-                </div>
-                <div class="card-sg-mid">
-                    <div class="flex items-center gap-1.5 mb-1"><div class="w-2.5 h-2.5 rounded-full bg-purple-500"></div><span class="text-[11px] font-bold text-slate-600">Fc</span></div>
-                    <span class="text-xl font-bold text-slate-800" id="stat-m-fc">0</span>
-                </div>
-            </div>
-
             <!-- FORM + PREVIEW SECTION -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
                 <!-- FORM INPUT DATA -->
-                <div class="lg:col-span-7 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="lg:col-span-7 bg-white/95 backdrop-blur-md rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 relative z-10">
                     <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200">
                         <div class="flex items-center space-x-3">
                             <div class="bg-blue-50 text-blue-900 p-2.5 rounded-xl border border-blue-200">
@@ -150,19 +120,23 @@
                         <!-- 3. Jalan & 4. RW -->
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div class="sm:col-span-2">
-                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">3. Jalan (1... 2... 3...) <span class="text-red-600">*</span></label>
-                                <textarea id="field-jalan" required placeholder="1. Jl. Merdeka&#10;2. Jl. Riau" rows="2" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800"></textarea>
+                                <div class="flex justify-between items-end mb-2">
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">3. Nama Jalan / Lokasi <span class="text-red-600">*</span></label>
+                                    <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded">Bisa lebih dari 1 jalan</span>
+                                </div>
+                                <textarea id="field-jalan" required placeholder="Contoh:&#10;1. Jl. Merdeka&#10;2. Jl. Sudirman&#10;3. Jl. Asia Afrika" rows="3" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800 leading-relaxed"></textarea>
+                                <p class="text-[11px] text-slate-500 mt-1">*Tekan tombol <b>Enter</b> untuk memisahkan nama jalan yang berbeda.</p>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">4. RW <span class="text-red-600">*</span></label>
-                                <input type="text" id="field-rw" required placeholder="Contoh: 05" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800">
+                                <input type="text" id="field-rw" required placeholder="Contoh: 01, 02, 05" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800">
                             </div>
                         </div>
 
                         <!-- 5. Jumlah Bangli/PKL & 6. Waktu Pelaksanaan -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">5. Jumlah Bangli / PKL <span class="text-red-600">*</span></label>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">5. Jumlah Total Bangli / PKL <span class="text-red-600">*</span></label>
                                 <div class="relative">
                                     <input type="number" id="field-jumlah" min="1" required placeholder="1" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800 pr-16">
                                     <span class="absolute right-3 top-3 text-xs font-bold text-slate-400">Unit</span>
@@ -174,17 +148,22 @@
                             </div>
                         </div>
 
-                        <!-- 7. Data PKL -->
-                        <div class="border border-slate-200 bg-slate-50 p-4 rounded-xl space-y-3">
-                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">7. Data PKL (Rincian per Kategori) <span class="text-red-600">*</span></label>
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                                <div><label class="text-[11px] font-bold text-slate-600">Rumah tinggal</label><input type="number" min="0" value="0" id="pkl-rumah" class="w-full px-3 py-2 rounded-lg border border-slate-300 mt-1 text-sm bg-white" oninput="updatePreview()"></div>
-                                <div><label class="text-[11px] font-bold text-slate-600">Warung sembako</label><input type="number" min="0" value="0" id="pkl-sembako" class="w-full px-3 py-2 rounded-lg border border-slate-300 mt-1 text-sm bg-white" oninput="updatePreview()"></div>
-                                <div><label class="text-[11px] font-bold text-slate-600">Tambal ban</label><input type="number" min="0" value="0" id="pkl-ban" class="w-full px-3 py-2 rounded-lg border border-slate-300 mt-1 text-sm bg-white" oninput="updatePreview()"></div>
-                                <div><label class="text-[11px] font-bold text-slate-600">Warung nasi</label><input type="number" min="0" value="0" id="pkl-nasi" class="w-full px-3 py-2 rounded-lg border border-slate-300 mt-1 text-sm bg-white" oninput="updatePreview()"></div>
-                                <div><label class="text-[11px] font-bold text-slate-600">Buah buahan</label><input type="number" min="0" value="0" id="pkl-buah" class="w-full px-3 py-2 rounded-lg border border-slate-300 mt-1 text-sm bg-white" oninput="updatePreview()"></div>
-                                <div><label class="text-[11px] font-bold text-slate-600">Bengkel</label><input type="number" min="0" value="0" id="pkl-bengkel" class="w-full px-3 py-2 rounded-lg border border-slate-300 mt-1 text-sm bg-white" oninput="updatePreview()"></div>
-                                <div><label class="text-[11px] font-bold text-slate-600">Fc</label><input type="number" min="0" value="0" id="pkl-fc" class="w-full px-3 py-2 rounded-lg border border-slate-300 mt-1 text-sm bg-white" oninput="updatePreview()"></div>
+                        <!-- 7. Data PKL (3 Kategori Saja) -->
+                        <div class="border border-slate-200 bg-slate-50 p-5 rounded-xl space-y-3">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">7. Data PKL (Rincian Kategori) <span class="text-red-600">*</span></label>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="text-[11px] font-bold text-slate-600 uppercase">Tempat Usaha</label>
+                                    <input type="number" min="0" value="0" id="pkl-usaha" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 mt-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500" oninput="updatePreview()">
+                                </div>
+                                <div>
+                                    <label class="text-[11px] font-bold text-slate-600 uppercase">Rumah Tinggal</label>
+                                    <input type="number" min="0" value="0" id="pkl-rumah" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 mt-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500" oninput="updatePreview()">
+                                </div>
+                                <div>
+                                    <label class="text-[11px] font-bold text-slate-600 uppercase">Lainnya</label>
+                                    <input type="number" min="0" value="0" id="pkl-lainnya" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 mt-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500" oninput="updatePreview()">
+                                </div>
                             </div>
                         </div>
 
@@ -203,8 +182,8 @@
 
                         <!-- 9. Keterangan -->
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">9. Keterangan</label>
-                            <textarea id="field-keterangan" rows="2" placeholder="KETERANGAN TAMBAHAN..." oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800"></textarea>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">9. Keterangan Tambahan</label>
+                            <textarea id="field-keterangan" rows="2" placeholder="Tuliskan catatan atau keterangan lain di sini..." oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800"></textarea>
                         </div>
 
                         <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-200">
@@ -218,8 +197,8 @@
                 </div>
 
                 <!-- PREVIEW CARD -->
-                <div class="lg:col-span-5 sticky top-24">
-                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+                <div class="lg:col-span-5 sticky top-24 relative z-10">
+                    <div class="bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
                         <div class="flex items-center justify-between pb-3 border-b border-slate-200">
                             <div class="flex items-center space-x-2">
                                 <span class="w-2.5 h-2.5 rounded-full bg-blue-600 animate-ping"></span>
@@ -239,7 +218,7 @@
                         <div class="space-y-2.5 text-xs sm:text-sm pt-2">
                             <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">1. Kecamatan:</span><span class="font-bold text-blue-900 text-right" id="prev-kecamatan">-</span></div>
                             <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">2. Kelurahan:</span><span class="font-bold text-slate-800 text-right" id="prev-kelurahan">-</span></div>
-                            <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">3. Jalan:</span><span class="font-bold text-slate-800 text-right max-w-[200px] whitespace-pre-wrap" id="prev-jalan">-</span></div>
+                            <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">3. Jalan:</span><span class="font-bold text-slate-800 text-right max-w-[200px] whitespace-pre-wrap leading-relaxed" id="prev-jalan">-</span></div>
                             <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">4. RW:</span><span class="font-bold text-slate-800 text-right" id="prev-rw">-</span></div>
                             <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">5. Jml Bangli/PKL:</span><span class="font-extrabold text-amber-600 text-right" id="prev-jumlah">0 Unit</span></div>
                             <div class="flex justify-between items-start pb-2 border-b border-slate-100"><span class="text-slate-500 font-bold">6. Waktu:</span><span class="font-bold text-slate-800 text-right" id="prev-waktu">-</span></div>
@@ -396,30 +375,15 @@
         }
 
         function formatDataPKL() {
-            const r = parseInt(document.getElementById('pkl-rumah').value) || 0;
-            const s = parseInt(document.getElementById('pkl-sembako').value) || 0;
-            const b = parseInt(document.getElementById('pkl-ban').value) || 0;
-            const n = parseInt(document.getElementById('pkl-nasi').value) || 0;
-            const f = parseInt(document.getElementById('pkl-buah').value) || 0;
-            const bk = parseInt(document.getElementById('pkl-bengkel').value) || 0;
-            const fc = parseInt(document.getElementById('pkl-fc').value) || 0;
+            // Mengambil data dari 3 inputan baru
+            const usaha = parseInt(document.getElementById('pkl-usaha').value) || 0;
+            const rumah = parseInt(document.getElementById('pkl-rumah').value) || 0;
+            const lainnya = parseInt(document.getElementById('pkl-lainnya').value) || 0;
             
-            document.getElementById('stat-m-rumah').innerText = r;
-            document.getElementById('stat-m-sembako').innerText = s;
-            document.getElementById('stat-m-ban').innerText = b;
-            document.getElementById('stat-m-nasi').innerText = n;
-            document.getElementById('stat-m-buah').innerText = f;
-            document.getElementById('stat-m-bengkel').innerText = bk;
-            document.getElementById('stat-m-fc').innerText = fc;
-
             let res = [];
-            if(r > 0) res.push(`Rumah tinggal: ${r}`);
-            if(s > 0) res.push(`Warung sembako: ${s}`);
-            if(b > 0) res.push(`Tambal ban: ${b}`);
-            if(n > 0) res.push(`Warung nasi: ${n}`);
-            if(f > 0) res.push(`Buah buahan: ${f}`);
-            if(bk > 0) res.push(`Bengkel: ${bk}`);
-            if(fc > 0) res.push(`Fc: ${fc}`);
+            if(usaha > 0) res.push(`Tempat Usaha: ${usaha}`);
+            if(rumah > 0) res.push(`Rumah Tinggal: ${rumah}`);
+            if(lainnya > 0) res.push(`Lainnya: ${lainnya}`);
             
             return res.length > 0 ? res.join('\n') : "Belum ada rincian data PKL...";
         }
