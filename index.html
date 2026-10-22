@@ -18,7 +18,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #e2e8f0; }
         .card-sg-top { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-left-width: 5px; }
         
-        /* Watermark diubah menjadi besar, transparan, dan jelas warnanya */
+        /* Watermark */
         .watermark-bg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 75vw; max-width: 800px; opacity: 0.15; pointer-events: none; z-index: 0; }
         
         @media print { body * { visibility: hidden; } #detail-modal, #detail-modal * { visibility: visible; } #detail-modal { position: absolute; left: 0; top: 0; width: 100%; height: auto; background: white !important; padding: 0; display: block !important; } #printable-receipt, #printable-receipt * { visibility: visible; } #printable-receipt { width: 100%; max-width: 100%; margin: 0 auto; padding: 20px; box-shadow: none !important; border: none !important; } .no-print { display: none !important; } }
@@ -119,17 +119,24 @@
 
                         <!-- 3. Jalan & 4. RW -->
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <!-- FITUR TAMBAH JALAN DINAMIS -->
                             <div class="sm:col-span-2">
                                 <div class="flex justify-between items-end mb-2">
                                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">3. Nama Jalan / Lokasi <span class="text-red-600">*</span></label>
-                                    <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded">Bisa lebih dari 1 jalan</span>
+                                    <span class="text-[10px] font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Gunakan tombol +</span>
                                 </div>
-                                <textarea id="field-jalan" required placeholder="Contoh:&#10;1. Jl. Merdeka&#10;2. Jl. Sudirman&#10;3. Jl. Asia Afrika" rows="3" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800 leading-relaxed"></textarea>
-                                <p class="text-[11px] text-slate-500 mt-1">*Tekan tombol <b>Enter</b> untuk memisahkan nama jalan yang berbeda.</p>
+                                <div id="jalan-container" class="space-y-2">
+                                    <div class="flex gap-2 jalan-row">
+                                        <input type="text" required placeholder="Contoh: Jl. Merdeka" oninput="updatePreview()" class="jalan-input w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800">
+                                        <button type="button" onclick="addJalanField()" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-xl hover:bg-blue-200 font-bold border border-blue-200 transition-colors flex items-center justify-center shrink-0" title="Tambah Jalan">
+                                            <i data-lucide="plus" class="w-5 h-5"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">4. RW <span class="text-red-600">*</span></label>
-                                <input type="text" id="field-rw" required placeholder="Contoh: 01, 02, 05" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800">
+                                <input type="text" id="field-rw" required placeholder="Contoh: 01, 02" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800">
                             </div>
                         </div>
 
@@ -148,7 +155,7 @@
                             </div>
                         </div>
 
-                        <!-- 7. Data PKL (3 Kategori Saja) -->
+                        <!-- 7. Data PKL (3 Kategori & Fitur Input Text Lainnya) -->
                         <div class="border border-slate-200 bg-slate-50 p-5 rounded-xl space-y-3">
                             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">7. Data PKL (Rincian Kategori) <span class="text-red-600">*</span></label>
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -160,9 +167,13 @@
                                     <label class="text-[11px] font-bold text-slate-600 uppercase">Rumah Tinggal</label>
                                     <input type="number" min="0" value="0" id="pkl-rumah" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 mt-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500" oninput="updatePreview()">
                                 </div>
+                                <!-- LAINNYA: Text (Nama) + Number (Jumlah) -->
                                 <div>
-                                    <label class="text-[11px] font-bold text-slate-600 uppercase">Lainnya</label>
-                                    <input type="number" min="0" value="0" id="pkl-lainnya" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 mt-1 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500" oninput="updatePreview()">
+                                    <label class="text-[11px] font-bold text-slate-600 uppercase">Lainnya (Nama & Jml)</label>
+                                    <div class="flex gap-2 mt-1">
+                                        <input type="text" id="pkl-lainnya-nama" placeholder="Sebutkan..." class="w-full px-3 py-2.5 rounded-lg border border-slate-300 text-sm font-medium bg-white focus:ring-2 focus:ring-blue-500" oninput="updatePreview()">
+                                        <input type="number" min="0" value="0" id="pkl-lainnya-qty" class="w-16 sm:w-20 px-3 py-2.5 rounded-lg border border-slate-300 text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500 shrink-0" oninput="updatePreview()">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -356,6 +367,39 @@
             updatePreview();
         });
 
+        // FUNGSI JALAN DINAMIS (TAMBAH & HAPUS)
+        function addJalanField() {
+            const container = document.getElementById('jalan-container');
+            const row = document.createElement('div');
+            row.className = 'flex gap-2 jalan-row mt-2';
+            row.innerHTML = `
+                <input type="text" required placeholder="Nama Jalan Lainnya" oninput="updatePreview()" class="jalan-input w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800">
+                <button type="button" onclick="removeJalanField(this)" class="px-4 py-2 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 font-bold border border-red-200 transition-colors flex items-center justify-center shrink-0" title="Hapus Jalan">
+                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                </button>
+            `;
+            container.appendChild(row);
+            lucide.createIcons();
+            updatePreview();
+        }
+
+        function removeJalanField(btn) {
+            btn.parentElement.remove();
+            updatePreview();
+        }
+
+        function getJalanValues() {
+            const inputs = document.querySelectorAll('.jalan-input');
+            const values = [];
+            inputs.forEach((input, index) => {
+                if (input.value.trim() !== '') {
+                    values.push(`${index + 1}. ${input.value.trim()}`);
+                }
+            });
+            return values.length > 0 ? values.join('\n') : '-';
+        }
+        // ==========================================
+
         function onKecamatanChange() {
             const kecVal = document.getElementById('field-kecamatan').value;
             const kelSelect = document.getElementById('field-kelurahan');
@@ -375,15 +419,18 @@
         }
 
         function formatDataPKL() {
-            // Mengambil data dari 3 inputan baru
+            // Ambil data dari 3 kategori
             const usaha = parseInt(document.getElementById('pkl-usaha').value) || 0;
             const rumah = parseInt(document.getElementById('pkl-rumah').value) || 0;
-            const lainnya = parseInt(document.getElementById('pkl-lainnya').value) || 0;
+            
+            // Kategori Lainnya (Teks & Angka)
+            const lainnyaQty = parseInt(document.getElementById('pkl-lainnya-qty').value) || 0;
+            const lainnyaNama = document.getElementById('pkl-lainnya-nama').value.trim() || 'Lainnya';
             
             let res = [];
             if(usaha > 0) res.push(`Tempat Usaha: ${usaha}`);
             if(rumah > 0) res.push(`Rumah Tinggal: ${rumah}`);
-            if(lainnya > 0) res.push(`Lainnya: ${lainnya}`);
+            if(lainnyaQty > 0) res.push(`${lainnyaNama}: ${lainnyaQty}`);
             
             return res.length > 0 ? res.join('\n') : "Belum ada rincian data PKL...";
         }
@@ -392,6 +439,7 @@
             const kec = document.getElementById('field-kecamatan').value || '-';
             const kel = document.getElementById('field-kelurahan').value || '-';
             const jml = document.getElementById('field-jumlah').value || '0';
+            const jalan = getJalanValues();
 
             document.getElementById('prev-kecamatan').innerText = kec;
             document.getElementById('card-kecamatan-val').innerText = kec;
@@ -399,7 +447,7 @@
             document.getElementById('prev-kelurahan').innerText = kel;
             document.getElementById('card-kelurahan-val').innerText = kel;
 
-            document.getElementById('prev-jalan').innerText = document.getElementById('field-jalan').value || '-';
+            document.getElementById('prev-jalan').innerText = jalan;
             document.getElementById('prev-rw').innerText = document.getElementById('field-rw').value || '-';
             
             document.getElementById('prev-jumlah').innerText = `${jml} Unit`;
@@ -444,6 +492,17 @@
 
         function resetForm() {
             document.getElementById('pkl-form').reset();
+            
+            // Reset Dynamic Jalan Fields
+            document.getElementById('jalan-container').innerHTML = `
+                <div class="flex gap-2 jalan-row">
+                    <input type="text" required placeholder="Contoh: Jl. Merdeka" oninput="updatePreview()" class="jalan-input w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-800 text-sm font-medium text-slate-800">
+                    <button type="button" onclick="addJalanField()" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-xl hover:bg-blue-200 font-bold border border-blue-200 transition-colors flex items-center justify-center shrink-0" title="Tambah Jalan">
+                        <i data-lucide="plus" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            `;
+
             uploadedImageBase64 = ''; 
             document.getElementById('preview-img').classList.add('hidden');
             document.getElementById('preview-img-placeholder').classList.remove('hidden');
@@ -451,8 +510,9 @@
             document.getElementById('field-kelurahan').disabled = true;
             document.getElementById('field-kelurahan').innerHTML = '<option value="">-- Pilih Kecamatan Dulu --</option>';
             document.getElementById('card-foto-status').innerHTML = `<i data-lucide="camera-off" class="w-4 h-4 text-slate-400"></i> Belum Diupload`;
-            updatePreview();
+            
             lucide.createIcons();
+            updatePreview();
         }
 
         function handleFormSubmit(e) {
@@ -466,7 +526,7 @@
                 id: `PKL-2026-${Math.floor(1000 + Math.random() * 9000)}`,
                 kecamatan: document.getElementById('field-kecamatan').value,
                 kelurahan: document.getElementById('field-kelurahan').value,
-                jalan: document.getElementById('field-jalan').value,
+                jalan: getJalanValues(), // Mengambil gabungan nama jalan dinamis
                 rw: document.getElementById('field-rw').value,
                 jumlah: parseInt(document.getElementById('field-jumlah').value),
                 waktu: document.getElementById('field-waktu').value,
