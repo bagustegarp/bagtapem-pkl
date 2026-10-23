@@ -129,7 +129,7 @@
 
                     <form id="pkl-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
                         
-                        <!-- KATEGORI LAPORAN (PENAMBAHAN BARU) -->
+                        <!-- KATEGORI LAPORAN -->
                         <div class="bg-blue-50/50 p-5 rounded-xl border border-blue-200 shadow-sm relative overflow-hidden">
                             <div class="absolute right-0 top-0 opacity-5 pointer-events-none transform translate-x-2 -translate-y-2">
                                 <i data-lucide="layers" class="w-32 h-32 text-blue-800"></i>
@@ -168,30 +168,20 @@
                                 </div>
                             </div>
 
-                            <!-- 3. & 4. JALAN & RW DINAMIS BERPASANGAN -->
+                            <!-- 3. & 4. JALAN & RW -->
                             <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
-                                <div class="flex justify-between items-end mb-3">
-                                    <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider">
-                                        <i data-lucide="navigation" class="w-4 h-4 mr-1.5 text-blue-600"></i> 3 & 4. Nama Jalan & RW <span class="text-red-600 ml-1">*</span>
-                                    </label>
-                                    <span class="text-[10px] font-bold bg-blue-600 text-white px-2.5 py-1 rounded-md cursor-pointer hover:bg-blue-700 transition-colors shadow-sm flex items-center gap-1" onclick="addJalanRwField()"><i data-lucide="plus" class="w-3 h-3"></i> Tambah Lokasi</span>
-                                </div>
+                                <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">
+                                    <i data-lucide="navigation" class="w-4 h-4 mr-1.5 text-blue-600"></i> 3 & 4. Nama Jalan & RW <span class="text-red-600 ml-1">*</span>
+                                </label>
                                 
-                                <div id="jalan-rw-container" class="space-y-3">
-                                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 jalan-rw-row items-center bg-white p-3 rounded-xl border border-slate-200 shadow-sm transition-all">
-                                        <div class="sm:col-span-8">
-                                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nama Jalan Utama / Gg</label>
-                                            <input type="text" required placeholder="Contoh: Jl. Merdeka" oninput="updatePreview()" class="jalan-input w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                                        </div>
-                                        <div class="sm:col-span-3">
-                                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">RW Lokasi</label>
-                                            <input type="text" required placeholder="Contoh: 05" oninput="updatePreview()" class="rw-input w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                                        </div>
-                                        <div class="sm:col-span-1 flex items-end justify-center pt-5 sm:pt-0">
-                                            <button type="button" onclick="addJalanRwField()" class="w-full sm:w-auto p-2.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-600 hover:text-white font-bold transition-all flex items-center justify-center hover:scale-105" title="Tambah Jalan & RW">
-                                                <i data-lucide="plus" class="w-4 h-4"></i>
-                                            </button>
-                                        </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                                    <div class="sm:col-span-9">
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nama Jalan Utama / Gg</label>
+                                        <input type="text" id="field-jalan" required placeholder="Contoh: Jl. Merdeka" oninput="updatePreview()" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                                    </div>
+                                    <div class="sm:col-span-3">
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">RW Lokasi</label>
+                                        <input type="text" id="field-rw" required placeholder="Contoh: 05" oninput="updatePreview()" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                                     </div>
                                 </div>
                             </div>
@@ -215,28 +205,12 @@
                                 </div>
                             </div>
 
-                            <!-- 7. Data PKL -->
+                            <!-- 7. Rincian Kategori (Berubah menjadi textarea keterangan) -->
                             <div class="border border-slate-200 bg-slate-50 p-5 rounded-xl space-y-3 hover:border-blue-300 transition-colors shadow-sm">
                                 <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider">
-                                    <i data-lucide="layout-list" class="w-4 h-4 mr-1.5 text-blue-600"></i> 7. Rincian Kategori <span class="text-red-600 ml-1">*</span>
+                                    <i data-lucide="layout-list" class="w-4 h-4 mr-1.5 text-blue-600"></i> 7. Keterangan Rincian Kategori <span class="text-red-600 ml-1">*</span>
                                 </label>
-                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
-                                    <div class="bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
-                                        <label class="text-[10px] font-extrabold text-slate-500 uppercase">Tempat Usaha</label>
-                                        <input type="number" min="0" value="0" id="pkl-usaha" class="w-full px-3 py-2 rounded border border-slate-200 mt-2 text-sm font-bold bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all outline-none text-center" oninput="updatePreview()">
-                                    </div>
-                                    <div class="bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
-                                        <label class="text-[10px] font-extrabold text-slate-500 uppercase">Rumah Tinggal</label>
-                                        <input type="number" min="0" value="0" id="pkl-rumah" class="w-full px-3 py-2 rounded border border-slate-200 mt-2 text-sm font-bold bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all outline-none text-center" oninput="updatePreview()">
-                                    </div>
-                                    <div class="bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
-                                        <label class="text-[10px] font-extrabold text-slate-500 uppercase">Lainnya (Nama & Jml)</label>
-                                        <div class="flex gap-2 mt-2">
-                                            <input type="text" id="pkl-lainnya-nama" placeholder="Jenis..." class="w-full px-2 py-2 rounded border border-slate-200 text-xs font-medium bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all outline-none" oninput="updatePreview()">
-                                            <input type="number" min="0" value="0" id="pkl-lainnya-qty" class="w-14 px-1 py-2 rounded border border-slate-200 text-sm font-bold bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 shrink-0 transition-all outline-none text-center" oninput="updatePreview()">
-                                        </div>
-                                    </div>
-                                </div>
+                                <textarea id="field-rincian" rows="3" required placeholder="Tuliskan keterangan detail rincian di sini..." oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:bg-slate-50 focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 transition-all outline-none shadow-sm"></textarea>
                             </div>
 
                             <!-- 8. Dokumentasi (Drag & Drop UI) -->
@@ -315,7 +289,7 @@
                                     <div class="flex justify-between items-start pb-2.5 border-b border-dashed border-slate-300"><span class="text-slate-500 font-bold">5. Jml Total Unit</span><span class="font-black text-amber-600 text-right text-base bg-amber-50 px-2 py-0.5 rounded" id="prev-jumlah">0 Unit</span></div>
                                     <div class="flex justify-between items-start pb-2.5 border-b border-dashed border-slate-300"><span class="text-slate-500 font-bold">6. Tanggal Pelaksanaan</span><span class="font-bold text-slate-800 text-right" id="prev-waktu">-</span></div>
                                     <div class="pb-2.5 border-b border-dashed border-slate-300">
-                                        <span class="text-slate-500 font-bold block mb-1.5">7. Rekap Data Form</span>
+                                        <span class="text-slate-500 font-bold block mb-1.5">7. Keterangan Rincian</span>
                                         <p class="p-3 bg-slate-50 rounded-lg text-slate-800 font-bold border border-slate-200 whitespace-pre-wrap leading-relaxed text-xs shadow-sm" id="prev-datapkl">Belum ada rincian...</p>
                                     </div>
                                     <div class="pt-1">
@@ -331,7 +305,7 @@
             </div>
         </main>
 
-        <!-- FOOTER ELEGAN (2 Kolom) -->
+        <!-- FOOTER ELEGAN -->
         <footer class="bg-white/90 backdrop-blur-md mt-12 py-6 border-t border-slate-200 relative z-20">
             <div class="max-w-[1400px] mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="flex items-center space-x-3 text-left">
@@ -343,13 +317,13 @@
                 </div>
                 <div class="flex items-center space-x-2 bg-slate-50 px-4 py-2 rounded-full border border-slate-200 shadow-sm">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="text-xs font-bold text-slate-600">Sistem Berjalan Normal • V 2.2</span>
+                    <span class="text-xs font-bold text-slate-600">Sistem Berjalan Normal • V 2.3</span>
                 </div>
             </div>
         </footer>
     </div>
 
-    <!-- MODAL BUKTI PELAPORAN DENGAN ANIMASI BOUNCE & FADE -->
+    <!-- MODAL BUKTI PELAPORAN -->
     <div id="detail-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
         <div id="modal-content" class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto transform scale-95 transition-all duration-300 opacity-0 border border-slate-100">
             <button onclick="closeModal()" class="absolute top-4 right-4 p-2 bg-slate-100 text-slate-400 hover:text-slate-800 hover:bg-slate-200 rounded-full no-print transition-all">
@@ -386,7 +360,7 @@
                     <div class="flex justify-between py-1.5 border-b border-dashed border-slate-200"><span class="text-slate-500 font-bold">5. Jumlah Total:</span><span class="font-black text-blue-900 bg-blue-50 px-2 py-0.5 rounded" id="modal-jumlah"></span></div>
                     <div class="flex justify-between py-1.5 border-b border-dashed border-slate-200"><span class="text-slate-500 font-bold">6. Tanggal Data:</span><span class="font-bold text-slate-900" id="modal-waktu"></span></div>
                     <div class="py-1.5 border-b border-dashed border-slate-200">
-                        <span class="text-slate-500 font-bold block mb-1.5">7. Data Rincian:</span>
+                        <span class="text-slate-500 font-bold block mb-1.5">7. Keterangan Rincian:</span>
                         <p class="p-2.5 bg-slate-50 rounded border border-slate-200 text-slate-900 font-bold whitespace-pre-wrap text-xs shadow-sm" id="modal-datapkl"></p>
                     </div>
                     <div class="py-1">
@@ -454,7 +428,7 @@
         };
 
         let uploadedImageBase64 = '';
-        const STORAGE_KEY = 'pkl_form_draft_v2';
+        const STORAGE_KEY = 'pkl_form_draft_v3';
 
         // --- TOAST NOTIFICATION ---
         function showToast(message, type = 'success') {
@@ -563,22 +537,15 @@
 
         // --- DRAFT LOKAL ---
         function saveDraft() {
-            const jalanRows = [];
-            document.querySelectorAll('.jalan-rw-row').forEach(row => {
-                jalanRows.push({ jalan: row.querySelector('.jalan-input').value, rw: row.querySelector('.rw-input').value });
-            });
-
             const draftData = {
                 kategori: document.getElementById('field-kategori').value,
                 kecamatan: document.getElementById('field-kecamatan').value,
                 kelurahan: document.getElementById('field-kelurahan').value,
-                jalanRw: jalanRows,
+                jalan: document.getElementById('field-jalan').value,
+                rw: document.getElementById('field-rw').value,
                 jumlah: document.getElementById('field-jumlah').value,
                 waktu: document.getElementById('field-waktu').value,
-                usaha: document.getElementById('pkl-usaha').value,
-                rumah: document.getElementById('pkl-rumah').value,
-                lainnyaNama: document.getElementById('pkl-lainnya-nama').value,
-                lainnyaQty: document.getElementById('pkl-lainnya-qty').value,
+                rincian: document.getElementById('field-rincian').value,
                 keterangan: document.getElementById('field-keterangan').value,
                 fotoBase64: uploadedImageBase64
             };
@@ -598,39 +565,12 @@
                     if(draft.kategori) { document.getElementById('field-kategori').value = draft.kategori; onKategoriChange(false); }
                     if(draft.kecamatan) { document.getElementById('field-kecamatan').value = draft.kecamatan; onKecamatanChange(false); }
                     if(draft.kelurahan) document.getElementById('field-kelurahan').value = draft.kelurahan;
+                    if(draft.jalan) document.getElementById('field-jalan').value = draft.jalan;
+                    if(draft.rw) document.getElementById('field-rw').value = draft.rw;
                     if(draft.jumlah) document.getElementById('field-jumlah').value = draft.jumlah;
                     if(draft.waktu) document.getElementById('field-waktu').value = draft.waktu;
-                    if(draft.usaha) document.getElementById('pkl-usaha').value = draft.usaha;
-                    if(draft.rumah) document.getElementById('pkl-rumah').value = draft.rumah;
-                    if(draft.lainnyaNama) document.getElementById('pkl-lainnya-nama').value = draft.lainnyaNama;
-                    if(draft.lainnyaQty) document.getElementById('pkl-lainnya-qty').value = draft.lainnyaQty;
+                    if(draft.rincian) document.getElementById('field-rincian').value = draft.rincian;
                     if(draft.keterangan) document.getElementById('field-keterangan').value = draft.keterangan;
-
-                    if(draft.jalanRw && draft.jalanRw.length > 0) {
-                        const container = document.getElementById('jalan-rw-container');
-                        container.innerHTML = '';
-                        draft.jalanRw.forEach((item, index) => {
-                            const isFirst = index === 0;
-                            const row = document.createElement('div');
-                            row.className = 'grid grid-cols-1 sm:grid-cols-12 gap-2 jalan-rw-row items-center bg-white p-3 rounded-xl border border-slate-200 shadow-sm transition-all';
-                            row.innerHTML = `
-                                <div class="sm:col-span-8">
-                                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nama Jalan Utama / Gg</label>
-                                    <input type="text" required value="${item.jalan}" placeholder="Contoh: Jl. Merdeka" oninput="updatePreview()" class="jalan-input w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                                </div>
-                                <div class="sm:col-span-3">
-                                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">RW Lokasi</label>
-                                    <input type="text" required value="${item.rw}" placeholder="Contoh: 05" oninput="updatePreview()" class="rw-input w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                                </div>
-                                <div class="sm:col-span-1 flex items-end justify-center pt-5 sm:pt-0">
-                                    <button type="button" onclick="${isFirst ? 'addJalanRwField()' : 'removeJalanRwField(this)'}" class="w-full sm:w-auto p-2.5 ${isFirst ? 'bg-blue-100 text-blue-700 hover:bg-blue-600 hover:text-white' : 'bg-red-50 text-red-600 hover:bg-red-500 hover:text-white'} rounded-lg font-bold transition-all flex items-center justify-center hover:scale-105" title="${isFirst ? 'Tambah Lokasi' : 'Hapus'}">
-                                        <i data-lucide="${isFirst ? 'plus' : 'trash-2'}" class="w-4 h-4"></i>
-                                    </button>
-                                </div>
-                            `;
-                            container.appendChild(row);
-                        });
-                    }
 
                     if(draft.fotoBase64) {
                         uploadedImageBase64 = draft.fotoBase64;
@@ -647,47 +587,13 @@
             updatePreview();
         }
 
-        // --- FORM DINAMIS ---
-        function addJalanRwField() {
-            const container = document.getElementById('jalan-rw-container');
-            const row = document.createElement('div');
-            row.className = 'grid grid-cols-1 sm:grid-cols-12 gap-2 jalan-rw-row items-center bg-white p-3 rounded-xl border border-slate-200 shadow-sm transition-all opacity-0 translate-y-2';
-            row.innerHTML = `
-                <div class="sm:col-span-8">
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nama Jalan Utama / Gg</label>
-                    <input type="text" required placeholder="Jalan Lainnya" oninput="updatePreview()" class="jalan-input w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                </div>
-                <div class="sm:col-span-3">
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">RW Lokasi</label>
-                    <input type="text" required placeholder="Contoh: 02" oninput="updatePreview()" class="rw-input w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                </div>
-                <div class="sm:col-span-1 flex items-end justify-center pt-5 sm:pt-0">
-                    <button type="button" onclick="removeJalanRwField(this)" class="w-full sm:w-auto p-2.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-500 hover:text-white font-bold transition-all flex items-center justify-center hover:scale-105" title="Hapus">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            `;
-            container.appendChild(row);
-            lucide.createIcons();
-            setTimeout(() => { row.classList.remove('opacity-0', 'translate-y-2'); }, 10);
-            updatePreview();
-        }
-
-        function removeJalanRwField(btn) {
-            const row = btn.closest('.jalan-rw-row');
-            row.classList.add('opacity-0', 'scale-95');
-            setTimeout(() => { row.remove(); updatePreview(); }, 200);
-        }
-
         function getJalanRwValues() {
-            const rows = document.querySelectorAll('.jalan-rw-row');
-            const values = [];
-            rows.forEach((row, index) => {
-                const jalanVal = row.querySelector('.jalan-input').value.trim();
-                const rwVal = row.querySelector('.rw-input').value.trim();
-                if (jalanVal !== '' || rwVal !== '') { values.push(`${index + 1}. ${jalanVal || '-'} (RW: ${rwVal || '-'})`); }
-            });
-            return values.length > 0 ? values.join('\n') : '-';
+            const jalan = document.getElementById('field-jalan').value.trim();
+            const rw = document.getElementById('field-rw').value.trim();
+            if(jalan || rw) {
+                return `${jalan || '-'} (RW: ${rw || '-'})`;
+            }
+            return '-';
         }
 
         function onKecamatanChange(doUpdatePreview = true) {
@@ -708,15 +614,8 @@
         }
 
         function formatDataPKL() {
-            const usaha = parseInt(document.getElementById('pkl-usaha').value) || 0;
-            const rumah = parseInt(document.getElementById('pkl-rumah').value) || 0;
-            const lainnyaQty = parseInt(document.getElementById('pkl-lainnya-qty').value) || 0;
-            const lainnyaNama = document.getElementById('pkl-lainnya-nama').value.trim() || 'Lainnya';
-            let res = [];
-            if(usaha > 0) res.push(`Tempat Usaha: ${usaha}`);
-            if(rumah > 0) res.push(`Rumah Tinggal: ${rumah}`);
-            if(lainnyaQty > 0) res.push(`${lainnyaNama}: ${lainnyaQty}`);
-            return res.length > 0 ? res.join('\n') : "Belum ada rincian data...";
+            const rincian = document.getElementById('field-rincian').value.trim();
+            return rincian ? rincian : "Belum ada rincian data...";
         }
 
         function updatePreview() {
@@ -773,23 +672,6 @@
             // Sembunyikan kembali form details & hapus status kategori
             onKategoriChange(false);
             
-            document.getElementById('jalan-rw-container').innerHTML = `
-                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 jalan-rw-row items-center bg-white p-3 rounded-xl border border-slate-200 shadow-sm transition-all">
-                    <div class="sm:col-span-8">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nama Jalan Utama / Gg</label>
-                        <input type="text" required placeholder="Contoh: Jl. Merdeka" oninput="updatePreview()" class="jalan-input w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                    </div>
-                    <div class="sm:col-span-3">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">RW Lokasi</label>
-                        <input type="text" required placeholder="Contoh: 05" oninput="updatePreview()" class="rw-input w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                    </div>
-                    <div class="sm:col-span-1 flex items-end justify-center pt-5 sm:pt-0">
-                        <button type="button" onclick="addJalanRwField()" class="w-full sm:w-auto p-2.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-600 hover:text-white font-bold transition-all flex items-center justify-center hover:scale-105" title="Tambah">
-                            <i data-lucide="plus" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
             uploadedImageBase64 = ''; 
             document.getElementById('preview-img').classList.add('hidden');
             document.getElementById('preview-img-placeholder').classList.remove('hidden');
