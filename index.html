@@ -73,9 +73,7 @@
             <!-- TITLE SECTION -->
             <div class="animate-fade-in-up border-l-4 border-blue-600 pl-4">
                 <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Selamat Datang, Petugas Pendataan!</h2>
-                <p class="text-sm text-slate-500 font-medium mt-1">Silakan pilih kategori laporan dan lengkapi atribut formulir di bawah dengan teliti!
-
-                </p>
+                <p class="text-sm text-slate-500 font-medium mt-1">Silakan pilih kategori laporan dan lengkapi atribut formulir di bawah dengan teliti!</p>
             </div>
 
             <!-- KARTU RINGKASAN DATA -->
@@ -212,7 +210,7 @@
                                 <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider">
                                     <i data-lucide="layout-list" class="w-4 h-4 mr-1.5 text-blue-600"></i> 7. Keterangan Rincian Kategori <span class="text-red-600 ml-1">*</span>
                                 </label>
-                                <textarea id="field-rincian" rows="4" required placeholder="Tuliskan keterangan detail rincian di sini..." oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:bg-slate-50 focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 transition-all outline-none shadow-sm"></textarea>
+                                <textarea id="field-rincian" rows="4" required placeholder="" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:bg-slate-50 focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 transition-all outline-none shadow-sm"></textarea>
                             </div>
 
                             <!-- 8. Dokumentasi (Drag & Drop UI) -->
@@ -506,11 +504,11 @@
                 
                 // --- LOGIKA UPDATE PLACEHOLDER SESUAI KATEGORI ---
                 if (kat === 'BANGLI') {
-                    rincianField.placeholder = "Tuliskan keterangan detail rincian di sini...\nContoh: Hunian liar/kios permanen/posko/lapak liar di atas saluran air./di atas trotoar/sempadan sungai dll.";
+                    rincianField.placeholder = "Contoh: Hunian liar/kios permanen/posko/lapak liar di atas saluran air./di atas trotoar/sempadan sungai dll.";
                 } else if (kat === 'PKL') {
-                    rincianField.placeholder = "Tuliskan keterangan detail rincian di sini...\nContoh: Gerobak, tenda bongkar-pasang, gelaran (lesehan), roda dorong, kendaraan - Kuliner (makanan/minuman), fashion/pakaian, aksesoris/gadget, buah-buahan/sayur, jasa.dll";
+                    rincianField.placeholder = "Contoh: Gerobak, tenda bongkar-pasang, gelaran (lesehan), roda dorong, kendaraan - Kuliner (makanan/minuman), fashion/pakaian, aksesoris/gadget, buah-buahan/sayur, jasa.dll";
                 } else if (kat === 'Spanduk, Baliho dan Tali-talian') {
-                    rincianField.placeholder = "Tuliskan keterangan detail rincian di sini...\nContoh: spanduk, banner, baligo, tali tali, dll";
+                    rincianField.placeholder = "Contoh: spanduk, banner, baligo, tali tali, dll";
                 }
             } else {
                 formDetails.classList.add('hidden');
@@ -521,7 +519,7 @@
                 prevBadge.className = "inline-block px-4 py-1.5 bg-slate-100 text-slate-400 font-black text-xs rounded-full uppercase tracking-widest border border-slate-200 shadow-sm transition-colors duration-300";
                 
                 // Reset placeholder ke default
-                rincianField.placeholder = "Tuliskan keterangan detail rincian di sini...";
+                rincianField.placeholder = "";
             }
             if(doUpdatePreview) updatePreview();
         }
