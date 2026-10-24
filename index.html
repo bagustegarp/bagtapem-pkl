@@ -30,6 +30,29 @@
         .animation-delay-2000 { animation-delay: 2s; }
         .animation-delay-4000 { animation-delay: 4s; }
 
+        /* --- Animasi Masuk OPSI A (Staggered Soft Fade & Slide Up) --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-enter {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0; /* Mulai dari tersembunyi agar tidak patah-patah */
+        }
+
+        /* Stagger Delays (Efek Muncul Bergantian) */
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.25s; }
+        .delay-3 { animation-delay: 0.4s; }
+        .delay-4 { animation-delay: 0.55s; }
+
         @media print { body * { visibility: hidden; } #detail-modal, #detail-modal * { visibility: visible; } #detail-modal { position: absolute; left: 0; top: 0; width: 100%; height: auto; background: white !important; padding: 0; display: block !important; } #printable-receipt, #printable-receipt * { visibility: visible; } #printable-receipt { width: 100%; max-width: 100%; margin: 0 auto; padding: 20px; box-shadow: none !important; border: none !important; } .no-print { display: none !important; } }
         ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: #e2e8f0; } ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
     </style>
@@ -50,8 +73,8 @@
     <div id="toast-container" class="fixed top-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
 
     <div class="relative z-10 flex-grow flex flex-col">
-        <!-- HEADER -->
-        <header class="bg-white/80 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <!-- HEADER (Ditambahkan animasi animate-enter delay-1) -->
+        <header class="bg-white/80 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-40 shadow-sm animate-enter delay-1">
             <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <img src="logo bagtapem.png" alt="Logo BAGTAPEM" class="h-10 w-auto object-contain" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Lambang_Kota_Bandung.svg/1200px-Lambang_Kota_Bandung.svg.png'">
@@ -70,14 +93,14 @@
 
         <main class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full space-y-8">
             
-            <!-- TITLE SECTION -->
-            <div class="animate-fade-in-up border-l-4 border-blue-600 pl-4">
+            <!-- TITLE SECTION (Ditambahkan animasi animate-enter delay-2) -->
+            <div class="border-l-4 border-blue-600 pl-4 animate-enter delay-2">
                 <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Selamat Datang, Petugas Pendataan!</h2>
                 <p class="text-sm text-slate-500 font-medium mt-1">Silakan pilih kategori laporan dan lengkapi atribut formulir di bawah dengan teliti!</p>
             </div>
 
-            <!-- KARTU RINGKASAN DATA -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+            <!-- KARTU RINGKASAN DATA (Ditambahkan animasi animate-enter delay-3) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 animate-enter delay-3">
                 <div class="card-sg-top border-l-[#1e3a8a] text-[#1e3a8a]">
                     <i data-lucide="store" class="w-24 h-24 card-icon-bg"></i>
                     <p class="text-xs font-bold text-slate-500 z-10 relative">Total Kuantitas Data</p>
@@ -106,8 +129,8 @@
                 </div>
             </div>
 
-            <!-- FORM + PREVIEW SECTION -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <!-- FORM + PREVIEW SECTION (Ditambahkan animasi animate-enter delay-4) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-enter delay-4">
                 
                 <!-- FORM INPUT DATA -->
                 <div class="lg:col-span-7 bg-white/95 backdrop-blur-md rounded-2xl p-6 sm:p-8 shadow-md border border-white relative z-10">
