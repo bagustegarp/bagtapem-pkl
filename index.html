@@ -236,67 +236,28 @@
                                 <textarea id="field-rincian" rows="4" required placeholder="" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:bg-slate-50 focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 transition-all outline-none shadow-sm"></textarea>
                             </div>
 
-                            <!-- 8. Dokumentasi PDF (4 Kolom Drag & Drop) -->
+                            <!-- 8. Dokumentasi PDF (1 Kolom Drag & Drop) -->
                             <div>
                                 <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                                    <i data-lucide="file-text" class="w-4 h-4 mr-1.5 text-blue-600"></i> 8. File Dokumentasi (Maks 4 PDF) <span class="text-red-600 ml-1">*</span>
+                                    <i data-lucide="file-text" class="w-4 h-4 mr-1.5 text-blue-600"></i> 8. File Dokumentasi (1 PDF) <span class="text-red-600 ml-1">*</span>
                                 </label>
-                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                                    <!-- PDF 1 -->
-                                    <div id="drop-area-1" class="relative border-2 border-dashed border-slate-300 rounded-xl p-3 text-center transition-all duration-300 bg-slate-50 hover:bg-blue-50 hover:border-blue-400 group overflow-hidden h-28 flex flex-col items-center justify-center cursor-pointer">
-                                        <input type="file" id="field-doc-1" accept="application/pdf" onchange="handlePdfUpload(event, 1)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Drag & Drop PDF 1">
-                                        <div id="drop-content-1" class="flex flex-col items-center justify-center space-y-1.5 pointer-events-none w-full px-1">
-                                            <div class="p-2 bg-white shadow-sm border border-slate-100 text-blue-700 rounded-full group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                                                <i id="icon-doc-1" data-lucide="file-up" class="w-5 h-5"></i>
-                                            </div>
-                                            <p class="text-[9px] font-bold text-slate-500 truncate w-full px-1" id="file-label-1">Drag/Klik PDF 1</p>
+                                
+                                <!-- Kolom Upload PDF Tunggal -->
+                                <div id="drop-area-1" class="relative border-2 border-dashed border-slate-300 rounded-xl p-5 text-center transition-all duration-300 bg-slate-50 hover:bg-blue-50 hover:border-blue-400 group overflow-hidden h-36 flex flex-col items-center justify-center cursor-pointer max-w-sm">
+                                    <input type="file" id="field-doc-1" accept="application/pdf" required onchange="handlePdfUpload(event, 1)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Drag & Drop PDF">
+                                    <div id="drop-content-1" class="flex flex-col items-center justify-center space-y-2 pointer-events-none w-full px-2">
+                                        <div class="p-3 bg-white shadow-sm border border-slate-100 text-blue-700 rounded-full group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                                            <i id="icon-doc-1" data-lucide="file-up" class="w-6 h-6"></i>
                                         </div>
-                                        <button type="button" id="btn-del-1" onclick="removePdf(1); event.preventDefault(); event.stopPropagation();" class="hidden absolute top-1 right-1 bg-red-100 text-red-600 rounded-full p-1 z-20 hover:bg-red-600 hover:text-white transition-colors shadow-sm">
-                                            <i data-lucide="x" class="w-3 h-3"></i>
-                                        </button>
+                                        <p class="text-[11px] font-bold text-slate-500 truncate w-full" id="file-label-1">Drag atau Klik untuk Upload PDF</p>
                                     </div>
-                                    <!-- PDF 2 -->
-                                    <div id="drop-area-2" class="relative border-2 border-dashed border-slate-300 rounded-xl p-3 text-center transition-all duration-300 bg-slate-50 hover:bg-blue-50 hover:border-blue-400 group overflow-hidden h-28 flex flex-col items-center justify-center cursor-pointer">
-                                        <input type="file" id="field-doc-2" accept="application/pdf" onchange="handlePdfUpload(event, 2)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Drag & Drop PDF 2">
-                                        <div id="drop-content-2" class="flex flex-col items-center justify-center space-y-1.5 pointer-events-none w-full px-1">
-                                            <div class="p-2 bg-white shadow-sm border border-slate-100 text-blue-700 rounded-full group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                                                <i id="icon-doc-2" data-lucide="file-up" class="w-5 h-5"></i>
-                                            </div>
-                                            <p class="text-[9px] font-bold text-slate-500 truncate w-full px-1" id="file-label-2">Drag/Klik PDF 2</p>
-                                        </div>
-                                        <button type="button" id="btn-del-2" onclick="removePdf(2); event.preventDefault(); event.stopPropagation();" class="hidden absolute top-1 right-1 bg-red-100 text-red-600 rounded-full p-1 z-20 hover:bg-red-600 hover:text-white transition-colors shadow-sm">
-                                            <i data-lucide="x" class="w-3 h-3"></i>
-                                        </button>
-                                    </div>
-                                    <!-- PDF 3 -->
-                                    <div id="drop-area-3" class="relative border-2 border-dashed border-slate-300 rounded-xl p-3 text-center transition-all duration-300 bg-slate-50 hover:bg-blue-50 hover:border-blue-400 group overflow-hidden h-28 flex flex-col items-center justify-center cursor-pointer">
-                                        <input type="file" id="field-doc-3" accept="application/pdf" onchange="handlePdfUpload(event, 3)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Drag & Drop PDF 3">
-                                        <div id="drop-content-3" class="flex flex-col items-center justify-center space-y-1.5 pointer-events-none w-full px-1">
-                                            <div class="p-2 bg-white shadow-sm border border-slate-100 text-blue-700 rounded-full group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                                                <i id="icon-doc-3" data-lucide="file-up" class="w-5 h-5"></i>
-                                            </div>
-                                            <p class="text-[9px] font-bold text-slate-500 truncate w-full px-1" id="file-label-3">Drag/Klik PDF 3</p>
-                                        </div>
-                                        <button type="button" id="btn-del-3" onclick="removePdf(3); event.preventDefault(); event.stopPropagation();" class="hidden absolute top-1 right-1 bg-red-100 text-red-600 rounded-full p-1 z-20 hover:bg-red-600 hover:text-white transition-colors shadow-sm">
-                                            <i data-lucide="x" class="w-3 h-3"></i>
-                                        </button>
-                                    </div>
-                                    <!-- PDF 4 -->
-                                    <div id="drop-area-4" class="relative border-2 border-dashed border-slate-300 rounded-xl p-3 text-center transition-all duration-300 bg-slate-50 hover:bg-blue-50 hover:border-blue-400 group overflow-hidden h-28 flex flex-col items-center justify-center cursor-pointer">
-                                        <input type="file" id="field-doc-4" accept="application/pdf" onchange="handlePdfUpload(event, 4)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Drag & Drop PDF 4">
-                                        <div id="drop-content-4" class="flex flex-col items-center justify-center space-y-1.5 pointer-events-none w-full px-1">
-                                            <div class="p-2 bg-white shadow-sm border border-slate-100 text-blue-700 rounded-full group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                                                <i id="icon-doc-4" data-lucide="file-up" class="w-5 h-5"></i>
-                                            </div>
-                                            <p class="text-[9px] font-bold text-slate-500 truncate w-full px-1" id="file-label-4">Drag/Klik PDF 4</p>
-                                        </div>
-                                        <button type="button" id="btn-del-4" onclick="removePdf(4); event.preventDefault(); event.stopPropagation();" class="hidden absolute top-1 right-1 bg-red-100 text-red-600 rounded-full p-1 z-20 hover:bg-red-600 hover:text-white transition-colors shadow-sm">
-                                            <i data-lucide="x" class="w-3 h-3"></i>
-                                        </button>
-                                    </div>
+                                    <button type="button" id="btn-del-1" onclick="removePdf(1); event.preventDefault(); event.stopPropagation();" class="hidden absolute top-2 right-2 bg-red-100 text-red-600 rounded-full p-1.5 z-20 hover:bg-red-600 hover:text-white transition-colors shadow-sm">
+                                        <i data-lucide="x" class="w-4 h-4"></i>
+                                    </button>
                                 </div>
+
                                 <p class="text-[10px] font-bold text-slate-400 mt-2 bg-white inline-block px-2 py-1 rounded border border-slate-100 shadow-sm">
-                                    <i data-lucide="info" class="w-3 h-3 inline"></i> Format: PDF (Maks 2MB per file). Wajib melampirkan minimal 1 dokumen.
+                                    <i data-lucide="info" class="w-3 h-3 inline"></i> Format: PDF. Ukuran Maksimal 2MB.
                                 </p>
                             </div>
 
@@ -346,7 +307,7 @@
                             <div id="preview-details" class="hidden space-y-4">
                                 <!-- PDF Wrapper -->
                                 <div class="relative w-full min-h-[120px] bg-slate-100 rounded-xl overflow-hidden border border-slate-200 p-4 shadow-inner flex flex-col justify-center">
-                                    <div id="preview-pdf-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full hidden">
+                                    <div id="preview-pdf-container" class="grid grid-cols-1 gap-2 w-full hidden">
                                         <!-- Diinjeksi oleh JS -->
                                     </div>
                                     <div id="preview-img-placeholder" class="text-center transition-opacity duration-300">
@@ -425,7 +386,7 @@
                 </div>
 
                 <!-- PDF List Modal (Replace Image) -->
-                <div id="modal-pdf-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200 shadow-inner w-full min-h-[80px]">
+                <div id="modal-pdf-list" class="grid grid-cols-1 gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200 shadow-inner w-full min-h-[80px]">
                     <!-- Injected via JS -->
                 </div>
 
@@ -534,9 +495,9 @@
 
         };
 
-        // Simpan 4 PDF secara terpisah
-        let uploadedPdfs = [null, null, null, null];
-        let pdfNames = ["", "", "", ""];
+        // Karena sekarang hanya 1 kolom PDF, array hanya menyimpan 1 nilai
+        let uploadedPdfs = [null];
+        let pdfNames = [""];
         const STORAGE_KEY = 'pkl_form_draft_v3';
 
         // --- TOAST NOTIFICATION ---
@@ -668,20 +629,17 @@
                     if(draft.rincian) document.getElementById('field-rincian').value = draft.rincian;
                     if(draft.keterangan) document.getElementById('field-keterangan').value = draft.keterangan;
 
-                    if(draft.pdfs) {
-                        uploadedPdfs = draft.pdfs;
-                        pdfNames = draft.pdfNames || ["", "", "", ""];
-                        uploadedPdfs.forEach((pdf, i) => {
-                            if(pdf) {
-                                const index = i + 1;
-                                document.getElementById(`file-label-${index}`).innerText = pdfNames[i] || `Draft PDF ${index}`;
-                                document.getElementById(`file-label-${index}`).classList.replace('text-slate-500', 'text-blue-700');
-                                const icon = document.getElementById(`icon-doc-${index}`);
-                                icon.setAttribute('data-lucide', 'file-check-2');
-                                icon.parentElement.classList.replace('text-blue-700', 'text-emerald-600');
-                                document.getElementById(`btn-del-${index}`).classList.remove('hidden');
-                            }
-                        });
+                    if(draft.pdfs && draft.pdfs[0]) {
+                        uploadedPdfs[0] = draft.pdfs[0];
+                        pdfNames[0] = draft.pdfNames ? draft.pdfNames[0] : "Draft PDF";
+                        
+                        document.getElementById(`file-label-1`).innerText = pdfNames[0];
+                        document.getElementById(`file-label-1`).classList.replace('text-slate-500', 'text-blue-700');
+                        const icon = document.getElementById(`icon-doc-1`);
+                        icon.setAttribute('data-lucide', 'file-check-2');
+                        icon.parentElement.classList.replace('text-blue-700', 'text-emerald-600');
+                        document.getElementById(`btn-del-1`).classList.remove('hidden');
+                        
                         showToast("Draft pelaporan sebelumnya berhasil dimuat", "info");
                     }
                     
@@ -742,17 +700,16 @@
             
             let hasPdf = false;
             pdfContainer.innerHTML = '';
-            uploadedPdfs.forEach((pdf, i) => {
-                if(pdf) {
-                    hasPdf = true;
-                    pdfContainer.innerHTML += `
-                        <div class="flex items-center gap-2 bg-white p-2.5 rounded border border-slate-200 shadow-sm overflow-hidden">
-                            <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-500 shrink-0"></i>
-                            <span class="text-[10px] font-bold text-slate-700 truncate w-full">${pdfNames[i]}</span>
-                        </div>
-                    `;
-                }
-            });
+            
+            if (uploadedPdfs[0]) {
+                hasPdf = true;
+                pdfContainer.innerHTML = `
+                    <div class="flex items-center gap-2 bg-white p-2.5 rounded border border-slate-200 shadow-sm overflow-hidden">
+                        <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-500 shrink-0"></i>
+                        <span class="text-[10px] font-bold text-slate-700 truncate w-full">${pdfNames[0]}</span>
+                    </div>
+                `;
+            }
 
             if(hasPdf) {
                 pdfContainer.classList.remove('hidden');
@@ -783,18 +740,18 @@
                 }
                 const reader = new FileReader();
                 reader.onload = function(evt) {
-                    uploadedPdfs[index - 1] = evt.target.result;
-                    pdfNames[index - 1] = file.name;
+                    uploadedPdfs[0] = evt.target.result;
+                    pdfNames[0] = file.name;
                     
-                    document.getElementById(`file-label-${index}`).innerText = file.name;
-                    document.getElementById(`file-label-${index}`).classList.replace('text-slate-500', 'text-blue-700');
-                    const icon = document.getElementById(`icon-doc-${index}`);
+                    document.getElementById(`file-label-1`).innerText = file.name;
+                    document.getElementById(`file-label-1`).classList.replace('text-slate-500', 'text-blue-700');
+                    const icon = document.getElementById(`icon-doc-1`);
                     icon.setAttribute('data-lucide', 'file-check-2');
                     icon.parentElement.classList.replace('text-blue-700', 'text-emerald-600');
                     
-                    document.getElementById(`btn-del-${index}`).classList.remove('hidden');
+                    document.getElementById(`btn-del-1`).classList.remove('hidden');
                     
-                    showToast(`PDF ${index} berhasil dimuat`, "success");
+                    showToast(`PDF berhasil dimuat`, "success");
                     lucide.createIcons(); 
                     updatePreview(); 
                 };
@@ -803,15 +760,15 @@
         }
 
         function removePdf(index) {
-            uploadedPdfs[index - 1] = null;
-            pdfNames[index - 1] = "";
-            document.getElementById(`field-doc-${index}`).value = "";
-            document.getElementById(`file-label-${index}`).innerText = `Drag/Klik PDF ${index}`;
-            document.getElementById(`file-label-${index}`).classList.replace('text-blue-700', 'text-slate-500');
-            const icon = document.getElementById(`icon-doc-${index}`);
+            uploadedPdfs[0] = null;
+            pdfNames[0] = "";
+            document.getElementById(`field-doc-1`).value = "";
+            document.getElementById(`file-label-1`).innerText = `Drag atau Klik untuk Upload PDF`;
+            document.getElementById(`file-label-1`).classList.replace('text-blue-700', 'text-slate-500');
+            const icon = document.getElementById(`icon-doc-1`);
             icon.setAttribute('data-lucide', 'file-up');
             icon.parentElement.classList.replace('text-emerald-600', 'text-blue-700');
-            document.getElementById(`btn-del-${index}`).classList.add('hidden');
+            document.getElementById(`btn-del-1`).classList.add('hidden');
             
             lucide.createIcons();
             updatePreview();
@@ -821,11 +778,7 @@
             document.getElementById('pkl-form').reset();
             
             onKategoriChange(false);
-            
-            // Reset ke-4 kolom PDF
-            for(let i=1; i<=4; i++) {
-                removePdf(i);
-            }
+            removePdf(1);
             
             const kelSelect = document.getElementById('field-kelurahan');
             kelSelect.disabled = true; kelSelect.classList.add('opacity-50'); kelSelect.innerHTML = '<option value="">-- Pilih Kecamatan Dulu --</option>';
@@ -861,9 +814,9 @@
         function handleFormSubmit(e) {
             e.preventDefault();
             
-            // Validasi minimal 1 PDF
-            if (!uploadedPdfs.some(pdf => pdf !== null)) { 
-                showToast("Harap upload minimal 1 file PDF sebelum mengirim!", "error"); 
+            // Validasi file PDF harus ada
+            if (!uploadedPdfs[0]) { 
+                showToast("Harap upload 1 file PDF sebelum mengirim!", "error"); 
                 return; 
             }
             
@@ -920,22 +873,19 @@
             // Generate list PDF dalam modal
             const modalPdfList = document.getElementById('modal-pdf-list');
             modalPdfList.innerHTML = '';
-            if(item.dokumentasi_pdf) {
-                item.dokumentasi_pdf.forEach((pdf, i) => {
-                    if(pdf) {
-                        const name = item.dokumentasi_names ? item.dokumentasi_names[i] : `Dokumen_${i+1}.pdf`;
-                        modalPdfList.innerHTML += `
-                            <a href="${pdf}" download="${name}" class="flex items-center gap-2 bg-white p-2.5 rounded border border-slate-200 shadow-sm hover:bg-blue-50 transition-colors no-print">
-                                <i data-lucide="download" class="w-4 h-4 text-blue-600 shrink-0"></i>
-                                <span class="text-[10px] font-bold text-slate-700 truncate w-full">${name}</span>
-                            </a>
-                            <div class="hidden print:flex items-center gap-2 bg-white p-2.5 rounded border border-slate-200 shadow-sm">
-                                <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-600 shrink-0"></i>
-                                <span class="text-[10px] font-bold text-slate-700 truncate w-full">${name}</span>
-                            </div>
-                        `;
-                    }
-                });
+            if(item.dokumentasi_pdf && item.dokumentasi_pdf[0]) {
+                const pdf = item.dokumentasi_pdf[0];
+                const name = item.dokumentasi_names ? item.dokumentasi_names[0] : `Dokumen_1.pdf`;
+                modalPdfList.innerHTML = `
+                    <a href="${pdf}" download="${name}" class="flex items-center gap-2 bg-white p-2.5 rounded border border-slate-200 shadow-sm hover:bg-blue-50 transition-colors no-print">
+                        <i data-lucide="download" class="w-4 h-4 text-blue-600 shrink-0"></i>
+                        <span class="text-[10px] font-bold text-slate-700 truncate w-full">${name}</span>
+                    </a>
+                    <div class="hidden print:flex items-center gap-2 bg-white p-2.5 rounded border border-slate-200 shadow-sm">
+                        <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+                        <span class="text-[10px] font-bold text-slate-700 truncate w-full">${name}</span>
+                    </div>
+                `;
             }
             
             lucide.createIcons();
