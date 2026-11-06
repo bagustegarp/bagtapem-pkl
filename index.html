@@ -9,9 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- Firebase SDK (v8) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Supabase JS SDK (v2) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -21,7 +20,7 @@
         .card-icon-bg { position: absolute; right: -10px; top: -10px; opacity: 0.05; color: inherit; transform: rotate(-10deg); transition: transform 0.3s ease; }
         .card-sg-top:hover .card-icon-bg { transform: rotate(0deg) scale(1.1); }
         
-        /* Watermark Logo - Dipertebal warnanya */
+        /* Watermark Logo */
         .watermark-bg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 75vw; max-width: 800px; opacity: 0.15; pointer-events: none; z-index: 0; filter: grayscale(20%); }
         
         /* Animated Background Blobs */
@@ -30,24 +29,12 @@
         .animation-delay-2000 { animation-delay: 2s; }
         .animation-delay-4000 { animation-delay: 4s; }
 
-        /* --- Animasi Masuk OPSI A (Staggered Soft Fade & Slide Up) --- */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .animate-enter {
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            opacity: 0; /* Mulai dari tersembunyi agar tidak patah-patah */
-        }
-
-        /* Stagger Delays (Efek Muncul Bergantian) */
+        .animate-enter { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
         .delay-1 { animation-delay: 0.1s; }
         .delay-2 { animation-delay: 0.25s; }
         .delay-3 { animation-delay: 0.4s; }
@@ -59,21 +46,17 @@
 </head>
 <body class="text-slate-800 min-h-screen relative flex flex-col justify-between overflow-x-hidden bg-slate-50">
 
-    <!-- Latar Belakang Estetik (Animated Blobs) -->
     <div class="fixed top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
         <div class="absolute -top-40 -left-10 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
         <div class="absolute top-40 -right-20 w-96 h-96 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
         <div class="absolute -bottom-40 left-1/3 w-[30rem] h-[30rem] bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
 
-    <!-- Watermark Logo di Tengah -->
     <img src="logo bagtapem.png" alt="Watermark Bagtapem" class="watermark-bg" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Lambang_Kota_Bandung.svg/1200px-Lambang_Kota_Bandung.svg.png'">
 
-    <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed top-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
 
     <div class="relative z-10 flex-grow flex flex-col">
-        <!-- HEADER -->
         <header class="bg-white/80 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-40 shadow-sm animate-enter delay-1">
             <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
                 <div class="flex items-center space-x-3">
@@ -83,23 +66,19 @@
                         <p class="text-[11px] sm:text-xs font-semibold text-blue-600 uppercase tracking-widest">Sistem Pendataan Mandiri PKL & BANGLI</p>
                     </div>
                 </div>
-                <!-- Network Status Indicator -->
                 <div id="network-status" class="hidden md:flex items-center space-x-2 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full transition-colors duration-300 shadow-sm">
                     <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" id="network-dot"></span>
-                    <span class="text-xs font-bold text-emerald-800" id="network-text">Koneksi Stabil</span>
+                    <span class="text-xs font-bold text-emerald-800" id="network-text">Koneksi Supabase Aktif</span>
                 </div>
             </div>
         </header>
 
         <main class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full space-y-8">
-            
-            <!-- TITLE SECTION -->
             <div class="border-l-4 border-blue-600 pl-4 animate-enter delay-2">
                 <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Selamat Datang, Petugas Pendataan!</h2>
                 <p class="text-sm text-slate-500 font-medium mt-1">Silakan pilih kategori laporan dan lengkapi atribut formulir di bawah dengan teliti!</p>
             </div>
 
-            <!-- KARTU RINGKASAN DATA -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 animate-enter delay-3">
                 <div class="card-sg-top border-l-[#1e3a8a] text-[#1e3a8a]">
                     <i data-lucide="store" class="w-24 h-24 card-icon-bg"></i>
@@ -129,10 +108,7 @@
                 </div>
             </div>
 
-            <!-- FORM + PREVIEW SECTION -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-enter delay-4">
-                
-                <!-- FORM INPUT DATA -->
                 <div class="lg:col-span-7 bg-white/95 backdrop-blur-md rounded-2xl p-6 sm:p-8 shadow-md border border-white relative z-10">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 mb-6 border-b border-slate-100">
                         <div class="flex items-center space-x-4">
@@ -151,8 +127,6 @@
                     </div>
 
                     <form id="pkl-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
-                        
-                        <!-- KATEGORI LAPORAN -->
                         <div class="bg-blue-50/50 p-5 rounded-xl border border-blue-200 shadow-sm relative overflow-hidden">
                             <div class="absolute right-0 top-0 opacity-5 pointer-events-none transform translate-x-2 -translate-y-2">
                                 <i data-lucide="layers" class="w-32 h-32 text-blue-800"></i>
@@ -169,9 +143,7 @@
                             </select>
                         </div>
 
-                        <!-- WRAPPER DETAIL FORM -->
                         <div id="form-details" class="hidden space-y-6 transition-all duration-500 origin-top">
-                            <!-- 1. Kecamatan & 2. Kelurahan -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div>
                                     <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
@@ -191,7 +163,6 @@
                                 </div>
                             </div>
 
-                            <!-- 3. & 4. JALAN & RW -->
                             <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
                                 <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">
                                     <i data-lucide="navigation" class="w-4 h-4 mr-1.5 text-blue-600"></i> 3. Nama Jalan & 4. RW <span class="text-red-600 ml-1">*</span>
@@ -209,7 +180,6 @@
                                 </div>
                             </div>
 
-                            <!-- 5. Jumlah Bangli/PKL & 6. Waktu Pelaksanaan -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div>
                                     <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
@@ -228,7 +198,6 @@
                                 </div>
                             </div>
 
-                            <!-- 7. Rincian Kategori -->
                             <div class="border border-slate-200 bg-slate-50 p-5 rounded-xl space-y-3 hover:border-blue-300 transition-colors shadow-sm">
                                 <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider">
                                     <i data-lucide="layout-list" class="w-4 h-4 mr-1.5 text-blue-600"></i> 7. Keterangan Rincian Kategori <span class="text-red-600 ml-1">*</span>
@@ -236,22 +205,20 @@
                                 <textarea id="field-rincian" rows="4" required placeholder="" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:bg-slate-50 focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 transition-all outline-none shadow-sm"></textarea>
                             </div>
 
-                            <!-- 8. Dokumentasi PDF (1 Kolom Drag & Drop) -->
                             <div>
                                 <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                                     <i data-lucide="file-text" class="w-4 h-4 mr-1.5 text-blue-600"></i> 8. File Dokumentasi (1 PDF) <span class="text-red-600 ml-1">*</span>
                                 </label>
                                 
-                                <!-- Kolom Upload PDF Tunggal -->
                                 <div id="drop-area-1" class="relative border-2 border-dashed border-slate-300 rounded-xl p-5 text-center transition-all duration-300 bg-slate-50 hover:bg-blue-50 hover:border-blue-400 group overflow-hidden h-36 flex flex-col items-center justify-center cursor-pointer max-w-sm">
-                                    <input type="file" id="field-doc-1" accept="application/pdf" required onchange="handlePdfUpload(event, 1)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Drag & Drop PDF">
+                                    <input type="file" id="field-doc-1" accept="application/pdf" required onchange="handlePdfUpload(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Drag & Drop PDF">
                                     <div id="drop-content-1" class="flex flex-col items-center justify-center space-y-2 pointer-events-none w-full px-2">
                                         <div class="p-3 bg-white shadow-sm border border-slate-100 text-blue-700 rounded-full group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
                                             <i id="icon-doc-1" data-lucide="file-up" class="w-6 h-6"></i>
                                         </div>
                                         <p class="text-[11px] font-bold text-slate-500 truncate w-full" id="file-label-1">Drag atau Klik untuk Upload PDF</p>
                                     </div>
-                                    <button type="button" id="btn-del-1" onclick="removePdf(1); event.preventDefault(); event.stopPropagation();" class="hidden absolute top-2 right-2 bg-red-100 text-red-600 rounded-full p-1.5 z-20 hover:bg-red-600 hover:text-white transition-colors shadow-sm">
+                                    <button type="button" id="btn-del-1" onclick="removePdf(); event.preventDefault(); event.stopPropagation();" class="hidden absolute top-2 right-2 bg-red-100 text-red-600 rounded-full p-1.5 z-20 hover:bg-red-600 hover:text-white transition-colors shadow-sm">
                                         <i data-lucide="x" class="w-4 h-4"></i>
                                     </button>
                                 </div>
@@ -261,7 +228,6 @@
                                 </p>
                             </div>
 
-                            <!-- 9. Keterangan -->
                             <div>
                                 <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                                     <i data-lucide="file-text" class="w-4 h-4 mr-1.5 text-blue-600"></i> 9. Keterangan Tambahan
@@ -273,14 +239,13 @@
                                 <button type="button" onclick="resetForm()" class="w-full sm:w-auto px-5 py-3 rounded-xl text-sm font-bold text-slate-500 bg-white border border-slate-200 hover:bg-slate-100 hover:text-slate-900 transition-colors shadow-sm">Kosongkan Form</button>
                                 <button type="submit" id="btn-submit" class="w-full sm:w-auto flex items-center justify-center space-x-2 px-7 py-3 rounded-xl bg-gradient-to-r from-blue-700 to-[#1e3a8a] hover:from-slate-800 hover:to-slate-900 text-white font-bold shadow-lg transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none">
                                     <i data-lucide="send" id="btn-icon" class="w-4 h-4 transition-transform"></i>
-                                    <span id="btn-text">Kirim Laporan</span>
+                                    <span id="btn-text">Kirim Laporan via Cloud</span>
                                 </button>
                             </div>
                         </div>
                     </form>
                 </div>
 
-                <!-- PREVIEW CARD (Gaya Dokumen Formal) -->
                 <div class="lg:col-span-5 sticky top-24 relative z-10 transition-all duration-500">
                     <div class="bg-white/95 backdrop-blur-md rounded-2xl p-0 shadow-lg border border-slate-200 overflow-hidden">
                         <div class="bg-slate-50 p-4 border-b border-slate-200 flex items-center justify-between">
@@ -292,31 +257,25 @@
                         </div>
                         
                         <div class="p-6 space-y-4">
-                            <!-- Kategori Badge Status -->
                             <div class="text-center mb-2">
                                 <span id="prev-kategori" class="inline-block px-4 py-1.5 bg-slate-100 text-slate-400 font-black text-xs rounded-full uppercase tracking-widest border border-slate-200 shadow-sm transition-colors duration-300">Belum Pilih Kategori</span>
                             </div>
 
-                            <!-- Empty State Preview -->
                             <div id="preview-empty-state" class="flex flex-col items-center justify-center py-12 text-center">
                                 <i data-lucide="file-search" class="w-16 h-16 text-slate-200 mb-3"></i>
                                 <p class="text-sm font-bold text-slate-400">Pilih kategori di form sebelah kiri<br>untuk melihat rincian dokumen.</p>
                             </div>
 
-                            <!-- Wrapper Konten Preview -->
                             <div id="preview-details" class="hidden space-y-4">
-                                <!-- PDF Wrapper -->
                                 <div class="relative w-full min-h-[120px] bg-slate-100 rounded-xl overflow-hidden border border-slate-200 p-4 shadow-inner flex flex-col justify-center">
                                     <div id="preview-pdf-container" class="grid grid-cols-1 gap-2 w-full hidden">
-                                        <!-- Diinjeksi oleh JS -->
                                     </div>
                                     <div id="preview-img-placeholder" class="text-center transition-opacity duration-300">
-                                        <i data-lucide="file-pdf" class="w-10 h-10 text-slate-300 mx-auto mb-2"></i>
+                                        <i data-lucide="file-text" class="w-10 h-10 text-slate-300 mx-auto mb-2"></i>
                                         <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-2">Ruang Bukti PDF (Atribut 8)</p>
                                     </div>
                                 </div>
 
-                                <!-- List Preview Bergaris Putus -->
                                 <div class="space-y-3 text-[13px] pt-3">
                                     <div class="flex justify-between items-start pb-2.5 border-b border-dashed border-slate-300"><span class="text-slate-500 font-bold">1. Kecamatan</span><span class="font-extrabold text-blue-900 text-right uppercase" id="prev-kecamatan">-</span></div>
                                     <div class="flex justify-between items-start pb-2.5 border-b border-dashed border-slate-300"><span class="text-slate-500 font-bold">2. Kelurahan</span><span class="font-extrabold text-slate-800 text-right uppercase" id="prev-kelurahan">-</span></div>
@@ -340,7 +299,6 @@
             </div>
         </main>
 
-        <!-- FOOTER ELEGAN -->
         <footer class="bg-white/90 backdrop-blur-md mt-12 py-6 border-t border-slate-200 relative z-20">
             <div class="max-w-[1400px] mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="flex items-center space-x-3 text-left">
@@ -352,13 +310,12 @@
                 </div>
                 <div class="flex items-center space-x-2 bg-slate-50 px-4 py-2 rounded-full border border-slate-200 shadow-sm">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="text-xs font-bold text-slate-600">@karyaanaktelkom • V 2.3</span>
+                    <span class="text-xs font-bold text-slate-600">@karyaanaktelkom • V 3.0 Supabase</span>
                 </div>
             </div>
         </footer>
     </div>
 
-    <!-- MODAL BUKTI PELAPORAN -->
     <div id="detail-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
         <div id="modal-content" class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto transform scale-95 transition-all duration-300 opacity-0 border border-slate-100">
             <button onclick="closeModal()" class="absolute top-4 right-4 p-2 bg-slate-100 text-slate-400 hover:text-slate-800 hover:bg-slate-200 rounded-full no-print transition-all">
@@ -385,9 +342,7 @@
                     </div>
                 </div>
 
-                <!-- PDF List Modal (Replace Image) -->
                 <div id="modal-pdf-list" class="grid grid-cols-1 gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200 shadow-inner w-full min-h-[80px]">
-                    <!-- Injected via JS -->
                 </div>
 
                 <div class="space-y-2.5 text-[13px] pt-1">
@@ -416,95 +371,51 @@
         </div>
     </div>
 
-    <!-- LOGIKA JAVASCRIPT -->
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyD0rc-XdBOnicvQNL8m0tt85Oce-Dd_LZI",
-            authDomain: "bagtapem-db.firebaseapp.com",
-            databaseURL: "https://bagtapem-db-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "bagtapem-db",
-            storageBucket: "bagtapem-db.firebasestorage.app",
-            messagingSenderId: "809415896068",
-            appId: "1:809415896068:web:6207a8b8c658130c9b5951",
-            measurementId: "G-XD3JVDH1NB"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const SUPABASE_URL = "https://iidsvuqubbxphzdjoyhk.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_zopMWE46HXr9jxWSmshe9A_XWgXqQ7K";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         const dataWilayahBandung = {
-          
-  "Andir": ["Campaka", "Ciroyom", "Dungus Cariang", "Garuda", "Kebon Jeruk", "Maleber"],
-
-  "Antapani": ["Antapani Kidul", "Antapani Kulon", "Antapani Tengah", "Antapani Wetan"],
-
-  "Arcamanik": ["Cisaranten Bina Harapan", "Cisaranten Endah", "Cisaranten Kulon", "Sukamiskin"],
-
-  "Astana Anyar": ["Cibadak", "Karang Anyar", "Karasak", "Nyengseret", "Panjunan", "Pelindung Hewan"],
-
-  "Babakan Ciparay": ["Babakan", "Babakan Ciparay", "Cirangrang", "Margahayu Utara", "Margasuka", "Sukahaji"],
-
-  "Bandung Kidul": ["Batununggal", "Kujangsari", "Mengger", "Wates"],
-
-  "Bandung Kulon": ["Cijerah", "Cibuntu", "Caringin", "Cigondewah Kaler", "Cigondewah Kidul", "Cigondewah Rahayu", "Gempolsari", "Warung Muncang"],
-
-  "Bandung Wetan": ["Cihapit", "Citarum", "Tamansari"],
-
-  "Batununggal": ["Binong", "Cibangkong", "Gumuruh", "Kacapiring", "Kebon Gedang", "Kebon Waru", "Maleer", "Samoja"],
-
-  "Bojongloa Kaler": ["Babakan Asih", "Babakan Tarogong", "Jamika", "Kopo", "Suka Asih"],
-
-  "Bojongloa Kidul": ["Cibaduyut", "Cibaduyut Kidul", "Cibaduyut Wetan", "Kebon Lega", "Mekar Wangi", "Situsaeur"],
-
-  "Buahbatu": ["Cijaura", "Jatisari", "Margasari", "Sekejati"],
-
-  "Cibeunying Kaler": ["Cihaurgeulis", "Cigadung", "Neglasari", "Sukaluyu"],
-
-  "Cibeunying Kidul": ["Cicadas", "Cikutra", "Padasuka", "Pasirlayung", "Sukamaju", "Sukapada"],
-
-  "Cibiru": ["Cipadung", "Cisurupan", "Palasari", "Pasir Biru"],
-
-  "Cicendo": ["Arjuna", "Husein Sastranegara", "Pajajaran", "Pamoyanan", "Pasirkaliki", "Sukaraja"],
-
-  "Cidadap": ["Ciumbuleuit", "Hegarmanah", "Ledeng"],
-
-  "Cinambo": ["Babakan Penghulu", "Cisaranten Wetan", "Pakemitan", "Sukamulya"],
-
-  "Coblong": ["Cipaganti", "Dago", "Lebak Siliwangi", "Lebak Gede", "Sadang Serang", "Sekeloa"],
-
-  "Gedebage": ["Cimincrang", "Cisaranten Kidul", "Rancabolang", "Rancanumpang"],
-
-  "Kiaracondong": ["Babakan Surabaya", "Babakan Sari", "Cicaheum", "Kebon Kangkung", "Kebon Jayanti", "Sukapura"],
-
-  "Lengkong": ["Burangrang", "Cijagra", "Cikawao", "Lingkar Selatan", "Malabar", "Paledang", "Turangga"],
-
-  "Mandalajati": ["Jatihandap", "Karang Pamulang", "Pasir Impun", "Sindang Jaya"],
-
-  "Panyileukan": ["Cipadung Kidul", "Cipadung Kulon", "Cipadung Wetan", "Mekar Mulya"],
-
-  "Rancasari": ["Cipamokolan", "Derwati", "Manjahlega", "Mekar Jaya"],
-
-  "Regol": ["Ancol", "Balong Gede", "Ciateul", "Cigelereng", "Ciseureuh", "Pasirluyu", "Pungkur"],
-
-  "Sukajadi": ["Cipedes", "Pasteur", "Sukagalih", "Sukabungah", "Sukawarna"],
-
-  "Sukasari": ["Gegerkalong", "Isola", "Sarijadi", "Sukarasa"],
-
-  "Sumur Bandung": ["Babakan Ciamis", "Braga", "Kebon Pisang", "Merdeka"],
-
-  "Ujungberung": ["Cigending", "Pasir Endah", "Pasir Jati", "Pasir Wangi", "Pasanggrahan"]
-
+            "Andir": ["Campaka", "Ciroyom", "Dungus Cariang", "Garuda", "Kebon Jeruk", "Maleber"],
+            "Antapani": ["Antapani Kidul", "Antapani Kulon", "Antapani Tengah", "Antapani Wetan"],
+            "Arcamanik": ["Cisaranten Bina Harapan", "Cisaranten Endah", "Cisaranten Kulon", "Sukamiskin"],
+            "Astana Anyar": ["Cibadak", "Karang Anyar", "Karasak", "Nyengseret", "Panjunan", "Pelindung Hewan"],
+            "Babakan Ciparay": ["Babakan", "Babakan Ciparay", "Cirangrang", "Margahayu Utara", "Margasuka", "Sukahaji"],
+            "Bandung Kidul": ["Batununggal", "Kujangsari", "Mengger", "Wates"],
+            "Bandung Kulon": ["Cijerah", "Cibuntu", "Caringin", "Cigondewah Kaler", "Cigondewah Kidul", "Cigondewah Rahayu", "Gempolsari", "Warung Muncang"],
+            "Bandung Wetan": ["Cihapit", "Citarum", "Tamansari"],
+            "Batununggal": ["Binong", "Cibangkong", "Gumuruh", "Kacapiring", "Kebon Gedang", "Kebon Waru", "Maleer", "Samoja"],
+            "Bojongloa Kaler": ["Babakan Asih", "Babakan Tarogong", "Jamika", "Kopo", "Suka Asih"],
+            "Bojongloa Kidul": ["Cibaduyut", "Cibaduyut Kidul", "Cibaduyut Wetan", "Kebon Lega", "Mekar Wangi", "Situsaeur"],
+            "Buahbatu": ["Cijaura", "Jatisari", "Margasari", "Sekejati"],
+            "Cibeunying Kaler": ["Cihaurgeulis", "Cigadung", "Neglasari", "Sukaluyu"],
+            "Cibeunying Kidul": ["Cicadas", "Cikutra", "Padasuka", "Pasirlayung", "Sukamaju", "Sukapada"],
+            "Cibiru": ["Cipadung", "Cisurupan", "Palasari", "Pasir Biru"],
+            "Cicendo": ["Arjuna", "Husein Sastranegara", "Pajajaran", "Pamoyanan", "Pasirkaliki", "Sukaraja"],
+            "Cidadap": ["Ciumbuleuit", "Hegarmanah", "Ledeng"],
+            "Cinambo": ["Babakan Penghulu", "Cisaranten Wetan", "Pakemitan", "Sukamulya"],
+            "Coblong": ["Cipaganti", "Dago", "Lebak Siliwangi", "Lebak Gede", "Sadang Serang", "Sekeloa"],
+            "Gedebage": ["Cimincrang", "Cisaranten Kidul", "Rancabolang", "Rancanumpang"],
+            "Kiaracondong": ["Babakan Surabaya", "Babakan Sari", "Cicaheum", "Kebon Kangkung", "Kebon Jayanti", "Sukapura"],
+            "Lengkong": ["Burangrang", "Cijagra", "Cikawao", "Lingkar Selatan", "Malabar", "Paledang", "Turangga"],
+            "Mandalajati": ["Jatihandap", "Karang Pamulang", "Pasir Impun", "Sindang Jaya"],
+            "Panyileukan": ["Cipadung Kidul", "Cipadung Kulon", "Cipadung Wetan", "Mekar Mulya"],
+            "Rancasari": ["Cipamokolan", "Derwati", "Manjahlega", "Mekar Jaya"],
+            "Regol": ["Ancol", "Balong Gede", "Ciateul", "Cigelereng", "Ciseureuh", "Pasirluyu", "Pungkur"],
+            "Sukajadi": ["Cipedes", "Pasteur", "Sukagalih", "Sukabungah", "Sukawarna"],
+            "Sukasari": ["Gegerkalong", "Isola", "Sarijadi", "Sukarasa"],
+            "Sumur Bandung": ["Babakan Ciamis", "Braga", "Kebon Pisang", "Merdeka"],
+            "Ujungberung": ["Cigending", "Pasir Endah", "Pasir Jati", "Pasir Wangi", "Pasanggrahan"]
         };
 
-        // Karena sekarang hanya 1 kolom PDF, array hanya menyimpan 1 nilai
-        let uploadedPdfs = [null];
-        let pdfNames = [""];
-        const STORAGE_KEY = 'pkl_form_draft_v3';
+        let selectedPdfFile = null;
+        let selectedPdfName = "";
+        const STORAGE_KEY = 'pkl_form_draft_supabase_v1';
 
-        // --- TOAST NOTIFICATION ---
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            
             let bgClass, iconName;
             if (type === 'success') { bgClass = 'bg-emerald-600'; iconName = 'check-circle'; }
             else if (type === 'error') { bgClass = 'bg-red-600'; iconName = 'alert-octagon'; }
@@ -520,26 +431,8 @@
             setTimeout(() => { toast.classList.add('translate-x-[120%]'); setTimeout(() => toast.remove(), 500); }, 3500);
         }
 
-        // --- NETWORK STATUS ---
-        window.addEventListener('online', () => {
-            document.getElementById('network-dot').className = 'w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse';
-            document.getElementById('network-text').innerText = 'Koneksi Stabil';
-            document.getElementById('network-text').className = 'text-xs font-bold text-emerald-800';
-            document.getElementById('network-status').className = 'hidden md:flex items-center space-x-2 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full transition-colors duration-300 shadow-sm';
-            showToast("Koneksi internet terhubung kembali", "success");
-        });
-
-        window.addEventListener('offline', () => {
-            document.getElementById('network-dot').className = 'w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse';
-            document.getElementById('network-text').innerText = 'Offline Mode';
-            document.getElementById('network-text').className = 'text-xs font-bold text-red-800';
-            document.getElementById('network-status').className = 'hidden md:flex items-center space-x-2 bg-red-50 border border-red-200 px-3 py-1.5 rounded-full transition-colors duration-300 shadow-sm';
-            showToast("Koneksi terputus. Data diamankan ke Draft.", "error");
-        });
-
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
-            
             const kecSelect = document.getElementById('field-kecamatan');
             Object.keys(dataWilayahBandung).sort().forEach(kec => {
                 const opt = document.createElement('option');
@@ -550,11 +443,9 @@
             const now = new Date();
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             document.getElementById('field-waktu').value = now.toISOString().slice(0, 10);
-            
             loadDraft(); 
         });
 
-        // --- LOGIKA MENAMPILKAN FORM SETELAH KATEGORI DIPILIH ---
         function onKategoriChange(doUpdatePreview = true) {
             const kat = document.getElementById('field-kategori').value;
             const formDetails = document.getElementById('form-details');
@@ -585,13 +476,11 @@
                 
                 prevBadge.innerText = "Belum Pilih Kategori";
                 prevBadge.className = "inline-block px-4 py-1.5 bg-slate-100 text-slate-400 font-black text-xs rounded-full uppercase tracking-widest border border-slate-200 shadow-sm transition-colors duration-300";
-                
                 rincianField.placeholder = "";
             }
             if(doUpdatePreview) updatePreview();
         }
 
-        // --- DRAFT LOKAL ---
         function saveDraft() {
             const draftData = {
                 kategori: document.getElementById('field-kategori').value,
@@ -603,10 +492,8 @@
                 waktu: document.getElementById('field-waktu').value,
                 rincian: document.getElementById('field-rincian').value,
                 keterangan: document.getElementById('field-keterangan').value,
-                pdfs: uploadedPdfs,
-                pdfNames: pdfNames
+                pdfName: selectedPdfName
             };
-
             localStorage.setItem(STORAGE_KEY, JSON.stringify(draftData));
             const timeStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             document.getElementById('draft-status').innerText = `Draft tersimpan (${timeStr})`;
@@ -618,7 +505,6 @@
             if(saved) {
                 try {
                     const draft = JSON.parse(saved);
-                    
                     if(draft.kategori) { document.getElementById('field-kategori').value = draft.kategori; onKategoriChange(false); }
                     if(draft.kecamatan) { document.getElementById('field-kecamatan').value = draft.kecamatan; onKecamatanChange(false); }
                     if(draft.kelurahan) document.getElementById('field-kelurahan').value = draft.kelurahan;
@@ -628,21 +514,6 @@
                     if(draft.waktu) document.getElementById('field-waktu').value = draft.waktu;
                     if(draft.rincian) document.getElementById('field-rincian').value = draft.rincian;
                     if(draft.keterangan) document.getElementById('field-keterangan').value = draft.keterangan;
-
-                    if(draft.pdfs && draft.pdfs[0]) {
-                        uploadedPdfs[0] = draft.pdfs[0];
-                        pdfNames[0] = draft.pdfNames ? draft.pdfNames[0] : "Draft PDF";
-                        
-                        document.getElementById(`file-label-1`).innerText = pdfNames[0];
-                        document.getElementById(`file-label-1`).classList.replace('text-slate-500', 'text-blue-700');
-                        const icon = document.getElementById(`icon-doc-1`);
-                        icon.setAttribute('data-lucide', 'file-check-2');
-                        icon.parentElement.classList.replace('text-blue-700', 'text-emerald-600');
-                        document.getElementById(`btn-del-1`).classList.remove('hidden');
-                        
-                        showToast("Draft pelaporan sebelumnya berhasil dimuat", "info");
-                    }
-                    
                 } catch(e) { console.error(e); }
             }
             updatePreview();
@@ -651,9 +522,7 @@
         function getJalanRwValues() {
             const jalan = document.getElementById('field-jalan').value.trim();
             const rw = document.getElementById('field-rw').value.trim();
-            if(jalan || rw) {
-                return `${jalan || '-'} (RW: ${rw || '-'})`;
-            }
+            if(jalan || rw) return `${jalan || '-'} (RW: ${rw || '-'})`;
             return '-';
         }
 
@@ -698,20 +567,13 @@
             const pdfContainer = document.getElementById('preview-pdf-container');
             const pdfPlaceholder = document.getElementById('preview-img-placeholder');
             
-            let hasPdf = false;
-            pdfContainer.innerHTML = '';
-            
-            if (uploadedPdfs[0]) {
-                hasPdf = true;
+            if (selectedPdfFile || selectedPdfName) {
                 pdfContainer.innerHTML = `
                     <div class="flex items-center gap-2 bg-white p-2.5 rounded border border-slate-200 shadow-sm overflow-hidden">
                         <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-500 shrink-0"></i>
-                        <span class="text-[10px] font-bold text-slate-700 truncate w-full">${pdfNames[0]}</span>
+                        <span class="text-[10px] font-bold text-slate-700 truncate w-full">${selectedPdfName}</span>
                     </div>
                 `;
-            }
-
-            if(hasPdf) {
                 pdfContainer.classList.remove('hidden');
                 pdfPlaceholder.classList.add('hidden');
                 document.getElementById('card-foto-status').innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i> <span class="text-emerald-700">Siap Dikirim</span>`;
@@ -725,7 +587,7 @@
             saveDraft(); 
         }
 
-        function handlePdfUpload(e, index) {
+        function handlePdfUpload(e) {
             const file = e.target.files[0];
             if (file) {
                 if (file.type !== "application/pdf") { 
@@ -738,30 +600,26 @@
                     e.target.value = ""; 
                     return; 
                 }
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    uploadedPdfs[0] = evt.target.result;
-                    pdfNames[0] = file.name;
-                    
-                    document.getElementById(`file-label-1`).innerText = file.name;
-                    document.getElementById(`file-label-1`).classList.replace('text-slate-500', 'text-blue-700');
-                    const icon = document.getElementById(`icon-doc-1`);
-                    icon.setAttribute('data-lucide', 'file-check-2');
-                    icon.parentElement.classList.replace('text-blue-700', 'text-emerald-600');
-                    
-                    document.getElementById(`btn-del-1`).classList.remove('hidden');
-                    
-                    showToast(`PDF berhasil dimuat`, "success");
-                    lucide.createIcons(); 
-                    updatePreview(); 
-                };
-                reader.readAsDataURL(file);
+                
+                selectedPdfFile = file;
+                selectedPdfName = file.name;
+                
+                document.getElementById(`file-label-1`).innerText = file.name;
+                document.getElementById(`file-label-1`).classList.replace('text-slate-500', 'text-blue-700');
+                const icon = document.getElementById(`icon-doc-1`);
+                icon.setAttribute('data-lucide', 'file-check-2');
+                icon.parentElement.classList.replace('text-blue-700', 'text-emerald-600');
+                document.getElementById(`btn-del-1`).classList.remove('hidden');
+                
+                showToast(`File PDF dimuat`, "success");
+                lucide.createIcons(); 
+                updatePreview(); 
             }
         }
 
-        function removePdf(index) {
-            uploadedPdfs[0] = null;
-            pdfNames[0] = "";
+        function removePdf() {
+            selectedPdfFile = null;
+            selectedPdfName = "";
             document.getElementById(`field-doc-1`).value = "";
             document.getElementById(`file-label-1`).innerText = `Drag atau Klik untuk Upload PDF`;
             document.getElementById(`file-label-1`).classList.replace('text-blue-700', 'text-slate-500');
@@ -776,9 +634,8 @@
 
         function resetForm() {
             document.getElementById('pkl-form').reset();
-            
             onKategoriChange(false);
-            removePdf(1);
+            removePdf();
             
             const kelSelect = document.getElementById('field-kelurahan');
             kelSelect.disabled = true; kelSelect.classList.add('opacity-50'); kelSelect.innerHTML = '<option value="">-- Pilih Kecamatan Dulu --</option>';
@@ -811,56 +668,74 @@
             lucide.createIcons({root: btn});
         }
 
-        function handleFormSubmit(e) {
+        async function handleFormSubmit(e) {
             e.preventDefault();
             
-            // Validasi file PDF harus ada
-            if (!uploadedPdfs[0]) { 
+            if (!selectedPdfFile) { 
                 showToast("Harap upload 1 file PDF sebelum mengirim!", "error"); 
                 return; 
             }
             
-            if (!navigator.onLine) { showToast("Gagal! Sedang offline. Silakan periksa koneksi.", "error"); return; }
-
             setSubmitButtonState(true);
-            
-            const katVal = document.getElementById('field-kategori').value;
-            let prefix = 'LAP';
-            if(katVal === 'BANGLI') prefix = 'BGL';
-            else if(katVal === 'PKL') prefix = 'PKL';
-            else if(katVal === 'Spanduk, Baliho dan Tali-talian') prefix = 'SPK';
 
-            const refId = `${prefix}-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-            const newEntry = {
-                id: refId,
-                kategori_laporan: katVal,
-                kecamatan: document.getElementById('field-kecamatan').value,
-                kelurahan: document.getElementById('field-kelurahan').value,
-                lokasi: getJalanRwValues(), 
-                rtrw: "Multiple (Per Jalan)", 
-                jumlah: parseInt(document.getElementById('field-jumlah').value),
-                waktu: document.getElementById('field-waktu').value,
-                datapkl: formatDataPKL(),
-                keterangan: document.getElementById('field-keterangan').value || '-',
-                dokumentasi_pdf: uploadedPdfs,
-                dokumentasi_names: pdfNames,
-                created_at: new Date().toISOString()
-            };
+            try {
+                // 1. Upload File PDF ke Storage Supabase
+                const fileName = `${Date.now()}_${selectedPdfFile.name.replace(/\s+/g, '_')}`;
+                const { data: storageData, error: storageError } = await supabaseClient
+                    .storage
+                    .from('dokumentasi')
+                    .upload(fileName, selectedPdfFile);
 
-            database.ref('pkl_reports').push(newEntry).then(() => {
+                if (storageError) throw storageError;
+
+                const { data: publicUrlData } = supabaseClient
+                    .storage
+                    .from('dokumentasi')
+                    .getPublicUrl(fileName);
+
+                const publicPdfUrl = publicUrlData.publicUrl;
+
+                // 2. Simpan Data Teks ke PostgreSQL Supabase
+                const katVal = document.getElementById('field-kategori').value;
+                let prefix = 'LAP';
+                if(katVal === 'BANGLI') prefix = 'BGL';
+                else if(katVal === 'PKL') prefix = 'PKL';
+                else if(katVal === 'Spanduk, Baliho dan Tali-talian') prefix = 'SPK';
+
+                const refId = `${prefix}-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+
+                const newEntry = {
+                    ref_id: refId,
+                    kategori_laporan: katVal,
+                    kecamatan: document.getElementById('field-kecamatan').value,
+                    kelurahan: document.getElementById('field-kelurahan').value,
+                    lokasi: getJalanRwValues(), 
+                    jumlah: parseInt(document.getElementById('field-jumlah').value),
+                    waktu: document.getElementById('field-waktu').value,
+                    datapkl: formatDataPKL(),
+                    keterangan: document.getElementById('field-keterangan').value || '-',
+                    pdf_url: publicPdfUrl,
+                    pdf_name: selectedPdfName
+                };
+
+                const { error: dbError } = await supabaseClient.from('pkl_reports').insert([newEntry]);
+                if (dbError) throw dbError;
+
                 setSubmitButtonState(false);
                 showToast("Laporan Berhasil Terkirim ke Cloud!", "success");
                 openModal(newEntry);
                 localStorage.removeItem(STORAGE_KEY);
                 resetForm();
-            }).catch((err) => {
+
+            } catch (err) {
+                console.error(err);
                 setSubmitButtonState(false);
                 showToast("Gagal mengirim: " + err.message, "error");
-            });
+            }
         }
 
         function openModal(item) {
-            document.getElementById('modal-ref-id').innerText = item.id; 
+            document.getElementById('modal-ref-id').innerText = item.ref_id; 
             document.getElementById('modal-kategori').innerText = item.kategori_laporan;
             document.getElementById('modal-kecamatan').innerText = item.kecamatan;
             document.getElementById('modal-kelurahan').innerText = item.kelurahan;
@@ -870,21 +745,14 @@
             document.getElementById('modal-datapkl').innerText = item.datapkl;
             document.getElementById('modal-keterangan').innerText = item.keterangan;
             
-            // Generate list PDF dalam modal
             const modalPdfList = document.getElementById('modal-pdf-list');
             modalPdfList.innerHTML = '';
-            if(item.dokumentasi_pdf && item.dokumentasi_pdf[0]) {
-                const pdf = item.dokumentasi_pdf[0];
-                const name = item.dokumentasi_names ? item.dokumentasi_names[0] : `Dokumen_1.pdf`;
+            if(item.pdf_url) {
                 modalPdfList.innerHTML = `
-                    <a href="${pdf}" download="${name}" class="flex items-center gap-2 bg-white p-2.5 rounded border border-slate-200 shadow-sm hover:bg-blue-50 transition-colors no-print">
+                    <a href="${item.pdf_url}" target="_blank" download="${item.pdf_name}" class="flex items-center gap-2 bg-white p-2.5 rounded border border-slate-200 shadow-sm hover:bg-blue-50 transition-colors no-print">
                         <i data-lucide="download" class="w-4 h-4 text-blue-600 shrink-0"></i>
-                        <span class="text-[10px] font-bold text-slate-700 truncate w-full">${name}</span>
+                        <span class="text-[10px] font-bold text-slate-700 truncate w-full">${item.pdf_name || 'Dokumen_1.pdf'}</span>
                     </a>
-                    <div class="hidden print:flex items-center gap-2 bg-white p-2.5 rounded border border-slate-200 shadow-sm">
-                        <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-600 shrink-0"></i>
-                        <span class="text-[10px] font-bold text-slate-700 truncate w-full">${name}</span>
-                    </div>
                 `;
             }
             
@@ -904,11 +772,9 @@
         function closeModal() { 
             const modal = document.getElementById('detail-modal');
             const content = document.getElementById('modal-content');
-            
             modal.classList.add('opacity-0', 'pointer-events-none');
             content.classList.remove('scale-100', 'opacity-100');
             content.classList.add('scale-95', 'opacity-0');
-            
             setTimeout(() => { modal.classList.add('hidden'); }, 300); 
         }
     </script>
