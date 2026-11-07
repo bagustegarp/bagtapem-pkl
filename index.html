@@ -2,15 +2,781 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title> PEMELIHARAAN </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAGTAPEM - PKL & BANGLI</title>
+    
+    <link rel="icon" type="image/png" href="logo bagtapem.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Supabase JS SDK (v2) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f4f4; color: #333; }
-        h1 { font-size: 2.5em; margin-bottom: 10px; }
-        p { font-size: 1.2em; color: #666; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .card-sg-top { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-radius: 12px; padding: 18px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border-left-width: 5px; transition: transform 0.2s ease, box-shadow 0.2s ease; position: relative; overflow: hidden; }
+        .card-sg-top:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .card-icon-bg { position: absolute; right: -10px; top: -10px; opacity: 0.05; color: inherit; transform: rotate(-10deg); transition: transform 0.3s ease; }
+        .card-sg-top:hover .card-icon-bg { transform: rotate(0deg) scale(1.1); }
+        
+        /* Watermark Logo */
+        .watermark-bg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 75vw; max-width: 800px; opacity: 0.15; pointer-events: none; z-index: 0; filter: grayscale(20%); }
+        
+        /* Animated Background Blobs */
+        @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
+        .animate-blob { animation: blob 8s infinite; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-enter { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.25s; }
+        .delay-3 { animation-delay: 0.4s; }
+        .delay-4 { animation-delay: 0.55s; }
+
+        @media print { body * { visibility: hidden; } #detail-modal, #detail-modal * { visibility: visible; } #detail-modal { position: absolute; left: 0; top: 0; width: 100%; height: auto; background: white !important; padding: 0; display: block !important; } #printable-receipt, #printable-receipt * { visibility: visible; } #printable-receipt { width: 100%; max-width: 100%; margin: 0 auto; padding: 20px; box-shadow: none !important; border: none !important; } .no-print { display: none !important; } }
+        ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: #e2e8f0; } ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
     </style>
 </head>
-<body>
-    <h1>🚧 Website Sedang Maintenance</h1>
-    <p>Kami sedang melakukan pemeliharaan sistem. Mohon Maaf dan Terima Kasih.</p>
+<body class="text-slate-800 min-h-screen relative flex flex-col justify-between overflow-x-hidden bg-slate-50">
+
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+        <div class="absolute -top-40 -left-10 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        <div class="absolute top-40 -right-20 w-96 h-96 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-40 left-1/3 w-[30rem] h-[30rem] bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+    </div>
+
+    <img src="logo bagtapem.png" alt="Watermark Bagtapem" class="watermark-bg" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Lambang_Kota_Bandung.svg/1200px-Lambang_Kota_Bandung.svg.png'">
+
+    <div id="toast-container" class="fixed top-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+    <div class="relative z-10 flex-grow flex flex-col">
+        <header class="bg-white/80 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-40 shadow-sm animate-enter delay-1">
+            <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <img src="logo bagtapem.png" alt="Logo BAGTAPEM" class="h-10 w-auto object-contain" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Lambang_Kota_Bandung.svg/1200px-Lambang_Kota_Bandung.svg.png'">
+                    <div>
+                        <h1 class="text-base sm:text-lg font-extrabold text-slate-800 leading-tight tracking-tight">BAGTAPEM SETDA KOTA BANDUNG</h1>
+                        <p class="text-[11px] sm:text-xs font-semibold text-blue-600 uppercase tracking-widest">Sistem Pendataan Mandiri PKL & BANGLI</p>
+                    </div>
+                </div>
+                <div id="network-status" class="hidden md:flex items-center space-x-2 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full transition-colors duration-300 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" id="network-dot"></span>
+                    <span class="text-xs font-bold text-emerald-800" id="network-text">Koneksi Supabase Aktif</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full space-y-8">
+            <div class="border-l-4 border-blue-600 pl-4 animate-enter delay-2">
+                <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Selamat Datang, Petugas Pendataan!</h2>
+                <p class="text-sm text-slate-500 font-medium mt-1">Silakan pilih kategori laporan dan lengkapi atribut formulir di bawah dengan teliti!</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 animate-enter delay-3">
+                <div class="card-sg-top border-l-[#1e3a8a] text-[#1e3a8a]">
+                    <i data-lucide="store" class="w-24 h-24 card-icon-bg"></i>
+                    <p class="text-xs font-bold text-slate-500 z-10 relative">Total Kuantitas Data</p>
+                    <h3 class="text-3xl font-extrabold my-1 z-10 relative drop-shadow-sm" id="card-total-bangli">0 Unit</h3>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase z-10 relative">Atribut No. 5</p>
+                </div>
+                <div class="card-sg-top border-l-[#f59e0b] text-[#f59e0b]">
+                    <i data-lucide="map" class="w-24 h-24 card-icon-bg"></i>
+                    <p class="text-xs font-bold text-slate-500 z-10 relative">Kecamatan Aktif</p>
+                    <h3 class="text-xl font-bold text-slate-800 my-1 truncate z-10 relative" id="card-kecamatan-val">-</h3>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase z-10 relative">Atribut No. 1</p>
+                </div>
+                <div class="card-sg-top border-l-[#10b981] text-[#10b981]">
+                    <i data-lucide="map-pin" class="w-24 h-24 card-icon-bg"></i>
+                    <p class="text-xs font-bold text-slate-500 z-10 relative">Kelurahan Aktif</p>
+                    <h3 class="text-xl font-bold text-slate-800 my-1 truncate z-10 relative" id="card-kelurahan-val">-</h3>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase z-10 relative">Atribut No. 2</p>
+                </div>
+                <div class="card-sg-top border-l-[#4f46e5] text-[#4f46e5]">
+                    <i data-lucide="file-text" class="w-24 h-24 card-icon-bg opacity-[0.03]"></i>
+                    <p class="text-xs font-bold text-slate-500 z-10 relative">Status File PDF</p>
+                    <h3 class="text-sm font-bold text-emerald-600 my-1 flex items-center gap-1.5 z-10 relative py-1" id="card-foto-status">
+                        <i data-lucide="file-x" class="w-4 h-4 text-slate-400"></i> <span class="text-slate-500">Belum Diupload</span>
+                    </h3>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase z-10 relative mt-1.5">Atribut No. 8</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-enter delay-4">
+                <div class="lg:col-span-7 bg-white/95 backdrop-blur-md rounded-2xl p-6 sm:p-8 shadow-md border border-white relative z-10">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 mb-6 border-b border-slate-100">
+                        <div class="flex items-center space-x-4">
+                            <div class="bg-gradient-to-br from-blue-700 to-blue-900 text-white p-3 rounded-xl shadow-md">
+                                <i data-lucide="clipboard-edit" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">Formulir Lapangan</h3>
+                                <p class="text-xs font-medium text-slate-500">Wajib mengisi ruas yang bertanda bintang (*)</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="text-[11px] font-extrabold bg-blue-50 text-blue-800 px-3 py-1 rounded-full border border-blue-200 mb-1 flex items-center gap-1"><i data-lucide="check-square" class="w-3 h-3"></i> Form Lengkap</span>
+                            <span id="draft-status" class="text-[10px] font-medium text-slate-400 italic">Belum ada draft tersimpan</span>
+                        </div>
+                    </div>
+
+                    <form id="pkl-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                        <div class="bg-blue-50/50 p-5 rounded-xl border border-blue-200 shadow-sm relative overflow-hidden">
+                            <div class="absolute right-0 top-0 opacity-5 pointer-events-none transform translate-x-2 -translate-y-2">
+                                <i data-lucide="layers" class="w-32 h-32 text-blue-800"></i>
+                            </div>
+                            <label class="flex items-center text-sm font-extrabold text-slate-800 uppercase tracking-wider mb-3 relative z-10">
+                                <i data-lucide="list-filter" class="w-5 h-5 mr-2 text-blue-600"></i> Kategori Laporan <span class="text-red-600 ml-1">*</span>
+                            </label>
+                            <p class="text-xs text-slate-500 mb-3 relative z-10 font-medium">Pilih kategori pelaporan untuk mulai mengisi data form.</p>
+                            <select id="field-kategori" required onchange="onKategoriChange()" class="relative z-10 w-full px-4 py-3.5 rounded-xl border-2 border-blue-300 bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-600/20 text-sm font-bold text-slate-800 shadow-sm transition-all outline-none cursor-pointer">
+                                <option value="">-- PILIH KATEGORI --</option>
+                                <option value="BANGLI">1. BANGLI</option>
+                                <option value="PKL">2. PKL</option>
+                                <option value="Spanduk, Baliho dan Tali-talian">3. SPANDUK, BALIHO DAN TALI-TALIAN</option>
+                            </select>
+                        </div>
+
+                        <div id="form-details" class="hidden space-y-6 transition-all duration-500 origin-top">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                                        <i data-lucide="map" class="w-4 h-4 mr-1.5 text-blue-600"></i> 1. Kecamatan <span class="text-red-600 ml-1">*</span>
+                                    </label>
+                                    <select id="field-kecamatan" required onchange="onKecamatanChange()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 shadow-sm transition-all outline-none">
+                                        <option value="">-- Pilih Kecamatan --</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                                        <i data-lucide="map-pin" class="w-4 h-4 mr-1.5 text-blue-600"></i> 2. Kelurahan <span class="text-red-600 ml-1">*</span>
+                                    </label>
+                                    <select id="field-kelurahan" required onchange="updatePreview()" disabled class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 shadow-sm disabled:opacity-50 transition-all outline-none">
+                                        <option value="">-- Pilih Kecamatan Dulu --</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                                <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">
+                                    <i data-lucide="navigation" class="w-4 h-4 mr-1.5 text-blue-600"></i> 3. Nama Jalan & 4. RW <span class="text-red-600 ml-1">*</span>
+                                </label>
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                                    <div class="sm:col-span-9">
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nama Jalan Utama / Gg</label>
+                                        <input type="text" id="field-jalan" required placeholder="Contoh: Jl. Merdeka" oninput="updatePreview()" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                                    </div>
+                                    <div class="sm:col-span-3">
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">RW Lokasi</label>
+                                        <input type="text" id="field-rw" required placeholder="Contoh: 05" oninput="updatePreview()" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                                        <i data-lucide="calculator" class="w-4 h-4 mr-1.5 text-blue-600"></i> 5. Jml Total UNIT <span class="text-red-600 ml-1">*</span>
+                                    </label>
+                                    <div class="relative shadow-sm">
+                                        <input type="number" id="field-jumlah" min="1" required placeholder="1" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 pr-16 transition-all outline-none">
+                                        <span class="absolute right-4 top-3.5 text-xs font-extrabold text-slate-400">UNIT</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                                        <i data-lucide="calendar" class="w-4 h-4 mr-1.5 text-blue-600"></i> 6. WAKTU Pelaksanaan <span class="text-red-600 ml-1">*</span>
+                                    </label>
+                                    <input type="date" id="field-waktu" required onchange="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 shadow-sm transition-all outline-none">
+                                </div>
+                            </div>
+
+                            <div class="border border-slate-200 bg-slate-50 p-5 rounded-xl space-y-3 hover:border-blue-300 transition-colors shadow-sm">
+                                <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                    <i data-lucide="layout-list" class="w-4 h-4 mr-1.5 text-blue-600"></i> 7. Keterangan Rincian Kategori <span class="text-red-600 ml-1">*</span>
+                                </label>
+                                <textarea id="field-rincian" rows="4" required placeholder="" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:bg-slate-50 focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 transition-all outline-none shadow-sm"></textarea>
+                            </div>
+
+                            <div>
+                                <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                                    <i data-lucide="file-text" class="w-4 h-4 mr-1.5 text-blue-600"></i> 8. File Dokumentasi (1 PDF) <span class="text-red-600 ml-1">*</span>
+                                </label>
+                                
+                                <div id="drop-area-1" class="relative border-2 border-dashed border-slate-300 rounded-xl p-5 text-center transition-all duration-300 bg-slate-50 hover:bg-blue-50 hover:border-blue-400 group overflow-hidden h-36 flex flex-col items-center justify-center cursor-pointer max-w-sm">
+                                    <input type="file" id="field-doc-1" accept="application/pdf" required onchange="handlePdfUpload(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Drag & Drop PDF">
+                                    <div id="drop-content-1" class="flex flex-col items-center justify-center space-y-2 pointer-events-none w-full px-2">
+                                        <div class="p-3 bg-white shadow-sm border border-slate-100 text-blue-700 rounded-full group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                                            <i id="icon-doc-1" data-lucide="file-up" class="w-6 h-6"></i>
+                                        </div>
+                                        <p class="text-[11px] font-bold text-slate-500 truncate w-full" id="file-label-1">Drag atau Klik untuk Upload PDF</p>
+                                    </div>
+                                    <button type="button" id="btn-del-1" onclick="removePdf(); event.preventDefault(); event.stopPropagation();" class="hidden absolute top-2 right-2 bg-red-100 text-red-600 rounded-full p-1.5 z-20 hover:bg-red-600 hover:text-white transition-colors shadow-sm">
+                                        <i data-lucide="x" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+
+                                <p class="text-[10px] font-bold text-slate-400 mt-2 bg-white inline-block px-2 py-1 rounded border border-slate-100 shadow-sm">
+                                    <i data-lucide="info" class="w-3 h-3 inline"></i> Format: PDF. Ukuran Maksimal 2MB.
+                                </p>
+                            </div>
+
+                            <div>
+                                <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                                    <i data-lucide="file-text" class="w-4 h-4 mr-1.5 text-blue-600"></i> 9. Keterangan Tambahan
+                                </label>
+                                <textarea id="field-keterangan" rows="2" placeholder="Tuliskan catatan observasi atau kendala di sini..." oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 transition-all outline-none shadow-sm"></textarea>
+                            </div>
+
+                            <div class="pt-6 flex flex-col sm:flex-row items-center justify-end gap-3 border-t border-slate-100">
+                                <button type="button" onclick="resetForm()" class="w-full sm:w-auto px-5 py-3 rounded-xl text-sm font-bold text-slate-500 bg-white border border-slate-200 hover:bg-slate-100 hover:text-slate-900 transition-colors shadow-sm">Kosongkan Form</button>
+                                <button type="submit" id="btn-submit" class="w-full sm:w-auto flex items-center justify-center space-x-2 px-7 py-3 rounded-xl bg-gradient-to-r from-blue-700 to-[#1e3a8a] hover:from-slate-800 hover:to-slate-900 text-white font-bold shadow-lg transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none">
+                                    <i data-lucide="send" id="btn-icon" class="w-4 h-4 transition-transform"></i>
+                                    <span id="btn-text">Kirim Laporan via Cloud</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="lg:col-span-5 sticky top-24 relative z-10 transition-all duration-500">
+                    <div class="bg-white/95 backdrop-blur-md rounded-2xl p-0 shadow-lg border border-slate-200 overflow-hidden">
+                        <div class="bg-slate-50 p-4 border-b border-slate-200 flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-blue-600 animate-ping"></span>
+                                <h4 class="text-sm font-extrabold text-slate-900 uppercase tracking-wider">Live Preview Dokumen</h4>
+                            </div>
+                            <span class="text-[10px] text-slate-500 font-mono font-bold bg-white px-2 py-1 rounded border border-slate-200 shadow-sm flex items-center gap-1"><i data-lucide="save" class="w-3 h-3"></i> Auto-Save</span>
+                        </div>
+                        
+                        <div class="p-6 space-y-4">
+                            <div class="text-center mb-2">
+                                <span id="prev-kategori" class="inline-block px-4 py-1.5 bg-slate-100 text-slate-400 font-black text-xs rounded-full uppercase tracking-widest border border-slate-200 shadow-sm transition-colors duration-300">Belum Pilih Kategori</span>
+                            </div>
+
+                            <div id="preview-empty-state" class="flex flex-col items-center justify-center py-12 text-center">
+                                <i data-lucide="file-search" class="w-16 h-16 text-slate-200 mb-3"></i>
+                                <p class="text-sm font-bold text-slate-400">Pilih kategori di form sebelah kiri<br>untuk melihat rincian dokumen.</p>
+                            </div>
+
+                            <div id="preview-details" class="hidden space-y-4">
+                                <div class="relative w-full min-h-[120px] bg-slate-100 rounded-xl overflow-hidden border border-slate-200 p-4 shadow-inner flex flex-col justify-center">
+                                    <div id="preview-pdf-container" class="grid grid-cols-1 gap-2 w-full hidden">
+                                    </div>
+                                    <div id="preview-img-placeholder" class="text-center transition-opacity duration-300">
+                                        <i data-lucide="file-text" class="w-10 h-10 text-slate-300 mx-auto mb-2"></i>
+                                        <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-2">Ruang Bukti PDF (Atribut 8)</p>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3 text-[13px] pt-3">
+                                    <div class="flex justify-between items-start pb-2.5 border-b border-dashed border-slate-300"><span class="text-slate-500 font-bold">1. Kecamatan</span><span class="font-extrabold text-blue-900 text-right uppercase" id="prev-kecamatan">-</span></div>
+                                    <div class="flex justify-between items-start pb-2.5 border-b border-dashed border-slate-300"><span class="text-slate-500 font-bold">2. Kelurahan</span><span class="font-extrabold text-slate-800 text-right uppercase" id="prev-kelurahan">-</span></div>
+                                    <div class="pb-2.5 border-b border-dashed border-slate-300"><span class="text-slate-500 font-bold block mb-1">3 & 4. Rute Jalan & RW</span><p class="font-bold text-slate-800 whitespace-pre-wrap leading-relaxed bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-xs" id="prev-jalan-rw">-</p></div>
+                                    <div class="flex justify-between items-start pb-2.5 border-b border-dashed border-slate-300"><span class="text-slate-500 font-bold">5. Jml Total Unit</span><span class="font-black text-amber-600 text-right text-base bg-amber-50 px-2 py-0.5 rounded" id="prev-jumlah">0 Unit</span></div>
+                                    <div class="flex justify-between items-start pb-2.5 border-b border-dashed border-slate-300"><span class="text-slate-500 font-bold">6. Tanggal Pelaksanaan</span><span class="font-bold text-slate-800 text-right" id="prev-waktu">-</span></div>
+                                    <div class="pb-2.5 border-b border-dashed border-slate-300">
+                                        <span class="text-slate-500 font-bold block mb-1.5">7. Keterangan Rincian</span>
+                                        <p class="p-3 bg-slate-50 rounded-lg text-slate-800 font-bold border border-slate-200 whitespace-pre-wrap leading-relaxed text-xs shadow-sm" id="prev-datapkl">Belum ada rincian...</p>
+                                    </div>
+                                    <div class="pt-1">
+                                        <span class="text-slate-500 font-bold block mb-1.5">9. Keterangan Tambahan</span>
+                                        <p class="p-3 bg-[#fdfdfd] rounded-lg text-slate-600 border border-slate-200 text-xs italic leading-relaxed" id="prev-keterangan">-</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="bg-white/90 backdrop-blur-md mt-12 py-6 border-t border-slate-200 relative z-20">
+            <div class="max-w-[1400px] mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center space-x-3 text-left">
+                    <img src="logo bagtapem.png" alt="Logo BAGTAPEM" class="h-10 w-auto object-contain" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Lambang_Kota_Bandung.svg/1200px-Lambang_Kota_Bandung.svg.png'">
+                    <div>
+                        <p class="font-extrabold text-sm text-slate-800">Bagian Tata Pemerintahan (BAGTAPEM)</p>
+                        <p class="text-[11px] text-slate-500 font-semibold tracking-wide">Sekretariat Daerah Kota Bandung &copy; 2026</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 bg-slate-50 px-4 py-2 rounded-full border border-slate-200 shadow-sm">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-xs font-bold text-slate-600">@karyaanaktelkom • V 3.0 Supabase</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="detail-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div id="modal-content" class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto transform scale-95 transition-all duration-300 opacity-0 border border-slate-100">
+            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 bg-slate-100 text-slate-400 hover:text-slate-800 hover:bg-slate-200 rounded-full no-print transition-all">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div id="printable-receipt" class="space-y-4">
+                <div class="flex items-center space-x-4 pb-4 border-b-2 border-slate-900">
+                    <img src="logo bagtapem.png" alt="Logo Bagtapem" class="h-14 w-auto object-contain" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Lambang_Kota_Bandung.svg/1200px-Lambang_Kota_Bandung.svg.png'">
+                    <div>
+                        <h2 class="text-[15px] font-black text-slate-900 uppercase tracking-tight">Bagian Tata Pemerintahan</h2>
+                        <p class="text-xs text-slate-600 font-bold">Sekretariat Daerah Kota Bandung</p>
+                        <p class="text-[10px] text-blue-700 font-bold bg-blue-50 inline-block px-2 py-0.5 rounded mt-1">Bukti Pelaporan Penertiban</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-2 text-center py-2 bg-slate-50 rounded-lg border border-slate-200 shadow-inner">
+                    <div class="border-r border-slate-200">
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Kategori Laporan</span>
+                        <span class="text-sm font-black text-blue-700 uppercase" id="modal-kategori">-</span>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">REF ID</span>
+                        <span class="text-sm font-mono font-black text-slate-900 tracking-wider" id="modal-ref-id">LAP-2026-000</span>
+                    </div>
+                </div>
+
+                <div id="modal-pdf-list" class="grid grid-cols-1 gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200 shadow-inner w-full min-h-[80px]">
+                </div>
+
+                <div class="space-y-2.5 text-[13px] pt-1">
+                    <div class="flex justify-between py-1.5 border-b border-dashed border-slate-200"><span class="text-slate-500 font-bold">1. Kecamatan:</span><span class="font-extrabold text-slate-900 uppercase" id="modal-kecamatan"></span></div>
+                    <div class="flex justify-between py-1.5 border-b border-dashed border-slate-200"><span class="text-slate-500 font-bold">2. Kelurahan:</span><span class="font-extrabold text-slate-900 uppercase" id="modal-kelurahan"></span></div>
+                    <div class="py-1.5 border-b border-dashed border-slate-200"><span class="text-slate-500 font-bold block mb-1">3 & 4. Jalan & RW:</span><p class="font-bold text-slate-900 whitespace-pre-wrap text-xs bg-slate-50 p-2 rounded border border-slate-100" id="modal-jalan-rw"></p></div>
+                    <div class="flex justify-between py-1.5 border-b border-dashed border-slate-200"><span class="text-slate-500 font-bold">5. Jumlah Total:</span><span class="font-black text-blue-900 bg-blue-50 px-2 py-0.5 rounded" id="modal-jumlah"></span></div>
+                    <div class="flex justify-between py-1.5 border-b border-dashed border-slate-200"><span class="text-slate-500 font-bold">6. Tanggal Data:</span><span class="font-bold text-slate-900" id="modal-waktu"></span></div>
+                    <div class="py-1.5 border-b border-dashed border-slate-200">
+                        <span class="text-slate-500 font-bold block mb-1.5">7. Keterangan Rincian:</span>
+                        <p class="p-2.5 bg-slate-50 rounded border border-slate-200 text-slate-900 font-bold whitespace-pre-wrap text-xs shadow-sm" id="modal-datapkl"></p>
+                    </div>
+                    <div class="py-1">
+                        <span class="text-slate-500 font-bold block mb-1">9. Keterangan:</span>
+                        <p class="p-2 bg-white rounded border border-slate-200 text-slate-700 italic text-xs" id="modal-keterangan"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center justify-end pt-4 border-t border-slate-200 gap-3 no-print">
+                <button onclick="closeModal()" class="w-full sm:w-auto px-5 py-3 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-xl hover:bg-slate-50 transition-colors shadow-sm">Tutup Bukti</button>
+                <button onclick="window.print()" class="w-full sm:w-auto flex items-center justify-center space-x-2 px-6 py-3 bg-slate-900 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-lg">
+                    <i data-lucide="printer" class="w-4 h-4"></i>
+                    <span>Cetak PDF / Print</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://iidsvuqubbxphzdjoyhk.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_zopMWE46HXr9jxWSmshe9A_XWgXqQ7K";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const dataWilayahBandung = {
+            "Andir": ["Campaka", "Ciroyom", "Dungus Cariang", "Garuda", "Kebon Jeruk", "Maleber"],
+            "Antapani": ["Antapani Kidul", "Antapani Kulon", "Antapani Tengah", "Antapani Wetan"],
+            "Arcamanik": ["Cisaranten Bina Harapan", "Cisaranten Endah", "Cisaranten Kulon", "Sukamiskin"],
+            "Astana Anyar": ["Cibadak", "Karang Anyar", "Karasak", "Nyengseret", "Panjunan", "Pelindung Hewan"],
+            "Babakan Ciparay": ["Babakan", "Babakan Ciparay", "Cirangrang", "Margahayu Utara", "Margasuka", "Sukahaji"],
+            "Bandung Kidul": ["Batununggal", "Kujangsari", "Mengger", "Wates"],
+            "Bandung Kulon": ["Cijerah", "Cibuntu", "Caringin", "Cigondewah Kaler", "Cigondewah Kidul", "Cigondewah Rahayu", "Gempolsari", "Warung Muncang"],
+            "Bandung Wetan": ["Cihapit", "Citarum", "Tamansari"],
+            "Batununggal": ["Binong", "Cibangkong", "Gumuruh", "Kacapiring", "Kebon Gedang", "Kebon Waru", "Maleer", "Samoja"],
+            "Bojongloa Kaler": ["Babakan Asih", "Babakan Tarogong", "Jamika", "Kopo", "Suka Asih"],
+            "Bojongloa Kidul": ["Cibaduyut", "Cibaduyut Kidul", "Cibaduyut Wetan", "Kebon Lega", "Mekar Wangi", "Situsaeur"],
+            "Buahbatu": ["Cijaura", "Jatisari", "Margasari", "Sekejati"],
+            "Cibeunying Kaler": ["Cihaurgeulis", "Cigadung", "Neglasari", "Sukaluyu"],
+            "Cibeunying Kidul": ["Cicadas", "Cikutra", "Padasuka", "Pasirlayung", "Sukamaju", "Sukapada"],
+            "Cibiru": ["Cipadung", "Cisurupan", "Palasari", "Pasir Biru"],
+            "Cicendo": ["Arjuna", "Husein Sastranegara", "Pajajaran", "Pamoyanan", "Pasirkaliki", "Sukaraja"],
+            "Cidadap": ["Ciumbuleuit", "Hegarmanah", "Ledeng"],
+            "Cinambo": ["Babakan Penghulu", "Cisaranten Wetan", "Pakemitan", "Sukamulya"],
+            "Coblong": ["Cipaganti", "Dago", "Lebak Siliwangi", "Lebak Gede", "Sadang Serang", "Sekeloa"],
+            "Gedebage": ["Cimincrang", "Cisaranten Kidul", "Rancabolang", "Rancanumpang"],
+            "Kiaracondong": ["Babakan Surabaya", "Babakan Sari", "Cicaheum", "Kebon Kangkung", "Kebon Jayanti", "Sukapura"],
+            "Lengkong": ["Burangrang", "Cijagra", "Cikawao", "Lingkar Selatan", "Malabar", "Paledang", "Turangga"],
+            "Mandalajati": ["Jatihandap", "Karang Pamulang", "Pasir Impun", "Sindang Jaya"],
+            "Panyileukan": ["Cipadung Kidul", "Cipadung Kulon", "Cipadung Wetan", "Mekar Mulya"],
+            "Rancasari": ["Cipamokolan", "Derwati", "Manjahlega", "Mekar Jaya"],
+            "Regol": ["Ancol", "Balong Gede", "Ciateul", "Cigelereng", "Ciseureuh", "Pasirluyu", "Pungkur"],
+            "Sukajadi": ["Cipedes", "Pasteur", "Sukagalih", "Sukabungah", "Sukawarna"],
+            "Sukasari": ["Gegerkalong", "Isola", "Sarijadi", "Sukarasa"],
+            "Sumur Bandung": ["Babakan Ciamis", "Braga", "Kebon Pisang", "Merdeka"],
+            "Ujungberung": ["Cigending", "Pasir Endah", "Pasir Jati", "Pasir Wangi", "Pasanggrahan"]
+        };
+
+        let selectedPdfFile = null;
+        let selectedPdfName = "";
+        const STORAGE_KEY = 'pkl_form_draft_supabase_v1';
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            let bgClass, iconName;
+            if (type === 'success') { bgClass = 'bg-emerald-600'; iconName = 'check-circle'; }
+            else if (type === 'error') { bgClass = 'bg-red-600'; iconName = 'alert-octagon'; }
+            else { bgClass = 'bg-blue-600'; iconName = 'info'; }
+
+            toast.className = `${bgClass} text-white px-5 py-3.5 rounded-xl shadow-xl transform transition-all duration-500 translate-x-[120%] flex items-center gap-3 pointer-events-auto max-w-sm`;
+            toast.innerHTML = `<i data-lucide="${iconName}" class="w-5 h-5 shrink-0"></i> <span class="text-sm font-semibold">${message}</span>`;
+            
+            container.appendChild(toast);
+            lucide.createIcons({root: toast});
+            
+            setTimeout(() => { toast.classList.remove('translate-x-[120%]'); }, 50);
+            setTimeout(() => { toast.classList.add('translate-x-[120%]'); setTimeout(() => toast.remove(), 500); }, 3500);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            const kecSelect = document.getElementById('field-kecamatan');
+            Object.keys(dataWilayahBandung).sort().forEach(kec => {
+                const opt = document.createElement('option');
+                opt.value = kec; opt.textContent = kec;
+                kecSelect.appendChild(opt);
+            });
+            
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('field-waktu').value = now.toISOString().slice(0, 10);
+            loadDraft(); 
+        });
+
+        function onKategoriChange(doUpdatePreview = true) {
+            const kat = document.getElementById('field-kategori').value;
+            const formDetails = document.getElementById('form-details');
+            const prevDetails = document.getElementById('preview-details');
+            const prevBadge = document.getElementById('prev-kategori');
+            const emptyState = document.getElementById('preview-empty-state');
+            const rincianField = document.getElementById('field-rincian');
+            
+            if (kat) {
+                formDetails.classList.remove('hidden');
+                prevDetails.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+                
+                prevBadge.innerText = `KATEGORI: ${kat}`;
+                prevBadge.className = "inline-block px-4 py-1.5 bg-blue-100 text-blue-800 font-black text-xs rounded-full uppercase tracking-widest border border-blue-300 shadow-sm transition-colors duration-300";
+                
+                if (kat === 'BANGLI') {
+                    rincianField.placeholder = "Contoh: Hunian liar/kios permanen/posko/lapak liar di atas saluran air./di atas trotoar/sempadan sungai dll.";
+                } else if (kat === 'PKL') {
+                    rincianField.placeholder = "Contoh: Gerobak, tenda bongkar-pasang, gelaran (lesehan), roda dorong, kendaraan - Kuliner (makanan/minuman), fashion/pakaian, aksesoris/gadget, buah-buahan/sayur, jasa.dll";
+                } else if (kat === 'Spanduk, Baliho dan Tali-talian') {
+                    rincianField.placeholder = "Contoh: spanduk, banner, baligo, tali tali, dll";
+                }
+            } else {
+                formDetails.classList.add('hidden');
+                prevDetails.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                
+                prevBadge.innerText = "Belum Pilih Kategori";
+                prevBadge.className = "inline-block px-4 py-1.5 bg-slate-100 text-slate-400 font-black text-xs rounded-full uppercase tracking-widest border border-slate-200 shadow-sm transition-colors duration-300";
+                rincianField.placeholder = "";
+            }
+            if(doUpdatePreview) updatePreview();
+        }
+
+        function saveDraft() {
+            const draftData = {
+                kategori: document.getElementById('field-kategori').value,
+                kecamatan: document.getElementById('field-kecamatan').value,
+                kelurahan: document.getElementById('field-kelurahan').value,
+                jalan: document.getElementById('field-jalan').value,
+                rw: document.getElementById('field-rw').value,
+                jumlah: document.getElementById('field-jumlah').value,
+                waktu: document.getElementById('field-waktu').value,
+                rincian: document.getElementById('field-rincian').value,
+                keterangan: document.getElementById('field-keterangan').value,
+                pdfName: selectedPdfName
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(draftData));
+            const timeStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('draft-status').innerText = `Draft tersimpan (${timeStr})`;
+            document.getElementById('draft-status').classList.replace('text-slate-400', 'text-blue-600');
+        }
+
+        function loadDraft() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if(saved) {
+                try {
+                    const draft = JSON.parse(saved);
+                    if(draft.kategori) { document.getElementById('field-kategori').value = draft.kategori; onKategoriChange(false); }
+                    if(draft.kecamatan) { document.getElementById('field-kecamatan').value = draft.kecamatan; onKecamatanChange(false); }
+                    if(draft.kelurahan) document.getElementById('field-kelurahan').value = draft.kelurahan;
+                    if(draft.jalan) document.getElementById('field-jalan').value = draft.jalan;
+                    if(draft.rw) document.getElementById('field-rw').value = draft.rw;
+                    if(draft.jumlah) document.getElementById('field-jumlah').value = draft.jumlah;
+                    if(draft.waktu) document.getElementById('field-waktu').value = draft.waktu;
+                    if(draft.rincian) document.getElementById('field-rincian').value = draft.rincian;
+                    if(draft.keterangan) document.getElementById('field-keterangan').value = draft.keterangan;
+                } catch(e) { console.error(e); }
+            }
+            updatePreview();
+        }
+
+        function getJalanRwValues() {
+            const jalan = document.getElementById('field-jalan').value.trim();
+            const rw = document.getElementById('field-rw').value.trim();
+            if(jalan || rw) return `${jalan || '-'} (RW: ${rw || '-'})`;
+            return '-';
+        }
+
+        function onKecamatanChange(doUpdatePreview = true) {
+            const kecVal = document.getElementById('field-kecamatan').value;
+            const kelSelect = document.getElementById('field-kelurahan');
+            kelSelect.innerHTML = '<option value="">-- Pilih Kelurahan --</option>';
+            if (kecVal && dataWilayahBandung[kecVal]) {
+                kelSelect.disabled = false; kelSelect.classList.remove('opacity-50');
+                dataWilayahBandung[kecVal].sort().forEach(kel => {
+                    const opt = document.createElement('option'); opt.value = kel; opt.textContent = kel;
+                    kelSelect.appendChild(opt);
+                });
+            } else {
+                kelSelect.disabled = true; kelSelect.classList.add('opacity-50');
+                kelSelect.innerHTML = '<option value="">-- Pilih Kecamatan Dulu --</option>';
+            }
+            if(doUpdatePreview) updatePreview();
+        }
+
+        function formatDataPKL() {
+            const rincian = document.getElementById('field-rincian').value.trim();
+            return rincian ? rincian : "Belum ada rincian data...";
+        }
+
+        function updatePreview() {
+            const kec = document.getElementById('field-kecamatan').value || '-';
+            const kel = document.getElementById('field-kelurahan').value || '-';
+            const jml = document.getElementById('field-jumlah').value || '0';
+
+            document.getElementById('prev-kecamatan').innerText = kec; document.getElementById('card-kecamatan-val').innerText = kec;
+            document.getElementById('prev-kelurahan').innerText = kel; document.getElementById('card-kelurahan-val').innerText = kel;
+            document.getElementById('prev-jalan-rw').innerText = getJalanRwValues();
+            document.getElementById('prev-jumlah').innerText = `${jml} Unit`; document.getElementById('card-total-bangli').innerText = `${jml} Unit`;
+            
+            const rawWaktu = document.getElementById('field-waktu').value;
+            document.getElementById('prev-waktu').innerText = rawWaktu ? new Date(rawWaktu).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-';
+            
+            document.getElementById('prev-datapkl').innerText = formatDataPKL();
+            document.getElementById('prev-keterangan').innerText = document.getElementById('field-keterangan').value || '-';
+            
+            const pdfContainer = document.getElementById('preview-pdf-container');
+            const pdfPlaceholder = document.getElementById('preview-img-placeholder');
+            
+            if (selectedPdfFile || selectedPdfName) {
+                pdfContainer.innerHTML = `
+                    <div class="flex items-center gap-2 bg-white p-2.5 rounded border border-slate-200 shadow-sm overflow-hidden">
+                        <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-500 shrink-0"></i>
+                        <span class="text-[10px] font-bold text-slate-700 truncate w-full">${selectedPdfName}</span>
+                    </div>
+                `;
+                pdfContainer.classList.remove('hidden');
+                pdfPlaceholder.classList.add('hidden');
+                document.getElementById('card-foto-status').innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i> <span class="text-emerald-700">Siap Dikirim</span>`;
+            } else {
+                pdfContainer.classList.add('hidden');
+                pdfPlaceholder.classList.remove('hidden');
+                document.getElementById('card-foto-status').innerHTML = `<i data-lucide="file-x" class="w-4 h-4 text-slate-400"></i> <span class="text-slate-500">Belum Diupload</span>`;
+            }
+
+            lucide.createIcons();
+            saveDraft(); 
+        }
+
+        function handlePdfUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.type !== "application/pdf") { 
+                    showToast("Hanya file PDF yang diperbolehkan!", "error"); 
+                    e.target.value = ""; 
+                    return; 
+                }
+                if (file.size > 2 * 1024 * 1024) { 
+                    showToast("File maksimal 2MB!", "error"); 
+                    e.target.value = ""; 
+                    return; 
+                }
+                
+                selectedPdfFile = file;
+                selectedPdfName = file.name;
+                
+                document.getElementById(`file-label-1`).innerText = file.name;
+                document.getElementById(`file-label-1`).classList.replace('text-slate-500', 'text-blue-700');
+                const icon = document.getElementById(`icon-doc-1`);
+                icon.setAttribute('data-lucide', 'file-check-2');
+                icon.parentElement.classList.replace('text-blue-700', 'text-emerald-600');
+                document.getElementById(`btn-del-1`).classList.remove('hidden');
+                
+                showToast(`File PDF dimuat`, "success");
+                lucide.createIcons(); 
+                updatePreview(); 
+            }
+        }
+
+        function removePdf() {
+            selectedPdfFile = null;
+            selectedPdfName = "";
+            document.getElementById(`field-doc-1`).value = "";
+            document.getElementById(`file-label-1`).innerText = `Drag atau Klik untuk Upload PDF`;
+            document.getElementById(`file-label-1`).classList.replace('text-blue-700', 'text-slate-500');
+            const icon = document.getElementById(`icon-doc-1`);
+            icon.setAttribute('data-lucide', 'file-up');
+            icon.parentElement.classList.replace('text-emerald-600', 'text-blue-700');
+            document.getElementById(`btn-del-1`).classList.add('hidden');
+            
+            lucide.createIcons();
+            updatePreview();
+        }
+
+        function resetForm() {
+            document.getElementById('pkl-form').reset();
+            onKategoriChange(false);
+            removePdf();
+            
+            const kelSelect = document.getElementById('field-kelurahan');
+            kelSelect.disabled = true; kelSelect.classList.add('opacity-50'); kelSelect.innerHTML = '<option value="">-- Pilih Kecamatan Dulu --</option>';
+            document.getElementById('card-foto-status').innerHTML = `<i data-lucide="file-x" class="w-4 h-4 text-slate-400"></i> <span class="text-slate-500">Belum Diupload</span>`;
+            
+            localStorage.removeItem(STORAGE_KEY);
+            document.getElementById('draft-status').innerText = "Draft dihapus";
+            document.getElementById('draft-status').classList.replace('text-blue-600', 'text-slate-400');
+            
+            showToast("Formulir berhasil dikosongkan", "info");
+            lucide.createIcons();
+            
+            const now = new Date(); now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('field-waktu').value = now.toISOString().slice(0, 10);
+            updatePreview();
+        }
+
+        function setSubmitButtonState(isSubmitting) {
+            const btn = document.getElementById('btn-submit');
+            const text = document.getElementById('btn-text');
+            const icon = document.getElementById('btn-icon');
+            
+            if(isSubmitting) {
+                btn.disabled = true; text.innerText = "Mengirim...";
+                icon.setAttribute('data-lucide', 'loader-2'); icon.classList.add('animate-spin');
+            } else {
+                btn.disabled = false; text.innerText = "Kirim Laporan via Cloud";
+                icon.setAttribute('data-lucide', 'send'); icon.classList.remove('animate-spin');
+            }
+            lucide.createIcons({root: btn});
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            if (!selectedPdfFile) { 
+                showToast("Harap upload 1 file PDF sebelum mengirim!", "error"); 
+                return; 
+            }
+            
+            setSubmitButtonState(true);
+
+            try {
+                // 1. Upload File PDF ke Storage Supabase
+                const fileName = `${Date.now()}_${selectedPdfFile.name.replace(/\s+/g, '_')}`;
+                const { data: storageData, error: storageError } = await supabaseClient
+                    .storage
+                    .from('dokumentasi')
+                    .upload(fileName, selectedPdfFile);
+
+                if (storageError) throw storageError;
+
+                const { data: publicUrlData } = supabaseClient
+                    .storage
+                    .from('dokumentasi')
+                    .getPublicUrl(fileName);
+
+                const publicPdfUrl = publicUrlData.publicUrl;
+
+                // 2. Simpan Data Teks ke PostgreSQL Supabase
+                const katVal = document.getElementById('field-kategori').value;
+                let prefix = 'LAP';
+                if(katVal === 'BANGLI') prefix = 'BGL';
+                else if(katVal === 'PKL') prefix = 'PKL';
+                else if(katVal === 'Spanduk, Baliho dan Tali-talian') prefix = 'SPK';
+
+                const refId = `${prefix}-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+
+                const newEntry = {
+                    ref_id: refId,
+                    kategori_laporan: katVal,
+                    kecamatan: document.getElementById('field-kecamatan').value,
+                    kelurahan: document.getElementById('field-kelurahan').value,
+                    lokasi: getJalanRwValues(), 
+                    jumlah: parseInt(document.getElementById('field-jumlah').value),
+                    waktu: document.getElementById('field-waktu').value,
+                    datapkl: formatDataPKL(),
+                    keterangan: document.getElementById('field-keterangan').value || '-',
+                    pdf_url: publicPdfUrl,
+                    pdf_name: selectedPdfName
+                };
+
+                const { error: dbError } = await supabaseClient.from('pkl_reports').insert([newEntry]);
+                if (dbError) throw dbError;
+
+                setSubmitButtonState(false);
+                showToast("Laporan Berhasil Terkirim ke Cloud!", "success");
+                openModal(newEntry);
+                localStorage.removeItem(STORAGE_KEY);
+                resetForm();
+
+            } catch (err) {
+                console.error(err);
+                setSubmitButtonState(false);
+                showToast("Gagal mengirim: " + err.message, "error");
+            }
+        }
+
+        function openModal(item) {
+            document.getElementById('modal-ref-id').innerText = item.ref_id; 
+            document.getElementById('modal-kategori').innerText = item.kategori_laporan;
+            document.getElementById('modal-kecamatan').innerText = item.kecamatan;
+            document.getElementById('modal-kelurahan').innerText = item.kelurahan;
+            document.getElementById('modal-jalan-rw').innerText = item.lokasi; 
+            document.getElementById('modal-jumlah').innerText = `${item.jumlah} Unit`;
+            document.getElementById('modal-waktu').innerText = new Date(item.waktu).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('modal-datapkl').innerText = item.datapkl;
+            document.getElementById('modal-keterangan').innerText = item.keterangan;
+            
+            const modalPdfList = document.getElementById('modal-pdf-list');
+            modalPdfList.innerHTML = '';
+            if(item.pdf_url) {
+                modalPdfList.innerHTML = `
+                    <a href="${item.pdf_url}" target="_blank" download="${item.pdf_name}" class="flex items-center gap-2 bg-white p-2.5 rounded border border-slate-200 shadow-sm hover:bg-blue-50 transition-colors no-print">
+                        <i data-lucide="download" class="w-4 h-4 text-blue-600 shrink-0"></i>
+                        <span class="text-[10px] font-bold text-slate-700 truncate w-full">${item.pdf_name || 'Dokumen_1.pdf'}</span>
+                    </a>
+                `;
+            }
+            
+            lucide.createIcons();
+
+            const modal = document.getElementById('detail-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() { 
+            const modal = document.getElementById('detail-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300); 
+        }
+    </script>
 </body>
 </html>
