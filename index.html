@@ -109,143 +109,173 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-enter delay-4">
-                <div class="lg:col-span-7 bg-white/95 backdrop-blur-md rounded-2xl p-6 sm:p-8 shadow-md border border-white relative z-10">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 mb-6 border-b border-slate-100">
-                        <div class="flex items-center space-x-4">
-                            <div class="bg-gradient-to-br from-blue-700 to-blue-900 text-white p-3 rounded-xl shadow-md">
-                                <i data-lucide="clipboard-edit" class="w-5 h-5"></i>
+                <div class="lg:col-span-7 space-y-6">
+                    <!-- Form Utama -->
+                    <div class="bg-white/95 backdrop-blur-md rounded-2xl p-6 sm:p-8 shadow-md border border-white relative z-10">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 mb-6 border-b border-slate-100">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-gradient-to-br from-blue-700 to-blue-900 text-white p-3 rounded-xl shadow-md">
+                                    <i data-lucide="clipboard-edit" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-900">Formulir Lapangan</h3>
+                                    <p class="text-xs font-medium text-slate-500">Wajib mengisi ruas yang bertanda bintang (*)</p>
+                                </div>
                             </div>
-                            <div>
-                                <h3 class="text-lg font-bold text-slate-900">Formulir Lapangan</h3>
-                                <p class="text-xs font-medium text-slate-500">Wajib mengisi ruas yang bertanda bintang (*)</p>
+                            <div class="flex flex-col items-end">
+                                <span class="text-[11px] font-extrabold bg-blue-50 text-blue-800 px-3 py-1 rounded-full border border-blue-200 mb-1 flex items-center gap-1"><i data-lucide="check-square" class="w-3 h-3"></i> Form Lengkap</span>
+                                <span id="draft-status" class="text-[10px] font-medium text-slate-400 italic">Belum ada draft tersimpan</span>
                             </div>
                         </div>
-                        <div class="flex flex-col items-end">
-                            <span class="text-[11px] font-extrabold bg-blue-50 text-blue-800 px-3 py-1 rounded-full border border-blue-200 mb-1 flex items-center gap-1"><i data-lucide="check-square" class="w-3 h-3"></i> Form Lengkap</span>
-                            <span id="draft-status" class="text-[10px] font-medium text-slate-400 italic">Belum ada draft tersimpan</span>
-                        </div>
-                    </div>
 
-                    <form id="pkl-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
-                        <div class="bg-blue-50/50 p-5 rounded-xl border border-blue-200 shadow-sm relative overflow-hidden">
-                            <div class="absolute right-0 top-0 opacity-5 pointer-events-none transform translate-x-2 -translate-y-2">
-                                <i data-lucide="layers" class="w-32 h-32 text-blue-800"></i>
-                            </div>
-                            <label class="flex items-center text-sm font-extrabold text-slate-800 uppercase tracking-wider mb-3 relative z-10">
-                                <i data-lucide="list-filter" class="w-5 h-5 mr-2 text-blue-600"></i> Kategori Laporan <span class="text-red-600 ml-1">*</span>
-                            </label>
-                            <p class="text-xs text-slate-500 mb-3 relative z-10 font-medium">Pilih kategori pelaporan untuk mulai mengisi data form.</p>
-                            <select id="field-kategori" required onchange="onKategoriChange()" class="relative z-10 w-full px-4 py-3.5 rounded-xl border-2 border-blue-300 bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-600/20 text-sm font-bold text-slate-800 shadow-sm transition-all outline-none cursor-pointer">
-                                <option value="">-- PILIH KATEGORI --</option>
-                                <option value="BANGLI">1. BANGLI</option>
-                                <option value="PKL">2. PKL</option>
-                                <option value="Spanduk, Baliho dan Tali-talian">3. SPANDUK, BALIHO DAN TALI-TALIAN</option>
-                            </select>
-                        </div>
-
-                        <div id="form-details" class="hidden space-y-6 transition-all duration-500 origin-top">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                                        <i data-lucide="map" class="w-4 h-4 mr-1.5 text-blue-600"></i> 1. Kecamatan <span class="text-red-600 ml-1">*</span>
-                                    </label>
-                                    <select id="field-kecamatan" required onchange="onKecamatanChange()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 shadow-sm transition-all outline-none">
-                                        <option value="">-- Pilih Kecamatan --</option>
-                                    </select>
+                        <form id="pkl-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                            <div class="bg-blue-50/50 p-5 rounded-xl border border-blue-200 shadow-sm relative overflow-hidden">
+                                <div class="absolute right-0 top-0 opacity-5 pointer-events-none transform translate-x-2 -translate-y-2">
+                                    <i data-lucide="layers" class="w-32 h-32 text-blue-800"></i>
                                 </div>
-                                <div>
-                                    <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                                        <i data-lucide="map-pin" class="w-4 h-4 mr-1.5 text-blue-600"></i> 2. Kelurahan <span class="text-red-600 ml-1">*</span>
-                                    </label>
-                                    <select id="field-kelurahan" required onchange="updatePreview()" disabled class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 shadow-sm disabled:opacity-50 transition-all outline-none">
-                                        <option value="">-- Pilih Kecamatan Dulu --</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
-                                <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">
-                                    <i data-lucide="navigation" class="w-4 h-4 mr-1.5 text-blue-600"></i> 3. Nama Jalan & 4. RW <span class="text-red-600 ml-1">*</span>
+                                <label class="flex items-center text-sm font-extrabold text-slate-800 uppercase tracking-wider mb-3 relative z-10">
+                                    <i data-lucide="list-filter" class="w-5 h-5 mr-2 text-blue-600"></i> Kategori Laporan <span class="text-red-600 ml-1">*</span>
                                 </label>
-                                
-                                <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
-                                    <div class="sm:col-span-9">
-                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nama Jalan Utama / Gg</label>
-                                        <input type="text" id="field-jalan" required placeholder="Contoh: Jl. Merdeka" oninput="updatePreview()" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                                <p class="text-xs text-slate-500 mb-3 relative z-10 font-medium">Pilih kategori pelaporan untuk mulai mengisi data form.</p>
+                                <select id="field-kategori" required onchange="onKategoriChange()" class="relative z-10 w-full px-4 py-3.5 rounded-xl border-2 border-blue-300 bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-600/20 text-sm font-bold text-slate-800 shadow-sm transition-all outline-none cursor-pointer">
+                                    <option value="">-- PILIH KATEGORI --</option>
+                                    <option value="BANGLI">1. BANGLI</option>
+                                    <option value="PKL">2. PKL</option>
+                                    <option value="Spanduk, Baliho dan Tali-talian">3. SPANDUK, BALIHO DAN TALI-TALIAN</option>
+                                </select>
+                            </div>
+
+                            <div id="form-details" class="hidden space-y-6 transition-all duration-500 origin-top">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                    <div>
+                                        <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                                            <i data-lucide="map" class="w-4 h-4 mr-1.5 text-blue-600"></i> 1. Kecamatan <span class="text-red-600 ml-1">*</span>
+                                        </label>
+                                        <select id="field-kecamatan" required onchange="onKecamatanChange()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 shadow-sm transition-all outline-none">
+                                            <option value="">-- Pilih Kecamatan --</option>
+                                        </select>
                                     </div>
-                                    <div class="sm:col-span-3">
-                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">RW Lokasi</label>
-                                        <input type="text" id="field-rw" required placeholder="Contoh: 05" oninput="updatePreview()" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                                    <div>
+                                        <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                                            <i data-lucide="map-pin" class="w-4 h-4 mr-1.5 text-blue-600"></i> 2. Kelurahan <span class="text-red-600 ml-1">*</span>
+                                        </label>
+                                        <select id="field-kelurahan" required onchange="updatePreview()" disabled class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 shadow-sm disabled:opacity-50 transition-all outline-none">
+                                            <option value="">-- Pilih Kecamatan Dulu --</option>
+                                        </select>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                                        <i data-lucide="calculator" class="w-4 h-4 mr-1.5 text-blue-600"></i> 5. Jml Total UNIT <span class="text-red-600 ml-1">*</span>
+                                <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                                    <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">
+                                        <i data-lucide="navigation" class="w-4 h-4 mr-1.5 text-blue-600"></i> 3. Nama Jalan & 4. RW <span class="text-red-600 ml-1">*</span>
                                     </label>
-                                    <div class="relative shadow-sm">
-                                        <input type="number" id="field-jumlah" min="1" required placeholder="1" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 pr-16 transition-all outline-none">
-                                        <span class="absolute right-4 top-3.5 text-xs font-extrabold text-slate-400">UNIT</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                                        <i data-lucide="calendar" class="w-4 h-4 mr-1.5 text-blue-600"></i> 6. WAKTU Pelaksanaan <span class="text-red-600 ml-1">*</span>
-                                    </label>
-                                    <input type="date" id="field-waktu" required onchange="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 shadow-sm transition-all outline-none">
-                                </div>
-                            </div>
-
-                            <div class="border border-slate-200 bg-slate-50 p-5 rounded-xl space-y-3 hover:border-blue-300 transition-colors shadow-sm">
-                                <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider">
-                                    <i data-lucide="layout-list" class="w-4 h-4 mr-1.5 text-blue-600"></i> 7. Keterangan Rincian Kategori <span class="text-red-600 ml-1">*</span>
-                                </label>
-                                <textarea id="field-rincian" rows="4" required placeholder="" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:bg-slate-50 focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 transition-all outline-none shadow-sm"></textarea>
-                            </div>
-
-                            <div>
-                                <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                                    <i data-lucide="file-text" class="w-4 h-4 mr-1.5 text-blue-600"></i> 8. File Dokumentasi (1 PDF) <span class="text-red-600 ml-1">*</span>
-                                </label>
-                                
-                                <div id="drop-area-1" class="relative border-2 border-dashed border-slate-300 rounded-xl p-5 text-center transition-all duration-300 bg-slate-50 hover:bg-blue-50 hover:border-blue-400 group overflow-hidden h-36 flex flex-col items-center justify-center cursor-pointer max-w-sm">
-                                    <input type="file" id="field-doc-1" accept="application/pdf" required onchange="handlePdfUpload(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Drag & Drop PDF">
-                                    <div id="drop-content-1" class="flex flex-col items-center justify-center space-y-2 pointer-events-none w-full px-2">
-                                        <div class="p-3 bg-white shadow-sm border border-slate-100 text-blue-700 rounded-full group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                                            <i id="icon-doc-1" data-lucide="file-up" class="w-6 h-6"></i>
+                                    
+                                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                                        <div class="sm:col-span-9">
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nama Jalan Utama / Gg</label>
+                                            <input type="text" id="field-jalan" required placeholder="Contoh: Jl. Merdeka" oninput="updatePreview()" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                                         </div>
-                                        <p class="text-[11px] font-bold text-slate-500 truncate w-full" id="file-label-1">Drag atau Klik untuk Upload PDF</p>
+                                        <div class="sm:col-span-3">
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">RW Lokasi</label>
+                                            <input type="text" id="field-rw" required placeholder="Contoh: 05" oninput="updatePreview()" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                                        </div>
                                     </div>
-                                    <button type="button" id="btn-del-1" onclick="removePdf(); event.preventDefault(); event.stopPropagation();" class="hidden absolute top-2 right-2 bg-red-100 text-red-600 rounded-full p-1.5 z-20 hover:bg-red-600 hover:text-white transition-colors shadow-sm">
-                                        <i data-lucide="x" class="w-4 h-4"></i>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                    <div>
+                                        <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                                            <i data-lucide="calculator" class="w-4 h-4 mr-1.5 text-blue-600"></i> 5. Jml Total UNIT <span class="text-red-600 ml-1">*</span>
+                                        </label>
+                                        <div class="relative shadow-sm">
+                                            <input type="number" id="field-jumlah" min="1" required placeholder="1" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 pr-16 transition-all outline-none">
+                                            <span class="absolute right-4 top-3.5 text-xs font-extrabold text-slate-400">UNIT</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                                            <i data-lucide="calendar" class="w-4 h-4 mr-1.5 text-blue-600"></i> 6. WAKTU Pelaksanaan <span class="text-red-600 ml-1">*</span>
+                                        </label>
+                                        <input type="date" id="field-waktu" required onchange="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 shadow-sm transition-all outline-none">
+                                    </div>
+                                </div>
+
+                                <div class="border border-slate-200 bg-slate-50 p-5 rounded-xl space-y-3 hover:border-blue-300 transition-colors shadow-sm">
+                                    <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                        <i data-lucide="layout-list" class="w-4 h-4 mr-1.5 text-blue-600"></i> 7. Keterangan Rincian Kategori <span class="text-red-600 ml-1">*</span>
+                                    </label>
+                                    <textarea id="field-rincian" rows="4" required placeholder="" oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:bg-slate-50 focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 transition-all outline-none shadow-sm"></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                                        <i data-lucide="file-text" class="w-4 h-4 mr-1.5 text-blue-600"></i> 8. File Dokumentasi (1 PDF) <span class="text-red-600 ml-1">*</span>
+                                    </label>
+                                    
+                                    <div id="drop-area-1" class="relative border-2 border-dashed border-slate-300 rounded-xl p-5 text-center transition-all duration-300 bg-slate-50 hover:bg-blue-50 hover:border-blue-400 group overflow-hidden h-36 flex flex-col items-center justify-center cursor-pointer max-w-sm">
+                                        <input type="file" id="field-doc-1" accept="application/pdf" required onchange="handlePdfUpload(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Drag & Drop PDF">
+                                        <div id="drop-content-1" class="flex flex-col items-center justify-center space-y-2 pointer-events-none w-full px-2">
+                                            <div class="p-3 bg-white shadow-sm border border-slate-100 text-blue-700 rounded-full group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                                                <i id="icon-doc-1" data-lucide="file-up" class="w-6 h-6"></i>
+                                            </div>
+                                            <p class="text-[11px] font-bold text-slate-500 truncate w-full" id="file-label-1">Drag atau Klik untuk Upload PDF</p>
+                                        </div>
+                                        <button type="button" id="btn-del-1" onclick="removePdf(); event.preventDefault(); event.stopPropagation();" class="hidden absolute top-2 right-2 bg-red-100 text-red-600 rounded-full p-1.5 z-20 hover:bg-red-600 hover:text-white transition-colors shadow-sm">
+                                            <i data-lucide="x" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+
+                                    <p class="text-[10px] font-bold text-slate-400 mt-2 bg-white inline-block px-2 py-1 rounded border border-slate-100 shadow-sm">
+                                        <i data-lucide="info" class="w-3 h-3 inline"></i> Format: PDF. Ukuran Maksimal 2MB.
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                                        <i data-lucide="file-text" class="w-4 h-4 mr-1.5 text-blue-600"></i> 9. Keterangan Tambahan
+                                    </label>
+                                    <textarea id="field-keterangan" rows="2" placeholder="Tuliskan catatan observasi atau kendala di sini..." oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 transition-all outline-none shadow-sm"></textarea>
+                                </div>
+
+                                <div class="pt-6 flex flex-col sm:flex-row items-center justify-end gap-3 border-t border-slate-100">
+                                    <button type="button" onclick="resetForm()" class="w-full sm:w-auto px-5 py-3 rounded-xl text-sm font-bold text-slate-500 bg-white border border-slate-200 hover:bg-slate-100 hover:text-slate-900 transition-colors shadow-sm">Kosongkan Form</button>
+                                    <button type="submit" id="btn-submit" class="w-full sm:w-auto flex items-center justify-center space-x-2 px-7 py-3 rounded-xl bg-gradient-to-r from-blue-700 to-[#1e3a8a] hover:from-slate-800 hover:to-slate-900 text-white font-bold shadow-lg transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none">
+                                        <i data-lucide="send" id="btn-icon" class="w-4 h-4 transition-transform"></i>
+                                        <span id="btn-text">Kirim Laporan via Cloud</span>
                                     </button>
                                 </div>
-
-                                <p class="text-[10px] font-bold text-slate-400 mt-2 bg-white inline-block px-2 py-1 rounded border border-slate-100 shadow-sm">
-                                    <i data-lucide="info" class="w-3 h-3 inline"></i> Format: PDF. Ukuran Maksimal 2MB.
-                                </p>
                             </div>
+                        </form>
+                    </div>
 
-                            <div>
-                                <label class="flex items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                                    <i data-lucide="file-text" class="w-4 h-4 mr-1.5 text-blue-600"></i> 9. Keterangan Tambahan
-                                </label>
-                                <textarea id="field-keterangan" rows="2" placeholder="Tuliskan catatan observasi atau kendala di sini..." oninput="updatePreview()" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 text-sm font-medium text-slate-800 transition-all outline-none shadow-sm"></textarea>
+                    <!-- RIWAYAT PENGIRIMAN -->
+                    <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-md border border-white relative z-10 overflow-hidden mt-6">
+                        <div class="bg-slate-100 p-4 border-b border-slate-200 flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <i data-lucide="history" class="w-4 h-4 text-blue-600"></i>
+                                <h4 class="text-sm font-extrabold text-slate-900 uppercase tracking-wider">Riwayat Laporan Hari Ini</h4>
                             </div>
-
-                            <div class="pt-6 flex flex-col sm:flex-row items-center justify-end gap-3 border-t border-slate-100">
-                                <button type="button" onclick="resetForm()" class="w-full sm:w-auto px-5 py-3 rounded-xl text-sm font-bold text-slate-500 bg-white border border-slate-200 hover:bg-slate-100 hover:text-slate-900 transition-colors shadow-sm">Kosongkan Form</button>
-                                <button type="submit" id="btn-submit" class="w-full sm:w-auto flex items-center justify-center space-x-2 px-7 py-3 rounded-xl bg-gradient-to-r from-blue-700 to-[#1e3a8a] hover:from-slate-800 hover:to-slate-900 text-white font-bold shadow-lg transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none">
-                                    <i data-lucide="send" id="btn-icon" class="w-4 h-4 transition-transform"></i>
-                                    <span id="btn-text">Kirim Laporan via Cloud</span>
-                                </button>
-                            </div>
+                            <span class="text-[10px] text-slate-500 font-bold bg-white px-2 py-1 rounded border border-slate-200 shadow-sm" id="history-count">0 Laporan</span>
                         </div>
-                    </form>
+                        <div class="p-0 overflow-x-auto">
+                            <table class="w-full text-left border-collapse" id="history-table">
+                                <thead>
+                                    <tr class="bg-slate-50/70 border-b border-slate-200 text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">
+                                        <th class="px-4 py-3">Waktu Input</th>
+                                        <th class="px-4 py-3">Kategori</th>
+                                        <th class="px-4 py-3">Lokasi</th>
+                                        <th class="px-4 py-3">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-body" class="divide-y divide-slate-100 text-xs font-medium">
+                                    <tr id="history-empty"><td colspan="4" class="px-4 py-8 text-center text-slate-400 italic">Belum ada laporan yang Anda kirim hari ini.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- Live Preview -->
                 <div class="lg:col-span-5 sticky top-24 relative z-10 transition-all duration-500">
                     <div class="bg-white/95 backdrop-blur-md rounded-2xl p-0 shadow-lg border border-slate-200 overflow-hidden">
                         <div class="bg-slate-50 p-4 border-b border-slate-200 flex items-center justify-between">
@@ -412,6 +442,7 @@
         let selectedPdfFile = null;
         let selectedPdfName = "";
         const STORAGE_KEY = 'pkl_form_draft_supabase_v1';
+        const HISTORY_KEY = 'pkl_form_history_v1';
 
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
@@ -444,7 +475,67 @@
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             document.getElementById('field-waktu').value = now.toISOString().slice(0, 10);
             loadDraft(); 
+            loadHistory(); // Load riwayat setiap halaman di-refresh
         });
+
+        // FUNGSI RIWAYAT PENGIRIMAN
+        function loadHistory() {
+            const historyBody = document.getElementById('history-body');
+            const emptyState = document.getElementById('history-empty');
+            const savedHistory = localStorage.getItem(HISTORY_KEY);
+            
+            let historyData = [];
+            if (savedHistory) {
+                historyData = JSON.parse(savedHistory);
+            }
+
+            // Filter hanya tampilkan riwayat hari ini
+            const today = new Date().toLocaleDateString('id-ID');
+            historyData = historyData.filter(item => item.date === today);
+            
+            document.getElementById('history-count').innerText = `${historyData.length} Laporan`;
+
+            if (historyData.length === 0) {
+                emptyState.style.display = 'table-row';
+            } else {
+                emptyState.style.display = 'none';
+                // Hapus data lama di tabel
+                Array.from(historyBody.children).forEach(child => {
+                    if(child.id !== 'history-empty') historyBody.removeChild(child);
+                });
+
+                // Render dari yang paling baru
+                historyData.reverse().forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50 transition-colors';
+                    tr.innerHTML = `
+                        <td class="px-4 py-3"><span class="font-medium text-slate-800">${item.time}</span></td>
+                        <td class="px-4 py-3"><span class="font-bold text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-600 uppercase border border-slate-200">${item.kategori}</span></td>
+                        <td class="px-4 py-3 truncate max-w-[150px]"><span class="font-bold text-slate-800">${item.lokasi}</span><br><span class="text-[10px] text-slate-500">${item.kecamatan}</span></td>
+                        <td class="px-4 py-3"><span class="flex items-center gap-1 text-emerald-600 font-bold text-[10px] bg-emerald-50 px-2 py-1 rounded border border-emerald-100 w-max"><i data-lucide="check" class="w-3 h-3"></i> Terkirim</span></td>
+                    `;
+                    historyBody.appendChild(tr);
+                });
+                lucide.createIcons({root: historyBody});
+            }
+
+            // Simpan kembali data yang sudah di-filter (agar LocalStorage tidak bengkak)
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(historyData.reverse()));
+        }
+
+        function saveToHistory(kategori, lokasi, kecamatan) {
+            const savedHistory = localStorage.getItem(HISTORY_KEY);
+            let historyData = savedHistory ? JSON.parse(savedHistory) : [];
+            
+            const now = new Date();
+            const date = now.toLocaleDateString('id-ID');
+            const time = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+            historyData.push({ date, time, kategori, lokasi, kecamatan });
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(historyData));
+            loadHistory();
+        }
+        // ========================
 
         function onKategoriChange(doUpdatePreview = true) {
             const kat = document.getElementById('field-kategori').value;
@@ -697,6 +788,8 @@
 
                 // 2. Simpan Data Teks ke PostgreSQL Supabase
                 const katVal = document.getElementById('field-kategori').value;
+                const locVal = getJalanRwValues();
+                const kecVal = document.getElementById('field-kecamatan').value;
                 let prefix = 'LAP';
                 if(katVal === 'BANGLI') prefix = 'BGL';
                 else if(katVal === 'PKL') prefix = 'PKL';
@@ -707,9 +800,9 @@
                 const newEntry = {
                     ref_id: refId,
                     kategori_laporan: katVal,
-                    kecamatan: document.getElementById('field-kecamatan').value,
+                    kecamatan: kecVal,
                     kelurahan: document.getElementById('field-kelurahan').value,
-                    lokasi: getJalanRwValues(), 
+                    lokasi: locVal, 
                     jumlah: parseInt(document.getElementById('field-jumlah').value),
                     waktu: document.getElementById('field-waktu').value,
                     datapkl: formatDataPKL(),
@@ -720,6 +813,9 @@
 
                 const { error: dbError } = await supabaseClient.from('pkl_reports').insert([newEntry]);
                 if (dbError) throw dbError;
+
+                // Simpan ke riwayat lokal petugas
+                saveToHistory(katVal, locVal, kecVal);
 
                 setSubmitButtonState(false);
                 showToast("Laporan Berhasil Terkirim ke Cloud!", "success");
